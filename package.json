@@ -1,14 +1,4 @@
 {
-  "name": "@vitejs/plugin-rsc-examples-starter",
-  "version": "0.0.0",
-  "private": true,
-  "license": "MIT",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
   "dependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
@@ -20,5 +10,16 @@
     "@vitejs/plugin-rsc": "latest",
     "rsc-html-stream": "^0.0.7",
     "vite": "^7.1.12"
-  }
+  },
+  "license": "MIT",
+  "name": "@vitejs/plugin-rsc-examples-starter",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "format": "biome check --write",
+    "preview": "vite preview"
+  },
+  "type": "module",
+  "version": "0.0.0"
 }
