@@ -27,7 +27,7 @@ async function main() {
 
 		React.useEffect(() => {
 			setPayload = (v) => React.startTransition(() => setPayload_(v));
-		}, [setPayload_]);
+		}, []);
 
 		// re-fetch/render on client side navigation
 		React.useEffect(() => {
@@ -77,7 +77,7 @@ async function main() {
 	// implement server HMR by trigering re-fetch/render of RSC upon server code change
 	if (import.meta.hot) {
 		import.meta.hot.on("rsc:update", () => {
-			fetchRscPayload();
+			void fetchRscPayload();
 		});
 	}
 }
@@ -130,4 +130,4 @@ function listenNavigation(onNavigation: () => void) {
 	};
 }
 
-main();
+void main();
