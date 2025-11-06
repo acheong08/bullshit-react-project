@@ -18,6 +18,6 @@ See [alternatives considered](./techstack-alternatives)
 
 Server will be running on `http://127.0.0.1:8000`
 
-## Design decisions
+## Contributing
 
-TODO
+See [CONTRIBUTING.md](CONTRIBUTING.md)
