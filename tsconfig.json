@@ -1,18 +1,25 @@
 {
   "compilerOptions": {
-    "erasableSyntaxOnly": true,
     "allowImportingTsExtensions": true,
-    "strict": true,
+    "erasableSyntaxOnly": true,
+    "jsx": "react-jsx",
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "skipLibCheck": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
-    "moduleResolution": "Bundler",
-    "module": "ESNext",
+    "strict": true,
     "target": "ESNext",
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "types": ["vite/client", "@vitejs/plugin-rsc/types"],
-    "jsx": "react-jsx"
+    "types": [
+      "vite/client",
+      "@vitejs/plugin-rsc/types"
+    ],
+    "verbatimModuleSyntax": true
   }
 }
