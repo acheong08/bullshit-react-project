@@ -24,15 +24,23 @@ src
     └── db/
 ```
 
-`root.tsx` is the entrypoint to our webpage and handles routing to the various subpages, located under `pages/`. Reusable components should be placed in `components/`.
+`root.tsx` is the entry point to our webpage and handles routing to the various sub-pages, located under `pages/`. Reusable components should be placed in `components/`.
 
-## Server components and security
+## Client and Server interaction in React
 
-By default, all components are server side rendered unless `"use client"` is specified.
+In React, there are 3 types of code:
 
-Server-only functions should either take in a `Request` parameter when used in SSR or have the file be labelled as `"use server"` for use in client-side rendering. A server-side function used on client side magically generates an RPC API. **Do not** use `eval` or other unsafe operations on user input in server side code as that could lead to full compromise and data leaks.
+- SSR (Server Side Rendering): This refers to React Server Components which are generates on the server before being sent down as static HTML. By default, all components are server side rendered.
+- Client side rendering: This refers to components which are hydrated by JavaScript running in the browser as seen in traditional React. This should generally be used for components that use slow loading data such that we have a fast initial loading speed. To make a component client side rendered, tag the file with `"use client"`.
+- Server actions: These are functions tagged with `"use server"`. These functions should only be called by client side components. Behind the scenes, React auto magically generated API endpoints to react the server for this data.
 
-The database handler should never be directly accessed by client side code as that would expose us to arbitrary input. All database operations should be wrapped in type-safe code under `utils/db/` with `"user server"` enabled.
+## On security
+
+Server-only functions should take a `Request` parameter, even if unused. This ensures that they are not accidentally used on client side components, which could lead to security flaws such as authentication bypass. Server-only functions **should never** be tagged with `"use server"`. See ["When perfect code fails"](https://marma.dev/articles/2025/when-perfect-code-fails).
+
+A server action (not to be confused with server-only functions), when used on client side magically generates an RPC API. **Do not** use `eval` or other unsafe operations on user input in server side code as that could lead to full compromise and data leaks.
+
+The database handler should never be directly accessed by client side components as that would expose us to arbitrary input. All database operations should be wrapped in type-safe code under `utils/db/` with `"user server"` enabled.
 
 ## Formatting and style
 

@@ -58,11 +58,10 @@ export default async function handler(request: Request): Promise<Response> {
 	// we render RSC stream after handling server function request
 	// so that new render reflects updated state from server function call
 	// to achieve single round trip to mutate and fetch from server.
-	const url = new URL(request.url);
 	const rscPayload: RscPayload = {
 		formState,
 		returnValue,
-		root: <Root url={url} />,
+		root: <Root request={request} />,
 	};
 	const rscOptions = { temporaryReferences };
 	const rscStream = renderToReadableStream<RscPayload>(rscPayload, rscOptions);
@@ -70,6 +69,7 @@ export default async function handler(request: Request): Promise<Response> {
 	// respond RSC stream without HTML rendering based on framework's convention.
 	// here we use request header `content-type`.
 	// additionally we allow `?__rsc` and `?__html` to easily view payload directly.
+	const url = new URL(request.url);
 	const isRscRequest =
 		(!request.headers.get("accept")?.includes("text/html") &&
 			!url.searchParams.has("__html")) ||
