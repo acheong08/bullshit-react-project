@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "allowImportingTsExtensions": true,
+    "emitDecoratorMetadata": true,
     "erasableSyntaxOnly": true,
+    "experimentalDecorators": true,
     "jsx": "react-jsx",
     "lib": [
       "ESNext",
@@ -13,8 +15,10 @@
     "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+
     "skipLibCheck": true,
     "strict": true,
+    "strictPropertyInitialization": false,
     "target": "ESNext",
     "types": [
       "bun",

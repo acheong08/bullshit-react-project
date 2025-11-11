@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { createFromReadableStream } from "@vitejs/plugin-rsc/ssr";
 import React from "react";
 import type { ReactFormState } from "react-dom/client";
