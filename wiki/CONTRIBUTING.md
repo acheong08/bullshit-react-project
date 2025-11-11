@@ -53,32 +53,33 @@ We have an application that is able to be dockerized, however for those users wh
 
 Setting up bun - no need to use npm anymore! Linking buns website in as the information may change. They cover how to install and setup bun on all operating systems ["Bun documentation - installation"](`https://bun.com/docs/installation`).
 
-Once you can successfully run `bun --version` and its installed the next thing to do it navigate to the project directory on your local machine. 
-
+Once you can successfully run `bun --version` and its installed the next thing to do it navigate to the project directory on your local machine.
 
 Enter `bun install` which reads the existing package.json and installs all the project dependencies into `node_modules`.
 
 Finally run `bun run dev` and you should have an instance running locally on your machine. It should provide you with a link to put into a web browser. By default vite dev server runs on port `5173` so the link should be something like `http://localhost:5173`.
 
-## Installing and initalizing PostgreSQL
+## Installing and initializing PostgreSQL
 
 Here are the links for PostgreSQL main website
 
 ["MacOS Download link"](https://www.postgresql.org/download/macosx/)
-["Windows Download link"](https://www.postgresql.org/download/windows/) 
+["Windows Download link"](https://www.postgresql.org/download/windows/)
 For Linux, navigate to ["Download Screen"](https://www.postgresql.org/download/) and select the flavour of Linux you use and download accordingly.
 
 Follow the installer instructions, during the installation:
+
 - Choose a data directory (default works fine)
 - Set a password for default superuser account (make a note of it as you don't want to forget this).
 
-On Windows/MacOS, the installer generally sets PostgreSQL to run as a service automatically. 
+On Windows/MacOS, the installer generally sets PostgreSQL to run as a service automatically.
 
 On Linux run `sudo systemctl start postgressql`. Confirm its running by entering `sudo systemctl status postgresql`.
 
 On the running instance you now have of PostgreSQL you should create a database. Run `CREATE DATABASE <db_name>;`
 
 Environment Variables to be filled in:
+
 ```ruby
 export PGHOST=localhost
 export PGPORT=
@@ -90,3 +91,18 @@ export PGDATABASENAME=
 
 We will have a .env file to load these all for our application, that removes all the exports from environment variables above.
 
+## Voice commands (Accessibility)
+
+To ensure the application can be used entirely with voice commands, all actions on the page should be registered with the voice command system. See `src/utils/voice/commands.ts`
+
+```ts
+const vcManager = new VoiceCommandManager();
+vcManager.registerCommand({
+  callback: (input: string | null) => {
+    // Navigate to login page or enter form depending on page
+  },
+  hasInput: false,
+  label: "Log in",
+  matches: [/^Log in/i],
+});
+```
