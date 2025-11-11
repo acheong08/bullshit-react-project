@@ -1,18 +1,26 @@
 {
   "dependencies": {
+    "@types/dom-speech-recognition": "^0.0.7",
+    "bun-types": "^1.3.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.4",
+    "@types/bun": "^1.3.2",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "latest",
     "@vitejs/plugin-rsc": "latest",
+    "bun": "^1.3.2",
     "rsc-html-stream": "^0.0.7",
     "vite": "^7.1.12"
   },
   "license": "MIT",
   "name": "@vitejs/plugin-rsc-examples-starter",
+  "peerDependencies": {
+    "typescript": "^5"
+  },
   "private": true,
   "scripts": {
     "build": "vite build",

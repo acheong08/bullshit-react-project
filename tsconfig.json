@@ -17,6 +17,7 @@
     "strict": true,
     "target": "ESNext",
     "types": [
+      "bun",
       "vite/client",
       "@vitejs/plugin-rsc/types"
     ],
