@@ -4,3 +4,11 @@ lint:
     - pip install pre-commit
   script:
     - pre-commit run --all-files
+
+test:
+  image: oven/bun:1
+  stage: test
+  script:
+    - bun install
+    - bun test
+
