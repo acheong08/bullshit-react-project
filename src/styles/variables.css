@@ -1,0 +1,9 @@
+:root {
+	/*Colour variables (light mode)*/
+	--primary-blue: #11167b;
+	--bg-white: #f5f5f5;
+	--grey-border: #aeaeae;
+	--white: #ffffff;
+	--black: #000000;
+	--shadow: #00000025;
+}

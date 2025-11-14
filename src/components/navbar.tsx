@@ -7,7 +7,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 		<nav
 			style={{
 				borderBottom: "1px solid #ccc",
-				marginBottom: "1rem",
+				marginBottom: "0rem",
 				padding: "1rem",
 			}}
 		>
