@@ -1,9 +1,10 @@
 import { DataSource } from "typeorm";
+import { Game, GameMedia, Label } from "./entity/Games";
 import { User } from "./entity/User";
 
 export const AppDataSource = new DataSource({
 	database: "test",
-	entities: [User],
+	entities: [User, Game, GameMedia, Label],
 	host: "postgres",
 	logging: false,
 	migrations: [],
