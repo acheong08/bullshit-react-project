@@ -4,5 +4,23 @@ services:
   rsc:
     build:
       context: .
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "127.0.0.1:8000:4173"
+  postgres:
+    image: docker.io/library/postgres:18
+    restart: unless-stopped
+    volumes:
+      - postgresdata:/var/lib/postgresql
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+
+
+volumes:
+  postgresdata:

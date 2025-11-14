@@ -3,28 +3,35 @@
 This is a Vite + React Server Components project following the usual standards.
 
 ```
-root@localhost > tree src
+root@localhost> tree src
 src
 ├── action.tsx
-├── assets/
+├── assets
 │   └── react.svg
-├── components/
+├── client.tsx
+├── components              // Reusable components
 │   └── navbar.tsx
-├── framework/
+├── data-source.ts          // Production database definitions
+├── entity
+│   └── User.ts
+├── framework               // Server side entrypoint
+│   ├── entry.browser.tsx
+│   ├── entry.rsc.tsx
+│   └── entry.ssr.tsx
 ├── index.css
-├── pages/
+├── lib
+│   └── db                  // Database wrapper
+│       └── db.test.ts
+├── pages                   // Full page components
 │   ├── game.tsx
 │   ├── home.tsx
 │   ├── login.tsx
 │   ├── not-found.tsx
 │   └── profile.tsx
-├── root.tsx
-└── utils/
+├── root.tsx                // React entrypoint and routing
+└── utils
     └── auth.ts
-    └── db/
 ```
-
-`root.tsx` is the entry point to our webpage and handles routing to the various sub-pages, located under `pages/`. Reusable components should be placed in `components/`.
 
 ## Client and Server interaction in React
 
@@ -46,51 +53,6 @@ The database handler should never be directly accessed by client side components
 
 We use [biome](https://biomejs.dev/). Ensure that is run before requesting review. You can use the `pre-commit` hook already in the repository, or simply run `bun run format`. Ensure no warnings or errors are flagged.
 
-## Running without Docker Instructions
-
-This are commands for setting running the application without docker so you will need to have cloned the project repository to your local machine.
-We have an application that is able to be dockerized, however for those users who want to run the project without docker here are some instructions to help you get set up.
-
-Setting up bun - no need to use npm anymore! Linking buns website in as the information may change. They cover how to install and setup bun on all operating systems ["Bun documentation - installation"](`https://bun.com/docs/installation`).
-
-Once you can successfully run `bun --version` and its installed the next thing to do it navigate to the project directory on your local machine.
-
-Enter `bun install` which reads the existing package.json and installs all the project dependencies into `node_modules`.
-
-Finally run `bun run dev` and you should have an instance running locally on your machine. It should provide you with a link to put into a web browser. By default vite dev server runs on port `5173` so the link should be something like `http://localhost:5173`.
-
-## Installing and initializing PostgreSQL
-
-Here are the links for PostgreSQL main website
-
-["MacOS Download link"](https://www.postgresql.org/download/macosx/)
-["Windows Download link"](https://www.postgresql.org/download/windows/)
-For Linux, navigate to ["Download Screen"](https://www.postgresql.org/download/) and select the flavour of Linux you use and download accordingly.
-
-Follow the installer instructions, during the installation:
-
-- Choose a data directory (default works fine)
-- Set a password for default superuser account (make a note of it as you don't want to forget this).
-
-On Windows/MacOS, the installer generally sets PostgreSQL to run as a service automatically.
-
-On Linux run `sudo systemctl start postgressql`. Confirm its running by entering `sudo systemctl status postgresql`.
-
-On the running instance you now have of PostgreSQL you should create a database. Run `CREATE DATABASE <db_name>;`
-
-Environment Variables to be filled in:
-
-```ruby
-export PGHOST=localhost
-export PGPORT=
-export PGUSER=
-export PGPASSWORD=
-export PGDATABASE=
-export PGDATABASENAME=
-```
-
-We will have a .env file to load these all for our application, that removes all the exports from environment variables above.
-
 ## Voice commands (Accessibility)
 
 To ensure the application can be used entirely with voice commands, all actions on the page should be registered with the voice command system. See `src/utils/voice/commands.ts`
@@ -106,3 +68,7 @@ vcManager.registerCommand({
   matches: [/^Log in/i],
 });
 ```
+
+## Docker/podman
+
+By default, `podman compose up` uses any existing cached image. If you've made changes since the last build, you can run `podman compose build` to ensure the image is up to date.
