@@ -1,5 +1,6 @@
+import "./styles/variables.css";
+import "./styles/index.css";
 import { Navbar } from "./components/navbar.tsx";
-import "./index.css";
 import { GamePage } from "./pages/game.tsx";
 import { HomePage } from "./pages/home.tsx";
 import { LoginPage } from "./pages/login.tsx";
