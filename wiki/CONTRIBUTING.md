@@ -68,3 +68,7 @@ vcManager.registerCommand({
   matches: [/^Log in/i],
 });
 ```
+
+## Docker/podman
+
+By default, `podman compose up` uses any existing cached image. If you've made changes since the last build, you can run `podman compose build` to ensure the image is up to date.
