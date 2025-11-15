@@ -8,7 +8,7 @@ export class User extends BaseEntity {
 	@Column({ length: 32, type: "varchar" })
 	username: string;
 
-	@Column({ length: 98, type: "varchar" })
+	@Column({ length: 60, type: "varchar" })
 	passwordHash: string;
 
 	@Column({ length: 128, type: "varchar" })
