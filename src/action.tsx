@@ -34,8 +34,8 @@ export async function loginUser(
 
 		if (!user) {
 			return {
-				success: false,
 				error: "Invalid username or password",
+				success: false,
 			};
 		}
 
@@ -44,8 +44,8 @@ export async function loginUser(
 
 		if (!isPasswordValid) {
 			return {
-				success: false,
 				error: "Invalid username or password",
+				success: false,
 			};
 		}
 
@@ -59,8 +59,8 @@ export async function loginUser(
 	} catch (error) {
 		console.error("Login error:", error);
 		return {
-			success: false,
 			error: "An error occurred during login. Please try again.",
+			success: false,
 		};
 	}
 }

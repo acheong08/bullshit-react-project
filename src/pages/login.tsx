@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { loginUser } from "../action";
+import { setCookie } from "../utils/cookies";
 
 export function LoginPage() {
 	const [username, setUsername] = useState("");
@@ -18,15 +19,18 @@ export function LoginPage() {
 			const result = await loginUser(username, password);
 
 			if (result.success && result.token) {
-				// Set the auth token in a cookie
-				document.cookie = `authToken=${result.token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Strict`;
+				// Set the auth token in a cookie using Cookie Store API
+				await setCookie("authToken", result.token, {
+					maxAge: 60 * 60 * 24 * 7, // 7 days
+					sameSite: "strict",
+				});
 
 				// Redirect to home page or refresh
 				window.location.href = "/";
 			} else {
 				setError(result.error || "Login failed");
 			}
-		} catch (err) {
+		} catch (_err) {
 			setError("An unexpected error occurred. Please try again.");
 		} finally {
 			setIsLoading(false);
@@ -46,12 +50,12 @@ export function LoginPage() {
 					{error && (
 						<div
 							style={{
+								backgroundColor: "rgba(255, 0, 0, 0.1)",
+								border: "1px solid red",
+								borderRadius: "4px",
 								color: "red",
 								marginBottom: "1rem",
 								padding: "0.5rem",
-								border: "1px solid red",
-								borderRadius: "4px",
-								backgroundColor: "rgba(255, 0, 0, 0.1)",
 							}}
 						>
 							{error}
