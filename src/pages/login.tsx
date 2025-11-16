@@ -47,20 +47,7 @@ export function LoginPage() {
 				<form onSubmit={handleSubmit} className="auth-form">
 					<h1 className="form-header">Login</h1>
 
-					{error && (
-						<div
-							style={{
-								backgroundColor: "rgba(255, 0, 0, 0.1)",
-								border: "1px solid red",
-								borderRadius: "4px",
-								color: "red",
-								marginBottom: "1rem",
-								padding: "0.5rem",
-							}}
-						>
-							{error}
-						</div>
-					)}
+					{error && <div className="error-banner">{error}</div>}
 
 					<div className="input-container">
 						<label htmlFor="username">Username</label>
