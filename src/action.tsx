@@ -5,16 +5,6 @@ import { User } from "./entity/User";
 import { generateAccessToken } from "./utils/jwt";
 import { verifyPassword } from "./utils/password";
 
-let serverCounter = 0;
-
-export async function getServerCounter() {
-	return serverCounter;
-}
-
-export async function updateServerCounter(change: number) {
-	serverCounter += change;
-}
-
 export interface LoginResult {
 	success: boolean;
 	token?: string;
