@@ -1,3 +1,4 @@
+import path from "node:path";
 import react from "@vitejs/plugin-react";
 import rsc from "@vitejs/plugin-rsc";
 import { defineConfig } from "vite";
@@ -67,4 +68,10 @@ export default defineConfig({
 		// to understand internal transforms required for RSC.
 		// import("vite-plugin-inspect").then(m => m.default()),
 	],
+	resolve: {
+		alias: {
+			$lib: path.resolve(__dirname, "./src/lib"),
+			$tmpimg: path.resolve(__dirname, "./public/images"),
+		},
+	},
 });

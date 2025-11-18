@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "allowImportingTsExtensions": true,
+    "baseUrl": ".",
     "emitDecoratorMetadata": true,
     "erasableSyntaxOnly": false,
     "experimentalDecorators": true,
@@ -15,6 +16,14 @@
     "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "paths": {
+      "$lib/*": [
+        "src/lib/*"
+      ],
+      "$tmpimg/*": [
+        "public/images/*"
+      ]
+    },
 
     "skipLibCheck": true,
     "strict": true,
@@ -23,7 +32,9 @@
     "types": [
       "bun",
       "vite/client",
-      "@vitejs/plugin-rsc/types"
+      "@vitejs/plugin-rsc/types",
+      "react",
+      "react-dom"
     ],
     "verbatimModuleSyntax": true
   }
