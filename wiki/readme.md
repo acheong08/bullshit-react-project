@@ -12,6 +12,18 @@ See [alternatives considered](./techstack-alternatives)
 
 ## Getting it running
 
+To clone the repository locally, run:
+```bash
+git clone https://git.cardiff.ac.uk/c22067305/team_9_year_3_project.git
+```
+
+This project uses Git LFS to store larger files (like images) to reduce bloating in the repository.
+After cloning, install and pull LFS files to ensure these files load correctly:
+```bash
+git lfs install
+git lfs pull
+```
+
 `podman compose up -d`
 
 (Note: Docker can be used in place of podman)
