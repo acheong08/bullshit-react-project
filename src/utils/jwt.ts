@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 import type { StringValue } from "ms";
+import ms from "ms";
 
 // JWT configuration
 const JWT_SECRET =
 	process.env.JWT_SECRET || "your-secret-key-change-this-in-production";
-const JWT_EXPIRY: StringValue = "15m"; // 15 minutes default
-const REFRESH_TOKEN_EXPIRY: StringValue = "7d"; // 7 days default
+const JWT_EXPIRY = ms((process.env.JWT_EXPIRY || "7d") as StringValue);
 
 export interface TokenPayload {
 	userId: number;
@@ -17,12 +17,6 @@ export interface DecodedToken extends TokenPayload {
 	exp: number;
 }
 
-/**
- * Generates a JWT access token for a user
- * @param userId - The user's ID
- * @param username - The user's username
- * @returns Signed JWT token
- */
 export function generateAccessToken(userId: number, username: string): string {
 	const payload: TokenPayload = {
 		userId,
@@ -34,29 +28,6 @@ export function generateAccessToken(userId: number, username: string): string {
 	});
 }
 
-/**
- * Generates a JWT refresh token for a user (optional, for refresh token flow)
- * @param userId - The user's ID
- * @param username - The user's username
- * @returns Signed JWT refresh token
- */
-export function generateRefreshToken(userId: number, username: string): string {
-	const payload: TokenPayload = {
-		userId,
-		username,
-	};
-
-	return jwt.sign(payload, JWT_SECRET, {
-		expiresIn: REFRESH_TOKEN_EXPIRY,
-	});
-}
-
-/**
- * Verifies and decodes a JWT access token
- * @param token - The JWT token to verify
- * @returns Decoded token payload
- * @throws Error if token is invalid or expired
- */
 export function verifyAccessToken(token: string): DecodedToken {
 	try {
 		const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
@@ -69,20 +40,5 @@ export function verifyAccessToken(token: string): DecodedToken {
 			throw new Error("Invalid token");
 		}
 		throw new Error("Token verification failed");
-	}
-}
-
-/**
- * Decodes a JWT token without verifying the signature
- * Useful for reading token data when verification isn't needed
- * @param token - The JWT token to decode
- * @returns Decoded token payload or null if invalid
- */
-export function decodeToken(token: string): DecodedToken | null {
-	try {
-		const decoded = jwt.decode(token) as DecodedToken;
-		return decoded;
-	} catch {
-		return null;
 	}
 }

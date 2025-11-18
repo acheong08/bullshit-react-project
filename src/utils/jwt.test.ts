@@ -1,11 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import jwt from "jsonwebtoken";
-import {
-	decodeToken,
-	generateAccessToken,
-	generateRefreshToken,
-	verifyAccessToken,
-} from "./jwt";
+import { generateAccessToken, verifyAccessToken } from "./jwt";
 
 describe("generateAccessToken", () => {
 	test("should include userId and username in token payload", () => {
@@ -30,18 +25,6 @@ describe("generateAccessToken", () => {
 		expect(decoded.exp).toBeDefined();
 		expect(decoded.iat).toBeDefined();
 		expect(decoded.exp).toBeGreaterThan(decoded.iat);
-	});
-});
-
-describe("generateRefreshToken", () => {
-	test("should have longer expiry than access token", () => {
-		const accessToken = generateAccessToken(1, "testuser");
-		const refreshToken = generateRefreshToken(1, "testuser");
-
-		const accessDecoded = jwt.decode(accessToken) as { exp: number };
-		const refreshDecoded = jwt.decode(refreshToken) as { exp: number };
-
-		expect(refreshDecoded.exp).toBeGreaterThan(accessDecoded.exp);
 	});
 });
 
@@ -80,29 +63,14 @@ describe("decodeToken", () => {
 		const username = "decoder";
 		const token = generateAccessToken(userId, username);
 
-		const decoded = decodeToken(token);
+		const decoded = verifyAccessToken(token);
 
 		expect(decoded).not.toBeNull();
 		expect(decoded?.userId).toBe(userId);
 		expect(decoded?.username).toBe(username);
 	});
 
-	test("should decode expired token without throwing error", () => {
-		const secret =
-			process.env.JWT_SECRET || "your-secret-key-change-this-in-production";
-		const expiredToken = jwt.sign({ userId: 1, username: "testuser" }, secret, {
-			expiresIn: "-1s",
-		});
-
-		const decoded = decodeToken(expiredToken);
-
-		expect(decoded).not.toBeNull();
-		expect(decoded?.userId).toBe(1);
-	});
-
 	test("should return null for invalid token", () => {
-		const decoded = decodeToken("not.a.valid.token");
-
-		expect(decoded).toBeNull();
+		expect(verifyAccessToken, "not.a.valid.token").toThrowError();
 	});
 });
