@@ -1,12 +1,12 @@
 import "./styles/variables.css";
 import "./styles/index.css";
-import { Navbar } from "./components/navbar.tsx";
-import { GamePage } from "./pages/game.tsx";
-import { HomePage } from "./pages/home.tsx";
-import { LoginPage } from "./pages/login.tsx";
-import { NotFoundPage } from "./pages/not-found.tsx";
-import { ProfilePage } from "./pages/profile.tsx";
-import { isUserLoggedIn } from "./utils/auth.ts";
+import { Navbar } from "$components/navbar.tsx";
+import { GamePage } from "$pages/game.tsx";
+import { HomePage } from "$pages/home.tsx";
+import { LoginPage } from "$pages/login.tsx";
+import { NotFoundPage } from "$pages/not-found.tsx";
+import { ProfilePage } from "$pages/profile.tsx";
+import { isUserLoggedIn } from "$utils/auth.ts";
 
 export function Root(props: { request: Request }) {
 	const isLoggedIn = isUserLoggedIn(props.request);

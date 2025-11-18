@@ -1,8 +1,8 @@
+import GameCard from "$components/gameCards/game-card";
+import TopChartsGameCard from "$components/gameCards/top-charts-game-card";
+import WishListGameCard from "$components/gameCards/wish-list-game-card";
 import Pegi3 from "$tmpimg/Pegi-3.png";
 import StardewValleyLogo from "$tmpimg/Stardew_Valley_image.png";
-import GameCard from "../components/gameCards/game-card";
-import TopChartsGameCard from "../components/gameCards/top-charts-game-card";
-import WishListGameCard from "../components/gameCards/wish-list-game-card";
 
 export function HomePage() {
 	return (

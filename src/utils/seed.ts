@@ -1,4 +1,4 @@
-import { User } from "../entity/User";
+import { User } from "$entity/User";
 
 /**
  * Seeds the database with an admin user if ADMIN_USERNAME and ADMIN_PASSWORD_HASH are set

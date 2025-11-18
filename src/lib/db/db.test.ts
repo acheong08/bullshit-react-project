@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { expect, test } from "bun:test";
 import { DataSource } from "typeorm";
-import { User } from "../../entity/User";
+import { User } from "$entity/User";
 
 test("Add and remove user", async () => {
 	const AppDataSource = new DataSource({

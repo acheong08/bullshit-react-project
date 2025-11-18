@@ -1,5 +1,5 @@
+import { seedAdminUser } from "$utils/seed";
 import { AppDataSource } from "../data-source";
-import { seedAdminUser } from "../utils/seed";
 
 /**
  * Initialize database and run seeding operations

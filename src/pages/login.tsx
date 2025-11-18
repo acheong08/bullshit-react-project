@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
+import { setCookie } from "$utils/cookies";
 import { loginUser } from "../action";
-import { setCookie } from "../utils/cookies";
 
 export function LoginPage() {
 	const [username, setUsername] = useState("");
