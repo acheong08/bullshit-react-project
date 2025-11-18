@@ -49,6 +49,10 @@ A server action (not to be confused with server-only functions), when used on cl
 
 The database handler should never be directly accessed by client side components as that would expose us to arbitrary input. All database operations should be wrapped in type-safe code under `utils/db/` with `"user server"` enabled.
 
+### Authentication
+
+We're using JWTs that last 7 days. See `src/utils/auth.ts`. To handle revocations, we should use a Bloom filter for efficiency and limiting memory use.
+
 ## Formatting and style
 
 We use [biome](https://biomejs.dev/). Ensure that is run before requesting review. You can use the `pre-commit` hook already in the repository, or simply run `bun run format`. Ensure no warnings or errors are flagged.

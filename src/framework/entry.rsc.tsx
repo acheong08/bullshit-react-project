@@ -8,17 +8,8 @@ import {
 	renderToReadableStream,
 } from "@vitejs/plugin-rsc/rsc";
 import type { ReactFormState } from "react-dom/client";
-import { AppDataSource } from "../data-source";
 import { Root } from "../root.tsx";
-
-// Initialize database
-if (!AppDataSource.isInitialized) {
-	try {
-		AppDataSource.initialize();
-	} catch (error) {
-		console.log(error);
-	}
-}
+import "./init"; // Initialize database and run seed operations
 
 // The schema of payload which is serialized into RSC stream on rsc environment
 // and deserialized on ssr/client environments.

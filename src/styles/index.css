@@ -132,3 +132,12 @@ label {
 		display: none;
 	}
 }
+
+.error-banner {
+	background-color: "rgba(255, 0, 0, 0.1)";
+	border: "1px solid red";
+	border-radius: "4px";
+	color: "red";
+	margin-bottom: "1rem";
+	padding: "0.5rem";
+}
