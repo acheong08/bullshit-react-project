@@ -1,7 +1,6 @@
-import { User } from "$entity/User";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import gamesData from "$assets/games.jsonl?raw";
 import { Game, GameMedia, Label, LabelType, MediaType } from "$entity/Games";
+import { User } from "$entity/User";
 
 interface GameData {
 	url: string;
@@ -72,10 +71,8 @@ export async function seedGames(): Promise<void> {
 
 		console.log("[Seed] Starting game import from games.jsonl...");
 
-		// Read the JSONL file
-		const filePath = join(process.cwd(), "src", "assets", "games.jsonl");
-		const fileContent = readFileSync(filePath, "utf-8");
-		const lines = fileContent.trim().split("\n");
+		// Parse the JSONL data
+		const lines = gamesData.trim().split("\n");
 
 		// Cache for labels to avoid duplicates
 		const labelCache = new Map<string, Label>();
