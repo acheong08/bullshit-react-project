@@ -1,9 +1,9 @@
 "use server";
 
+import { User } from "$entity/User";
+import { generateAccessToken } from "$utils/jwt";
+import { verifyPassword } from "$utils/password";
 import { AppDataSource } from "./data-source";
-import { User } from "./entity/User";
-import { generateAccessToken } from "./utils/jwt";
-import { verifyPassword } from "./utils/password";
 
 export interface LoginResult {
 	success: boolean;

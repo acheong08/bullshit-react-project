@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
-import { Game, GameMedia, Label } from "./entity/Games";
-import { User } from "./entity/User";
+import { Game, GameMedia, Label } from "$entity/Games";
+import { User } from "$entity/User";
 
 export const AppDataSource = new DataSource({
 	database: process.env.POSTGRES_DB || "test",

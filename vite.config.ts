@@ -70,8 +70,12 @@ export default defineConfig({
 	],
 	resolve: {
 		alias: {
+			$components: path.resolve(__dirname, "./src/components"),
+			$entity: path.resolve(__dirname, "./src/entity"),
 			$lib: path.resolve(__dirname, "./src/lib"),
+			$pages: path.resolve(__dirname, "./src/pages"),
 			$tmpimg: path.resolve(__dirname, "./public/images"),
+			$utils: path.resolve(__dirname, "./src/utils"),
 		},
 	},
 });
