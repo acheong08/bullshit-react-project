@@ -12,7 +12,15 @@ export enum LabelType {
 	Genre = 1,
 	Accessibility = 2,
 	Platform = 3,
-	Misc = 4,
+	IndustryRating = 4,
+	Misc = 5,
+}
+
+export enum IndustryRating {
+	Everyone = "Everyone",
+	Teen = "Teen",
+	Mature = "Mature",
+	AdultsOnly = "Adults Only",
 }
 
 @Entity()
@@ -24,7 +32,7 @@ export class Label extends BaseEntity {
 	type: LabelType;
 
 	@Column("text")
-	name: string;
+	name: string | IndustryRating;
 
 	@Column("text")
 	description: string;
@@ -60,12 +68,6 @@ export class Game extends BaseEntity {
 
 	@Column("text", { default: "" })
 	description: string;
-
-	@Column("text", { nullable: true })
-	url: string;
-
-	@Column("text", { nullable: true })
-	industryRating: string;
 
 	@ManyToMany(() => Label)
 	@JoinTable()
