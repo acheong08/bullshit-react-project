@@ -2,14 +2,25 @@ import {
 	BaseEntity,
 	Column,
 	Entity,
+	JoinTable,
 	ManyToMany,
+	ManyToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
 
-enum LabelType {
+export enum LabelType {
 	Genre = 1,
 	Accessibility = 2,
-	Misc = 3,
+	Platform = 3,
+	IndustryRating = 4,
+	Misc = 5,
+}
+
+export enum IndustryRating {
+	Everyone = "Everyone",
+	Teen = "Teen",
+	Mature = "Mature",
+	AdultsOnly = "Adults Only",
 }
 
 @Entity()
@@ -21,13 +32,16 @@ export class Label extends BaseEntity {
 	type: LabelType;
 
 	@Column("text")
-	name: string;
+	name: string | IndustryRating;
 
 	@Column("text")
 	description: string;
+
+	@ManyToOne(() => Label, { nullable: true })
+	parent: Label | null;
 }
 
-enum MediaType {
+export enum MediaType {
 	PreviewImg = 1,
 	Video = 2,
 	Icon = 3,
@@ -52,18 +66,14 @@ export class Game extends BaseEntity {
 	@Column("text")
 	name: string;
 
-	@Column("text")
+	@Column("text", { default: "" })
 	description: string;
 
-	@ManyToMany(
-		(_) => Label,
-		(label) => label.id,
-	)
+	@ManyToMany(() => Label)
+	@JoinTable()
 	labels: Label[];
 
-	@ManyToMany(
-		(_) => GameMedia,
-		(media) => media.id,
-	)
+	@ManyToMany(() => GameMedia)
+	@JoinTable()
 	media: GameMedia[];
 }

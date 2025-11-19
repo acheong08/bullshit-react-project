@@ -17,6 +17,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
+      "$assets/*": [
+        "src/assets/*"
+      ],
       "$components/*": [
         "src/components/*"
       ],

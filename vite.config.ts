@@ -70,6 +70,7 @@ export default defineConfig({
 	],
 	resolve: {
 		alias: {
+			$assets: path.resolve(__dirname, "./src/assets"),
 			$components: path.resolve(__dirname, "./src/components"),
 			$entity: path.resolve(__dirname, "./src/entity"),
 			$lib: path.resolve(__dirname, "./src/lib"),
