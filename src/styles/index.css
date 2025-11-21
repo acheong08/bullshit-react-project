@@ -153,6 +153,129 @@ label {
 	padding: "0.5rem";
 }
 
+.flex {
+	display: flex;
+}
+
+.center {
+	justify-content: center;
+}
+
+.search-component-button {
+	border: 2px solid black;
+	border-radius: 8px;
+	background-color: white;
+	margin: 5px;
+	font-size: 1rem;
+	padding: 0.6rem 1.2rem;
+}
+.filter-button {
+	border: 2px solid black;
+	border-radius: 8px;
+	font-size: 1rem;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 12rem;
+	background-color: white;
+	padding: 0.6rem 1.2rem;
+	display: flex;
+	justify-content: center;
+}
+
+.sort-by-button {
+	border: 2px solid black;
+	margin: 5px;
+	min-width: 12.5rem;
+}
+
+.search-bar-input {
+	margin: 5px;
+	width: 30rem;
+	max-width: 40vw;
+	border: 2px solid black;
+	/* Below is inherited from the default button styling, to keep visual consistency */
+	padding: 0.6rem 1.2rem;
+	font-size: 1rem;
+	font-weight: 500;
+	font-family: inherit;
+	border-radius: 8px;
+}
+
+.category-header {
+	list-style-type: none;
+	color: white;
+	/* CSS doesnt have text-outline stylings, this is a hacky way to do it anyways */
+	text-shadow:
+		1.5px 1.5px 0px black,
+		-1.5px -1.5px 0px black,
+		1.5px -1.5px 0px black,
+		-1.5px 1.5px 0px black;
+
+	/* Below is inherited from the default button styling, to keep visual consistency */
+	font-size: 1rem;
+	font-weight: 500;
+	font-family: inherit;
+	align-items: center;
+	justify-self: center;
+}
+
+.dropdown-container {
+	background-color: gray;
+	border-radius: 8px;
+	border: 2px solid black;
+	list-style-type: none;
+	display: flex;
+	justify-content: space-around;
+	/* TODO: make this animate nicely */
+}
+
+.sort-dropdown-container {
+	background-color: gray;
+	border-radius: 8px;
+	border: 2px solid black;
+	list-style-type: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	align-self: center;
+	justify-self: center;
+	width: 13rem;
+}
+
+.highlight {
+	border: 2px solid blue;
+}
+
+.filter-label {
+	font-size: 1rem;
+	font-weight: 500;
+	font-family: inherit;
+	border: 2px solid black;
+	border-radius: 8px;
+	background-color: white;
+	margin: 5px;
+	width: 8rem;
+	display: flex;
+	justify-content: center;
+}
+
+.filters-display {
+	display: flex;
+	flex-wrap: wrap;
+	/* TODO: make this width be not tied to vw, and instead the size of the above elements */
+	width: 45vw;
+}
+
+.test-class {
+	border: 10px solid blue;
+}
+
+.sort-by-label {
+	min-width: 13rem;
+	white-space: nowrap;
+}
+
 .navbar {
 	padding: 1rem;
 	border-bottom: 1px solid lightgray;

@@ -6,6 +6,7 @@ import { HomePage } from "$pages/home.tsx";
 import { LoginPage } from "$pages/login.tsx";
 import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
+import { SearchPage } from "$pages/searchpage.tsx";
 import { isUserLoggedIn } from "$utils/auth.ts";
 
 export function Root(props: { request: Request }) {
@@ -44,6 +45,12 @@ function App(props: { url: URL }) {
 	if (pathname.startsWith("/game/")) {
 		const gameId = pathname.split("/")[2];
 		return <GamePage gameId={gameId} />;
+	}
+	if (pathname === "/search") {
+		const searchParamsObject = Object.fromEntries(
+			props.url.searchParams.entries(),
+		);
+		return <SearchPage params={searchParamsObject} />;
 	}
 
 	return <NotFoundPage />;
