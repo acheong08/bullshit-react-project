@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
-import { getAuthToken, getCurrentUser, isUserLoggedIn } from "./auth";
-import { generateAccessToken } from "./jwt";
+import { getAuthToken, getCurrentUser, isUserLoggedIn } from "$utils/auth";
+import { generateAccessToken } from "$utils/jwt";
 
 describe("getAuthToken", () => {
 	test("should extract and verify valid token from cookie", () => {

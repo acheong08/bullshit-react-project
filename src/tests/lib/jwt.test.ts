@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import jwt from "jsonwebtoken";
-import { generateAccessToken, verifyAccessToken } from "./jwt";
+import { generateAccessToken, verifyAccessToken } from "$utils/jwt";
 
 describe("generateAccessToken", () => {
 	test("should include userId and username in token payload", () => {

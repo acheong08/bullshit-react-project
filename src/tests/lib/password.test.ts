@@ -1,5 +1,9 @@
 import { describe, expect, test } from "bun:test";
-import { hashPassword, validatePassword, verifyPassword } from "./password";
+import {
+	hashPassword,
+	validatePassword,
+	verifyPassword,
+} from "$utils/password";
 
 describe("validatePassword", () => {
 	test("should accept valid password with all requirements", () => {
