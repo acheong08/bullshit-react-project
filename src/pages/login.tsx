@@ -37,6 +37,7 @@ export function LoginPage() {
 		}
 	}
 
+	//TODO: no alt tagged image for banner
 	return (
 		<div id="root">
 			<main className="login-container">

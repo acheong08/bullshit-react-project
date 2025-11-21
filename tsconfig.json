@@ -39,7 +39,6 @@
         "src/utils/*"
       ]
     },
-
     "skipLibCheck": true,
     "strict": true,
     "strictPropertyInitialization": false,
