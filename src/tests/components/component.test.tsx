@@ -1,6 +1,6 @@
 import { expect, test, vi } from "bun:test";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { SearchBar } from "../components/searchbar";
+import { SearchBar } from "$components/searchbar";
 
 test("basic math", () => {
 	expect(1 + 1).toBe(2);

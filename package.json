@@ -44,7 +44,7 @@
     "dev": "vite",
     "format": "biome check --write",
     "preview": "vite preview",
-    "test": "bun test ./src/utils ./src/lib && bun test ./src/tests/component.test.tsx --config=./bunfig.component.toml"
+    "test": "bun test ./src/tests/lib && bun test ./src/tests/components --config=./bunfig.component.toml && tsc --noEmit"
   },
   "type": "module",
   "version": "0.0.0"

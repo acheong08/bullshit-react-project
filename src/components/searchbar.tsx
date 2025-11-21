@@ -134,21 +134,23 @@ function searchFilterComponent({ selectedOption }: SortDropdownProps) {
 		["Accessibility", ["Visual", "Auditory", "Motor", "Cognitive"]],
 		["Miscellaneous", ["Multiplayer", "Singleplayer", "Co-op", "Trending"]],
 	]);
-	const _filtersReversed: Map<string, string> = new Map([
-		["Action", "Genre"],
-		["Adventure", "Genre"],
-		["RPG", "Genre"],
-		["Strategy", "Genre"],
-		["Visual", "Accessibility"],
-		["Auditory", "Accessibility"],
-		["Motor", "Accessibility"],
-		["Cognitive", "Accessibility"],
-		["Multiplayer", "Miscellaneous"],
-		["Singleplayer", "Miscellaneous"],
-		["Co-op", "Miscellaneous"],
-		["Trending", "Miscellaneous"],
-	]);
-	const [selectedFilters, setSelectedFilters] = useState(new Set<string>());
+	// const _filtersReversed: Map<string, string> = new Map([
+	//     ["Action", "Genre"],
+	//     ["Adventure", "Genre"],
+	//     ["RPG", "Genre"],
+	//     ["Strategy", "Genre"],
+	//     ["Visual", "Accessibility"],
+	//     ["Auditory", "Accessibility"],
+	//     ["Motor", "Accessibility"],
+	//     ["Cognitive", "Accessibility"],
+	//     ["Multiplayer", "Miscellaneous"],
+	//     ["Singleplayer", "Miscellaneous"],
+	//     ["Co-op", "Miscellaneous"],
+	//     ["Trending", "Miscellaneous"],
+	// ]);
+	const [selectedFilters, setSelectedFilters] = useState<Set<string>>(
+		new Set<string>(),
+	);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -191,7 +193,7 @@ function searchFilterComponent({ selectedOption }: SortDropdownProps) {
 				{ selectedFilters, setSelectedFilters },
 				filters,
 			)}
-			{selectedFiltersDisplay({ selectedFilters })}
+			{selectedFiltersDisplay({ selectedFilters, setSelectedFilters })}
 		</div>
 	);
 }
@@ -212,7 +214,7 @@ export function SearchBar() {
 	return (
 		<div>
 			<div className="flex center">
-				{searchFilterComponent({ selectedOption })}
+				{searchFilterComponent({ selectedOption, setSelectedOption })}
 				{sortDropdown({ selectedOption, setSelectedOption })}
 			</div>
 		</div>
