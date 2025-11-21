@@ -1,6 +1,7 @@
 import GameCard from "$components/gameCards/game-card";
 import TopChartsGameCard from "$components/gameCards/top-charts-game-card";
 import WishListGameCard from "$components/gameCards/wish-list-game-card";
+import { SearchBar } from "$components/searchbar";
 import Pegi3 from "$tmpimg/Pegi-3.png";
 import StardewValleyLogo from "$tmpimg/Stardew_Valley_image.png";
 
@@ -8,6 +9,7 @@ export function HomePage() {
 	return (
 		<div id="root">
 			<main>
+				<SearchBar />
 				<h1 className="page-title">This is the Home page</h1>
 				<div className="quicklinks">
 					<a href="/game/123">Some random game title</a>
