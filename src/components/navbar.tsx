@@ -1,31 +1,90 @@
+"use client";
+
+import { useState } from "react";
+import { setCookie } from "../utils/cookies";
+
 interface NavbarProps {
 	isLoggedIn: boolean;
 }
 
-export function Navbar({ isLoggedIn }: NavbarProps) {
+interface DarkLightToggleProps {
+	isDark: boolean;
+	onToggle: () => void;
+}
+
+function DarkLightToggle({ isDark, onToggle }: DarkLightToggleProps) {
 	return (
-		<nav
-			style={{
-				borderBottom: "1px solid #ccc",
-				marginBottom: "0rem",
-				padding: "1rem",
-			}}
+		<button
+			className="clear-button-stylings dark-light-button"
+			onClick={onToggle}
+			role="switch"
+			aria-checked={isDark}
+			aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+			type="button"
 		>
-			<div style={{ alignItems: "center", display: "flex", gap: "2rem" }}>
-				<a href="/" style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
-					Game App
+			<div className="dark-light-toggle">
+				<div className="toggle-thumb" />
+				<span className="sun-icon">✶</span>
+				<img
+					className="moon-icon"
+					src="/public/images/moon.png"
+					alt="Moon Icon"
+				/>
+			</div>
+		</button>
+	);
+}
+
+export function Navbar({ isLoggedIn }: NavbarProps) {
+	const [isDark, setDark] = useState(false);
+
+	return (
+		<nav className="navbar">
+			<div className="navbar-section flex">
+				<a href="/">
+					<img
+						className="navbar-logo"
+						src="/public/images/logo.png"
+						alt="Company Logo"
+					/>
 				</a>
-				<div style={{ display: "flex", gap: "1rem", marginLeft: "auto" }}>
-					<a href="/">Home</a>
-					{isLoggedIn ? (
-						<>
-							<a href="/profile">Profile</a>
-							<a href="/logout">Logout</a>
-						</>
-					) : (
-						<a href="/login">Login</a>
-					)}
-				</div>
+				{isLoggedIn ? (
+					<>
+						<a href="/user/ExampleUsername123">
+							<img
+								className="navbar-profile-pic"
+								src="/public/images/example-images/example-profile-icon.png"
+								alt="Profile Icon"
+							/>
+						</a>
+						<a href="/user/ExampleUsername123" className="navbar-username">
+							ExampleUsername123
+						</a>
+					</>
+				) : (
+					<button className="navbar-button" type="button">
+						<a href="/login" className="clear-a-stylings">
+							Login
+						</a>
+					</button>
+				)}
+			</div>
+
+			<div className="navbar-section flex">
+				<DarkLightToggle
+					isDark={isDark}
+					onToggle={() => {
+						setDark(!isDark);
+						void setCookie("theme", isDark ? "light" : "dark");
+					}}
+				/>
+				<a href="/user/username/wishlist">
+					<img
+						className="navbar-image"
+						src="/public/images/wishlist-icon.png"
+						alt="Company Logo"
+					/>
+				</a>
 			</div>
 		</nav>
 	);

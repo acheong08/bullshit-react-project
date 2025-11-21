@@ -45,6 +45,17 @@ main {
 	font-size: 20px;
 }
 
+.navbar-button {
+	background-color: var(--primary-blue);
+	color: var(--white);
+	box-shadow: 0 6px 7px 0 var(--shadow);
+	border: 0;
+	outline: 0;
+	border-radius: 10px;
+	font-size: 1rem;
+	padding: 0.75rem 2rem;
+}
+
 /*Navbar*/
 
 nav {
@@ -140,4 +151,102 @@ label {
 	color: "red";
 	margin-bottom: "1rem";
 	padding: "0.5rem";
+}
+
+.navbar {
+	padding: 1rem;
+	border-bottom: 1px solid lightgray;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.navbar-section {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	flex-shrink: 0;
+}
+
+.navbar-logo {
+	height: 4.5rem;
+	flex-shrink: 0;
+}
+
+.navbar-image {
+	height: 3rem;
+	flex-shrink: 0;
+}
+
+.navbar-profile-pic {
+	height: 4rem;
+}
+
+.navbar-username {
+	color: #3531a7;
+	font-weight: 600;
+}
+
+.flex {
+	display: flex;
+}
+
+.clear-button-stylings {
+	background: none;
+	border: none;
+	cursor: pointer;
+}
+
+.dark-light-toggle {
+	position: relative;
+	width: 4.5rem;
+	height: 2rem;
+	background: linear-gradient(to right, white, black);
+	border-radius: 0.5rem;
+	border: 1px solid gray;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	padding: 0 4px;
+}
+
+/* The circle that changes position */
+.toggle-thumb {
+	width: 2rem;
+	height: 2rem;
+	background: white;
+	border-radius: 50%;
+	border: 1px solid gray;
+	position: absolute;
+	transition: all 0.3s ease;
+	/* to put the button above whatever its hovering over */
+	z-index: 2;
+	left: 4px;
+}
+
+.dark-light-button[aria-checked="true"] .toggle-thumb {
+	transition: left 0.3s ease;
+	left: calc(100% - 2rem - 4px);
+}
+
+.sun-icon,
+.moon-icon {
+	font-size: 14px;
+	z-index: 1;
+}
+
+.sun-icon {
+	margin-right: auto;
+	color: black;
+	font-size: 1.5rem;
+}
+
+.moon-icon {
+	margin-left: auto;
+	height: 1rem;
+}
+
+.clear-a-stylings {
+	text-decoration: none;
+	color: inherit;
 }
