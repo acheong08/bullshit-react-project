@@ -1,5 +1,6 @@
 import "./styles/variables.css";
 import "./styles/index.css";
+import * as cookie from "cookie";
 import { Navbar } from "$components/navbar.tsx";
 import { GamePage } from "$pages/game.tsx";
 import { HomePage } from "$pages/home.tsx";
@@ -8,11 +9,20 @@ import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
 import { isUserLoggedIn } from "$utils/auth.ts";
+import { getTheme } from "$utils/getTheme";
 
 export function Root(props: { request: Request }) {
 	const isLoggedIn = isUserLoggedIn(props.request);
+	const cookies = props.request.headers.get("cookie") || "";
+	const theme = cookie.parse(cookies).theme || "system";
+	let initialDark = theme === "dark" ? true : false;
+	if (theme === "system") {
+		const systemTheme = getTheme();
+		initialDark = systemTheme === "dark" ? true : false;
+	}
+
 	return (
-		<html lang="en">
+		<html lang="en" data-theme={theme}>
 			<head>
 				<meta charSet="UTF-8" />
 				<link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -20,7 +30,7 @@ export function Root(props: { request: Request }) {
 				<title>Vite + RSC</title>
 			</head>
 			<body>
-				<Navbar isLoggedIn={isLoggedIn} />
+				<Navbar isLoggedIn={isLoggedIn} initialDark={initialDark} />
 				<div className="app-container">
 					<App url={new URL(props.request.url)} />
 				</div>

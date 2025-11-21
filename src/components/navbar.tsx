@@ -5,6 +5,7 @@ import { setCookie } from "../utils/cookies";
 
 interface NavbarProps {
 	isLoggedIn: boolean;
+	initialDark: boolean;
 }
 
 interface DarkLightToggleProps {
@@ -35,8 +36,8 @@ function DarkLightToggle({ isDark, onToggle }: DarkLightToggleProps) {
 	);
 }
 
-export function Navbar({ isLoggedIn }: NavbarProps) {
-	const [isDark, setDark] = useState(false);
+export function Navbar({ isLoggedIn, initialDark }: NavbarProps) {
+	const [isDark, setDark] = useState(initialDark);
 
 	return (
 		<nav className="navbar">
@@ -73,9 +74,13 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 			<div className="navbar-section flex">
 				<DarkLightToggle
 					isDark={isDark}
-					onToggle={() => {
+					onToggle={async () => {
 						setDark(!isDark);
-						void setCookie("theme", isDark ? "light" : "dark");
+						await setCookie("theme", isDark ? "light" : "dark");
+						document.documentElement.setAttribute(
+							"data-theme",
+							isDark ? "light" : "dark",
+						);
 					}}
 				/>
 				<a href="/user/username/wishlist">
