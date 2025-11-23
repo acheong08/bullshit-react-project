@@ -1,9 +1,8 @@
 lint:
-  image: python:3.13
-  before_script:
-    - pip install pre-commit
+  image: oven/bun:1
   script:
-    - pre-commit run --all-files
+    - bun install
+    - bun run format
 
 test:
   image: oven/bun:1
