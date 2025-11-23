@@ -1,5 +1,6 @@
 import { instanceToPlain } from "class-transformer";
 import { MediaCarousel } from "$components/media-carousel";
+import { ReviewsSection } from "$components/reviews-section";
 import type { Game, GameMedia } from "$entity/Games";
 import { LabelType } from "$entity/Games";
 import { getGameById } from "$lib/db";
@@ -122,6 +123,12 @@ export async function GamePage({ gameId }: GamePageProps) {
 								</p>
 							</div>
 						</div>
+					</div>
+
+					{/* Ratings and Reviews Section */}
+					<div className="reviews-section">
+						<h2>Ratings and reviews</h2>
+						<ReviewsSection />
 					</div>
 				</div>
 			</main>
