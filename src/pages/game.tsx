@@ -25,73 +25,102 @@ export async function GamePage({ gameId }: GamePageProps) {
 	}
 
 	// Organize labels by type
-	const platformLabels =
-		game.labels?.filter((label) => label.type === LabelType.Platform) || [];
-	const ratingLabels =
-		game.labels?.filter((label) => label.type === LabelType.IndustryRating) ||
-		[];
+
 	const accessibilityLabels =
 		game.labels?.filter((label) => label.type === LabelType.Accessibility) ||
 		[];
 
+	const heroImage =
+		game.media && game.media.length > 0
+			? game.media[0].uri
+			: "/placeholder-hero.jpg"; // Fallback if no media
+
 	return (
 		<div id="root">
-			<main>
-				<div className="game-page">
-					<div className="game-header">
-						<h1>{game.name}</h1>
+			<main className="game-page-main">
+				{/* Hero Section */}
+				<div
+					className="game-hero"
+					style={{
+						backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${heroImage})`,
+					}}
+				>
+					<div className="hero-content-wrapper">
+						<div className="hero-details">
+							<h1 className="game-title">{game.name}</h1>
+							<div className="hero-stats">
+								<div className="stat-group">
+									<img
+										src={heroImage} // Using game image as icon placeholder
+										alt="Icon"
+										className="game-icon-small"
+									/>
+									<div className="stat-text">
+										<span className="rating-score">4.5 ★</span>
+										<span className="review-count">11.7K reviews</span>
+									</div>
+								</div>
+								<div className="stat-divider" />
+								<div className="stat-group">
+									<span className="download-count">1M+</span>
+									<span className="download-label">Downloads</span>
+								</div>
+								<div className="stat-divider" />
+								<div className="pegi-badge">
+									{game.labels
+										.filter((l) => l.type === LabelType.IndustryRating)
+										.pop()?.name || "No ratings"}
+								</div>
+							</div>
+							<div className="hero-actions">
+								<button type="button" className="install-btn">
+									Install
+								</button>
+								<button type="button" className="bookmark-btn">
+									Bookmark
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="game-content-container">
+					{/* Media Section */}
+					<div className="media-section">
+						{game.media && game.media.length > 0 && (
+							<MediaCarousel
+								media={instanceToPlain(game.media) as GameMedia[]}
+								gameName={game.name}
+							/>
+						)}
 					</div>
 
-					<div className="game-content">
-						{/* Media Carousel on the Left */}
-						<div className="carousel-section">
-							{game.media && game.media.length > 0 && (
-								<MediaCarousel
-									media={instanceToPlain(game.media) as GameMedia[]}
-									gameName={game.name}
-								/>
-							)}
+					{/* About Section */}
+					<div className="about-section">
+						<h2>About the game</h2>
+						<p className="game-description">
+							{game.description ||
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sagittis vestibulum justo, eu commodo sapien finibus at. In elementum mattis suscipit. Nullam nec suscipit ligula."}
+						</p>
+
+						<div className="tags-container">
+							{accessibilityLabels.map((label) => (
+								<span key={label.id} className="game-tag">
+									{label.name}
+								</span>
+							))}
 						</div>
 
-						{/* Info Section on the Right */}
-						<div className="game-info">
-							<section className="info-section">
-								<h2>Details</h2>
-								<p>{game.description || "No description available"}</p>
-							</section>
-
-							{platformLabels.length > 0 && (
-								<section className="info-section">
-									<h3>Platforms</h3>
-									<ul>
-										{platformLabels.map((label) => (
-											<li key={label.id}>{label.name}</li>
-										))}
-									</ul>
-								</section>
-							)}
-
-							{ratingLabels.length > 0 && (
-								<section className="info-section">
-									<h3>Rating</h3>
-									<ul>
-										{ratingLabels.map((label) => (
-											<li key={label.id}>{label.name}</li>
-										))}
-									</ul>
-								</section>
-							)}
-
-							{accessibilityLabels.length > 0 && (
-								<section className="info-section">
-									<h3>Accessibility Features</h3>
-									<ul>
-										{accessibilityLabels.map((label) => (
-											<li key={label.id}>{label.name}</li>
-										))}
-									</ul>
-								</section>
-							)}
+						<div className="meta-info">
+							<div className="meta-item">
+								<h3>Available on</h3>
+								<p>
+									{game.labels
+										.filter((label) => label.type === LabelType.Platform)
+										.map((label) => label.name)
+										.join(", ")}
+								</p>
+							</div>
 						</div>
 					</div>
 				</div>

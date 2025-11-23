@@ -15,49 +15,33 @@ export function MediaCarousel({ media, gameName }: MediaCarouselProps) {
 		return null;
 	}
 
-	const goToPrevious = () => {
-		setCurrentIndex((prevIndex) =>
-			prevIndex === 0 ? media.length - 1 : prevIndex - 1,
-		);
-	};
-
-	const goToNext = () => {
-		setCurrentIndex((prevIndex) =>
-			prevIndex === media.length - 1 ? 0 : prevIndex + 1,
-		);
-	};
-
 	const currentMedia = media[currentIndex];
 
 	return (
-		<div className="carousel-container">
-			<div className="carousel">
+		<div className="media-gallery">
+			<div className="featured-media">
 				<img
 					src={currentMedia.uri}
-					alt={`${gameName} media gallery ${currentIndex + 1} of ${media.length}`}
-					className="carousel-image active"
+					alt={`${gameName} media ${currentIndex + 1}`}
+					className="featured-image"
 				/>
+				<div className="media-caption">TODO: Captions</div>
 			</div>
-			<div className="carousel-controls">
-				<button
-					onClick={goToPrevious}
-					className="carousel-button"
-					disabled={media.length <= 1}
-					type="button"
-				>
-					← Previous
-				</button>
-				<span className="carousel-counter">
-					{currentIndex + 1} / {media.length}
-				</span>
-				<button
-					onClick={goToNext}
-					className="carousel-button"
-					disabled={media.length <= 1}
-					type="button"
-				>
-					Next →
-				</button>
+			<div className="thumbnails-row">
+				{media.map((item, index) => (
+					<button
+						key={item.id || index}
+						type="button"
+						className={`thumbnail-btn ${index === currentIndex ? "active" : ""}`}
+						onClick={() => setCurrentIndex(index)}
+					>
+						<img
+							src={item.uri}
+							alt={`Thumbnail ${index + 1}`}
+							className="thumbnail-image"
+						/>
+					</button>
+				))}
 			</div>
 		</div>
 	);
