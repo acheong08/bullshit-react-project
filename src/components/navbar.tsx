@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { getTheme } from "$utils/theme";
 import { setCookie } from "../utils/cookies";
 
 interface NavbarProps {
 	isLoggedIn: boolean;
-	initialDark: boolean;
 }
 
 interface DarkLightToggleProps {
@@ -36,9 +35,8 @@ function DarkLightToggle({ isDark, onToggle }: DarkLightToggleProps) {
 	);
 }
 
-export function Navbar({ isLoggedIn, initialDark }: NavbarProps) {
-	const [isDark, setDark] = useState(initialDark);
-
+export function Navbar({ isLoggedIn }: NavbarProps) {
+	let isDark = getTheme() === "dark";
 	return (
 		<nav className="navbar">
 			<div className="navbar-section flex">
@@ -75,7 +73,7 @@ export function Navbar({ isLoggedIn, initialDark }: NavbarProps) {
 				<DarkLightToggle
 					isDark={isDark}
 					onToggle={async () => {
-						setDark(!isDark);
+						isDark = !isDark;
 						await setCookie("theme", isDark ? "light" : "dark");
 						document.documentElement.setAttribute(
 							"data-theme",

@@ -9,17 +9,11 @@ import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
 import { isUserLoggedIn } from "$utils/auth.ts";
-import { getTheme } from "$utils/getTheme";
 
 export function Root(props: { request: Request }) {
 	const isLoggedIn = isUserLoggedIn(props.request);
 	const cookies = props.request.headers.get("cookie") || "";
 	const theme = cookie.parse(cookies).theme || "system";
-	let initialDark = theme === "dark" ? true : false;
-	if (theme === "system") {
-		const systemTheme = getTheme();
-		initialDark = systemTheme === "dark" ? true : false;
-	}
 
 	return (
 		<html lang="en" data-theme={theme}>
@@ -30,7 +24,7 @@ export function Root(props: { request: Request }) {
 				<title>Vite + RSC</title>
 			</head>
 			<body>
-				<Navbar isLoggedIn={isLoggedIn} initialDark={initialDark} />
+				<Navbar isLoggedIn={isLoggedIn} />
 				<div className="app-container">
 					<App url={new URL(props.request.url)} />
 				</div>
