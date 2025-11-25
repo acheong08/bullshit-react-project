@@ -535,3 +535,28 @@ label {
 		1.5px -1.5px 0px var(--black-white),
 		-1.5px 1.5px 0px var(--black-white);
 }
+
+/* home page css */
+main {
+	max-width: 100%;
+}
+
+.spotlight {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+	width: 100%;
+}
+
+.spotlight-game-card {
+	width: min(1000px, 95vw);
+	background: white;
+	border-radius: 16px;
+	padding: 20px;
+	display: grid;
+	grid-template-columns: 1.2fr 1fr;
+	align-items: start;
+	gap: 20px;
+	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}

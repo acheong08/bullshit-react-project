@@ -1,7 +1,8 @@
 .game-card-gallery {
 	display: grid;
 	grid-template-columns: repeat(4, 260px);
-	gap: 50px;
+	row-gap: 30px;
+	column-gap: 90px;
 	padding: 20px;
 	justify-content: center;
 }
@@ -74,7 +75,7 @@ a {
 	justify-content: center;
 	align-items: center;
 	gap: 0;
-	font-size: 14px;
+	font-size: 1rem;
 	color: var(--black);
 	font-weight: 500;
 }
@@ -135,8 +136,9 @@ a {
 /* top charts card styling */
 .top-charts-game-card-gallery {
 	display: grid;
-	grid-template-columns: repeat(2, 400px);
-	gap: 40px;
+	grid-template-columns: repeat(3, 400px);
+	row-gap: 20px;
+	column-gap: 50px;
 	padding: 20px;
 	justify-content: center;
 }
@@ -673,5 +675,396 @@ a {
 		top: 300px;
 		right: 10px;
 		margin-top: 0;
+	}
+}
+
+/* spotlight game card css */
+
+.spotlight {
+	display: grid;
+	place-items: center;
+	padding: 0;
+	width: 100%;
+	margin: 0;
+}
+.spotlight-game-card {
+	width: min(1300px, 95vw);
+	background: white;
+	border-radius: 16px;
+	padding: 25px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	display: grid;
+	grid-template-columns: 1.2fr 1fr;
+	justify-content: center;
+	align-items: start;
+	gap: 20px;
+	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.spotlight-video {
+	width: 100%;
+	border: 0;
+	border-radius: 10px;
+	height: 100%;
+}
+
+.spotlight-video,
+.spotlight-video iframe {
+	border-radius: 10px;
+}
+
+.spotlight-card-title {
+	font-size: 2.25rem;
+	display: flex;
+	justify-content: flex-start;
+	color: #000000;
+	margin-top: 0;
+}
+
+.spotlight-game-card-genres {
+	display: flex;
+	justify-content: flex-start;
+	color: #000000;
+}
+
+.spotlight-game-card-genres span:not(:last-child)::after {
+	content: " | ";
+	margin: 0 5px;
+}
+
+.spotlight-genre-tag-row {
+	font-size: 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.spotlight-tag {
+	font-weight: 600;
+	font-size: 1.05rem;
+	font-style: italic;
+	color: #000000;
+	padding-right: 15px;
+}
+
+.spotlight-info {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	flex: 1;
+}
+
+.image-previews {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 5px;
+	width: 100%;
+	max-width: 700px;
+}
+
+.image-previews img {
+	width: 100%;
+	height: 110px;
+	object-fit: cover;
+}
+
+.image-previews img:nth-child(1) {
+	border-radius: 10px 0 0 0;
+}
+
+.image-previews img:nth-child(2) {
+	border-radius: 0 10px 0 0;
+}
+
+.image-previews img:nth-child(3) {
+	border-radius: 0 0 0 10px;
+}
+
+.image-previews img:nth-child(4) {
+	border-radius: 0 0 10px 0;
+}
+
+.spotlight-game-card:focus-visible {
+	outline: 3px solid #4da3ff;
+	outline-offset: 2px;
+	transform: scale(1.03);
+	box-shadow: 0 0 12px rgba(77, 163, 255, 0.6);
+}
+
+/* css for different sized screens e.g. mobile and tablet */
+
+@media (max-width: 575px) {
+	.spotlight-game-card {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		text-align: center;
+		padding: 5px;
+		margin: 8px;
+		padding-bottom: 15px;
+	}
+
+	.spotlight-card-title {
+		padding-top: 10px;
+		display: flex;
+		justify-content: center;
+		font-size: 1.7rem;
+	}
+
+	.spotlight-video {
+		max-width: 95%;
+		display: flex;
+		justify-content: center;
+		padding-top: 8px;
+	}
+
+	.spotlight-game-card-genres {
+		padding-left: 5px;
+		font-size: 0.85rem;
+	}
+}
+
+@media (min-width: 576px) and (max-width: 900px) {
+	.spotlight-game-card {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		text-align: center;
+		padding: 8px;
+		margin: 10px;
+		padding-bottom: 20px;
+		max-width: 450px;
+	}
+
+	.spotlight-card-title {
+		margin-top: 75px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.spotlight-video {
+		max-width: 96%;
+		display: flex;
+		justify-content: center;
+		padding-top: 10px;
+	}
+
+	.spotlight-game-card-genres {
+		padding-left: 7px;
+	}
+
+	.image-previews img {
+		width: 100%;
+		height: 120px;
+		object-fit: cover;
+	}
+}
+
+/* popular game card css */
+
+.popular-games-gallery {
+	display: grid;
+	grid-template-columns: repeat(1, 650px);
+	padding: 5px;
+	justify-content: right;
+	gap: 25px;
+	margin-left: 45px;
+}
+.popular-game-card {
+	width: 720px;
+	height: 75px;
+	background: white;
+	border-radius: 16px;
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	text-align: left;
+	text-decoration: none;
+	color: inherit;
+	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.popular-game-card:hover,
+.category-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.popular-game-card-image {
+	width: 80px;
+	height: 80px;
+	object-fit: cover;
+	border-radius: 12px;
+	flex-shrink: 0;
+}
+
+.popular-game-card-content {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+}
+
+.popular-game-card h3 {
+	margin: 0;
+	padding-left: 10px;
+	font-size: 1.7rem;
+	font-weight: 700;
+	color: #333;
+}
+
+.popular-game-card-genres {
+	display: flex;
+	gap: 2px;
+	flex-wrap: wrap;
+	margin: 0;
+	font-size: 1.25rem;
+	padding-right: 50px;
+}
+
+.popular-game-card:focus-visible {
+	outline: 3px solid #4da3ff;
+	outline-offset: 2px;
+	transform: scale(1.03);
+	box-shadow: 0 0 12px rgba(77, 163, 255, 0.6);
+}
+
+.genre-item {
+	color: black;
+}
+
+@media (max-width: 768px) {
+	.popular-games-gallery {
+		grid-template-columns: 1fr;
+		justify-content: center;
+		margin-left: 0;
+		padding: 5px 20px;
+	}
+
+	.popular-game-card {
+		width: 100%;
+		max-width: 500px;
+		height: auto;
+		min-height: 75px;
+		padding: 10px;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.popular-game-card-image {
+		width: 60px;
+		height: 60px;
+	}
+
+	.popular-game-card h3 {
+		font-size: 1.3rem;
+		padding-left: 8px;
+	}
+
+	.popular-game-card-genres {
+		font-size: 1rem;
+		padding-right: 10px;
+		padding-left: 8px;
+	}
+}
+
+@media (max-width: 480px) {
+	.popular-games-gallery {
+		padding: 5px 15px;
+	}
+
+	.popular-game-card {
+		max-width: 100%;
+		padding: 8px;
+	}
+
+	.popular-game-card-image {
+		width: 50px;
+		height: 50px;
+	}
+
+	.popular-game-card h3 {
+		font-size: 1.1rem;
+		padding-left: 6px;
+	}
+
+	.popular-game-card-genres {
+		font-size: 0.9rem;
+		padding-right: 5px;
+		padding-left: 6px;
+	}
+}
+
+/* category cards styling */
+
+.category-card {
+	width: 340px;
+	height: 75px;
+	background: white;
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	text-decoration: none;
+	color: inherit;
+	box-shadow: 0 4px 4px rgba(251, 250, 250, 0.08);
+	border-radius: 5px;
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+	overflow: hidden;
+	position: relative;
+}
+
+.masked-icon {
+	width: 120px;
+	height: 120px;
+
+	background: linear-gradient(to left, #11167b, #ffffff);
+
+	-webkit-mask-image: var(--icon-image);
+	-webkit-mask-size: contain;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+
+	mask-image: var(--icon-image);
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	mask-position: center;
+
+	flex-shrink: 0;
+	margin-left: -10px;
+}
+
+.category-card h3 {
+	font-size: 2rem;
+	text-transform: capitalize;
+	margin: 0;
+	color: #11167b;
+	font-weight: 500;
+}
+
+.category-card:focus-visible {
+	outline: 3px solid #4da3ff;
+	outline-offset: 2px;
+	transform: scale(1.03);
+	box-shadow: 0 0 12px rgba(77, 163, 255, 0.6);
+}
+
+.category-gallery {
+	display: grid;
+	grid-template-columns: repeat(3, 340px);
+	row-gap: 30px;
+	column-gap: 155px;
+	padding: 20px;
+	justify-content: center;
+}
+
+@media (max-width: 768px) {
+	.category-gallery {
+		grid-template-columns: repeat(1, 340px);
 	}
 }
