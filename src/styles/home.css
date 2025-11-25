@@ -102,7 +102,7 @@ main {
 }
 
 html[data-theme="light"] .dictate-btn .icon,
-.filters-dictate-btn .icon  {
+.filters-dictate-btn .icon {
 	filter: invert(1) brightness(1.2);
 	/* This inverts the colors for dark mode */
 }
