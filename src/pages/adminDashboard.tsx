@@ -1,3 +1,1 @@
-
-export function adminPanel() {
-  }
+export function adminPanel() {}

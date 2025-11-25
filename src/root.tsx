@@ -2,6 +2,7 @@ import "dotenv/config";
 import "./styles/variables.css";
 import "./styles/index.css";
 import { Navbar } from "$components/navbar.tsx";
+import { AdminReportsPage } from "$pages/admin/reports.tsx";
 import { GamePage } from "$pages/game.tsx";
 import { HomePage } from "$pages/home.tsx";
 import { LoginPage } from "$pages/login.tsx";
@@ -9,7 +10,6 @@ import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
 import { isUserLoggedIn } from "$utils/auth.ts";
-import { AdminReportsPage } from "$pages/admin/reports.tsx";
 
 export function Root(props: { request: Request }) {
 	const isLoggedIn = isUserLoggedIn(props.request);
@@ -49,7 +49,7 @@ function App(props: { url: URL }) {
 		const gameId = pathname.split("/")[2];
 		return <GamePage gameId={gameId} />;
 	}
-  	if (pathname === "/admin/reports") {
+	if (pathname === "/admin/reports") {
 		return <AdminReportsPage />;
 	}
 	if (pathname === "/search") {
