@@ -1,13 +1,136 @@
+import { instanceToPlain } from "class-transformer";
+import { MediaCarousel } from "$components/media-carousel";
+import { ReviewsSection } from "$components/reviews-section";
+import type { Game, GameMedia } from "$entity/Games";
+import { LabelType } from "$entity/Games";
+import { getGameById } from "$lib/db";
+
 interface GamePageProps {
 	gameId: string;
 }
 
-export function GamePage({ gameId }: GamePageProps) {
+export async function GamePage({ gameId }: GamePageProps) {
+	// Fetch the game data
+	const gameIdNumber = Number.parseInt(gameId, 10);
+	const game: Game | null = await getGameById(gameIdNumber);
+
+	if (!game) {
+		return (
+			<div id="root">
+				<main>
+					<h1>Game Not Found</h1>
+					<p>The game with ID {gameId} could not be found.</p>
+				</main>
+			</div>
+		);
+	}
+
+	// Organize labels by type
+
+	const accessibilityLabels =
+		game.labels?.filter((label) => label.type === LabelType.Accessibility) ||
+		[];
+
+	const heroImage =
+		game.media && game.media.length > 0
+			? game.media[0].uri
+			: "/placeholder-hero.jpg"; // Fallback if no media
+
 	return (
 		<div id="root">
-			<main>
-				<h1>This is the Game page</h1>
-				<p>Game ID: {gameId}</p>
+			<main className="game-page-main">
+				{/* Hero Section */}
+				<div
+					className="game-hero"
+					style={{
+						backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url(${heroImage})`,
+					}}
+				>
+					<div className="hero-content-wrapper">
+						<div className="hero-details">
+							<h1 className="game-title">{game.name}</h1>
+							<div className="hero-stats">
+								<div className="stat-group">
+									<img
+										src={heroImage} // Using game image as icon placeholder
+										alt="Icon"
+										className="game-icon-small"
+									/>
+									<div className="stat-text">
+										<span className="rating-score">4.5 ★</span>
+										<span className="review-count">11.7K reviews</span>
+									</div>
+								</div>
+								<div className="stat-divider" />
+								<div className="stat-group">
+									<span className="download-count">1M+</span>
+									<span className="download-label">Downloads</span>
+								</div>
+								<div className="stat-divider" />
+								<div className="pegi-badge">
+									{game.labels
+										.filter((l) => l.type === LabelType.IndustryRating)
+										.pop()?.name || "No ratings"}
+								</div>
+							</div>
+							<div className="hero-actions">
+								<button type="button" className="install-btn">
+									Install
+								</button>
+								<button type="button" className="bookmark-btn">
+									Bookmark
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className="game-content-container">
+					{/* Media Section */}
+					<div className="media-section">
+						{game.media && game.media.length > 0 && (
+							<MediaCarousel
+								media={instanceToPlain(game.media) as GameMedia[]}
+								gameName={game.name}
+							/>
+						)}
+					</div>
+
+					{/* About Section */}
+					<div className="about-section">
+						<h2>About the game</h2>
+						<p className="game-description">
+							{game.description ||
+								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sagittis vestibulum justo, eu commodo sapien finibus at. In elementum mattis suscipit. Nullam nec suscipit ligula."}
+						</p>
+
+						<div className="tags-container">
+							{accessibilityLabels.map((label) => (
+								<span key={label.id} className="game-tag">
+									{label.name}
+								</span>
+							))}
+						</div>
+
+						<div className="meta-info">
+							<div className="meta-item">
+								<h3>Available on</h3>
+								<p>
+									{game.labels
+										.filter((label) => label.type === LabelType.Platform)
+										.map((label) => label.name)
+										.join(", ")}
+								</p>
+							</div>
+						</div>
+					</div>
+
+					{/* Ratings and Reviews Section */}
+					<div className="reviews-section">
+						<h2>Ratings and reviews</h2>
+						<ReviewsSection />
+					</div>
+				</div>
 			</main>
 		</div>
 	);
