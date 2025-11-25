@@ -1,6 +1,5 @@
 import "./styles/variables.css";
 import "./styles/index.css";
-import * as cookie from "cookie";
 import { Navbar } from "$components/navbar.tsx";
 import { GamePage } from "$pages/game.tsx";
 import { HomePage } from "$pages/home.tsx";
@@ -12,11 +11,9 @@ import { isUserLoggedIn } from "$utils/auth.ts";
 
 export function Root(props: { request: Request }) {
 	const isLoggedIn = isUserLoggedIn(props.request);
-	const cookies = props.request.headers.get("cookie") || "";
-	const theme = cookie.parse(cookies).theme || "system";
 
 	return (
-		<html lang="en" data-theme={theme}>
+		<html lang="en" data-theme="">
 			<head>
 				<meta charSet="UTF-8" />
 				<link rel="icon" type="image/svg+xml" href="/vite.svg" />

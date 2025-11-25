@@ -3,6 +3,7 @@ import {
 	type Dispatch,
 	type FormEvent,
 	type SetStateAction,
+	useEffect,
 	useState,
 } from "react";
 
@@ -75,7 +76,7 @@ function dropdownFilterSelector(
 	return (
 		<div>
 			{filterOpen && (
-				<div className="dropdown-container">
+				<div className="filters-dropdown-container">
 					{Array.from(filters.entries()).map(
 						([category, options]: [string, string[]]) => (
 							<ul className="category-header center" key={category}>
@@ -125,7 +126,10 @@ function selectedFiltersDisplay({ selectedFilters }: FilterSummaryProps) {
 	);
 }
 
-function searchFilterComponent({ selectedOption }: SortDropdownProps) {
+function searchFilterComponent(
+	{ selectedOption }: SortDropdownProps,
+	{ selectedFilters, setSelectedFilters }: FilterSummaryProps,
+) {
 	const [filterOpen, setFilterOpen] = useState(false);
 
 	//NOTE: this is clunky as hell, in future these will be pulled from the database
@@ -148,9 +152,6 @@ function searchFilterComponent({ selectedOption }: SortDropdownProps) {
 	//     ["Co-op", "Miscellaneous"],
 	//     ["Trending", "Miscellaneous"],
 	// ]);
-	const [selectedFilters, setSelectedFilters] = useState<Set<string>>(
-		new Set<string>(),
-	);
 
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -161,7 +162,9 @@ function searchFilterComponent({ selectedOption }: SortDropdownProps) {
 		const filters = Array.from(selectedFilters).join(",");
 		const sort = selectedOption;
 		const fullQuery = `/search?query=${encodeURIComponent(searchQuery)}&filters=${encodeURIComponent(filters)}&sort=${encodeURIComponent(sort)}`;
-		window.location.assign(fullQuery);
+		if (searchQuery.trim() !== "") {
+			window.location.assign(fullQuery);
+		}
 	};
 
 	return (
@@ -209,13 +212,33 @@ export function SearchBar() {
 		"Price: High to Low",
 	];
 
-	const [selectedOption, setSelectedOption] = useState(options[0]);
+	const [selectedSort, setSelectedSort] = useState(options[0]);
+	const [selectedFilters, setSelectedFilters] = useState<Set<string>>(
+		new Set(),
+	);
+
+	// Initialize state from URL parameters on component mount
+	useEffect(() => {
+		const searchParams = new URLSearchParams(window.location.search);
+		const initialSort = searchParams.get("sort") || options[0];
+		const filterParams = searchParams.get("filters")?.split(",") || [];
+		//TODO: have query also populate search bar input field (defaultValue)
+
+		setSelectedSort(initialSort);
+		setSelectedFilters(new Set(filterParams));
+	}, []);
 
 	return (
 		<div>
 			<div className="flex center">
-				{searchFilterComponent({ selectedOption, setSelectedOption })}
-				{sortDropdown({ selectedOption, setSelectedOption })}
+				{searchFilterComponent(
+					{ selectedOption: selectedSort, setSelectedOption: setSelectedSort },
+					{ selectedFilters, setSelectedFilters },
+				)}
+				{sortDropdown({
+					selectedOption: selectedSort,
+					setSelectedOption: setSelectedSort,
+				})}
 			</div>
 		</div>
 	);
