@@ -12,6 +12,7 @@ interface GameReport {
   reportedAt: string;
   status: 'pending' | 'resolved';
 }
+// Mock data - to be filled in with actual database information ( can edit all fields and images)
 const mockReports: GameReport[] = [
   {
     id: 1,
@@ -44,6 +45,8 @@ const mockReports: GameReport[] = [
     status: 'pending'
   }
 ];
+
+//Always remember to remove "default" from export as this mesess things up.
 export function AdminReportsPage() {
   const [reports, setReports] = useState<GameReport[]>(mockReports);
   const [selectedId, setSelectedId] = useState<number | null>(null);
