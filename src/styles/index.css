@@ -21,6 +21,7 @@ html[data-theme="light"] {
 }
 
 body {
+	background-color: var(--background);
 	font-family: system-ui;
 	font-size: 1.25rem;
 	line-height: 1.5;
@@ -37,6 +38,12 @@ video {
 main {
 	max-width: min(70ch, 100% - 4rem);
 	margin-inline: auto;
+}
+
+/*Headers*/
+
+.page-title {
+	color: var(--text);
 }
 
 /*Buttons*/
@@ -130,6 +137,7 @@ label {
 	grid-gap: 20px;
 	max-width: 100%;
 	min-height: 92.15vh;
+	color: var(--text);
 }
 
 .login-banner {
@@ -153,14 +161,15 @@ label {
 }
 
 .error-banner {
-	background-color: "rgba(255, 0, 0, 0.1)";
-	border: "1px solid red";
-	border-radius: "4px";
-	color: "red";
-	margin-bottom: "1rem";
-	padding: "0.5rem";
+	background-color: rgba(255, 0, 0, 0.1);
+	border: 1px solid red;
+	border-radius: 4px;
+	color: red;
+	margin-bottom: 1rem;
+	padding: 0.5rem;
 }
 
+/* Navbar */
 .flex {
 	display: flex;
 }
@@ -172,7 +181,7 @@ label {
 .search-component-button {
 	border: 2px solid black;
 	border-radius: 8px;
-	background-color: white;
+	/* background-color: white; */
 	margin: 5px;
 	font-size: 1rem;
 	padding: 0.6rem 1.2rem;
@@ -185,7 +194,7 @@ label {
 	margin-bottom: 5px;
 	width: 12rem;
 	max-width: calc((100vw - 15rem - 15px) / 3);
-	background-color: white;
+	/* background-color: white; */
 	padding: 0.6rem 1.2rem;
 	display: flex;
 	justify-content: center;
@@ -258,39 +267,16 @@ label {
 	border: 2px solid blue;
 }
 
-.filter-label {
-	font-size: 1rem;
-	font-weight: 500;
-	font-family: inherit;
-	border: 2px solid black;
-	border-radius: 8px;
-	background-color: white;
-	margin: 5px;
-	width: 8rem;
-	display: flex;
-	justify-content: center;
-}
-
 .filters-display {
 	display: flex;
 	flex-wrap: wrap;
-	/* TODO: make this width be not tied to vw, and instead the size of the above elements */
 	width: 45rem;
 	max-width: calc(100vw - 15rem);
 }
 
-.test-class {
-	border: 10px solid blue;
-}
-
-.sort-by-label {
-	min-width: 13rem;
-	white-space: nowrap;
-}
-
 .navbar {
 	padding: 1rem;
-	border-bottom: 1px solid lightgray;
+	border-bottom: 1px solid var(--shadow);
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -318,7 +304,7 @@ label {
 }
 
 .navbar-username {
-	color: #3531a7;
+	color: var(--primary-blue);
 	font-weight: 600;
 }
 
@@ -372,7 +358,7 @@ label {
 
 .sun-icon {
 	margin-right: auto;
-	color: black;
+	color: var(--black);
 	font-size: 1.5rem;
 }
 
@@ -384,6 +370,119 @@ label {
 .clear-a-stylings {
 	text-decoration: none;
 	color: inherit;
+}
+
+/* Search bar/filter styling */
+
+.center {
+	justify-content: center;
+}
+
+.search-component-button {
+	border: 2px solid black;
+	border-radius: 8px;
+	margin: 5px;
+	font-size: 1rem;
+	padding: 0.6rem 1.2rem;
+}
+
+.filter-button {
+	border: 2px solid black;
+	border-radius: 8px;
+	font-size: 1rem;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 12rem;
+	padding: 0.6rem 1.2rem;
+	display: flex;
+	justify-content: center;
+}
+
+.sort-by-button {
+	border: 2px solid black;
+	margin: 5px;
+	min-width: 12.5rem;
+}
+
+.search-bar-input {
+	margin: 5px;
+	width: 30rem;
+	max-width: 40vw;
+	border: 2px solid var(--black);
+	/* Below is inherited from the default button styling, to keep visual consistency */
+	padding: 0.6rem 1.2rem;
+	font-size: 1rem;
+	font-weight: 500;
+	font-family: inherit;
+	border-radius: 8px;
+}
+
+.category-header {
+	list-style-type: none;
+	color: var(--white);
+	/* CSS doesnt have text-outline stylings, this is a hacky way to do it anyways */
+	text-shadow:
+		1.5px 1.5px 0px var(--black),
+		-1.5px -1.5px 0px var(--black),
+		1.5px -1.5px 0px var(--black),
+		-1.5px 1.5px 0px var(--black);
+
+	/* Below is inherited from the default button styling, to keep visual consistency */
+	font-size: 1rem;
+	font-weight: 500;
+	font-family: inherit;
+	align-items: center;
+	justify-self: center;
+}
+
+.dropdown-container {
+	background-color: gray;
+	border-radius: 8px;
+	border: 2px solid var(--black);
+	list-style-type: none;
+	display: flex;
+	justify-content: space-around;
+	/* TODO: make this animate nicely */
+}
+
+.sort-dropdown-container {
+	background-color: gray;
+	border-radius: 8px;
+	border: 2px solid var(--black);
+	list-style-type: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	align-self: center;
+	justify-self: center;
+	width: 13rem;
+}
+
+.highlight {
+	border: 2px solid var(--primary-blue);
+}
+
+.filter-label {
+	font-size: 1rem;
+	font-weight: 500;
+	font-family: inherit;
+	border: 2px solid var(--black);
+	border-radius: 8px;
+	/* background-color: var(--white); */
+	margin: 5px;
+	width: 8rem;
+	display: flex;
+	justify-content: center;
+}
+
+.test-class {
+	border: 10px solid var(--primary-blue);
+}
+
+.sort-by-label {
+	min-width: 13rem;
+	white-space: nowrap;
 }
 
 .query-header {
@@ -408,7 +507,7 @@ label {
 .back-button {
 	font-size: 1.5rem;
 	width: 2.3rem;
-	border: 0.2rem var(--black-white-border) solid;
+	border: 0.2rem var(--black-white) solid;
 	border-radius: 2rem;
 	margin-right: 1rem;
 	align-items: center;
@@ -431,8 +530,8 @@ label {
 .text-outline {
 	/* CSS doesnt have text-outline stylings, this is a hacky way to do it anyways */
 	text-shadow:
-		1.5px 1.5px 0px var(--black-white-border),
-		-1.5px -1.5px 0px var(--black-white-border),
-		1.5px -1.5px 0px var(--black-white-border),
-		-1.5px 1.5px 0px var(--black-white-border);
+		1.5px 1.5px 0px var(--black-white),
+		-1.5px -1.5px 0px var(--black-white),
+		1.5px -1.5px 0px var(--black-white),
+		-1.5px 1.5px 0px var(--black-white);
 }

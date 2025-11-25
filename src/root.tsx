@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "./styles/variables.css";
 import "./styles/index.css";
 import { Navbar } from "$components/navbar.tsx";

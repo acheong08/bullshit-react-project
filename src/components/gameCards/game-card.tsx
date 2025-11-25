@@ -1,4 +1,4 @@
-import "./game-card.css";
+import "$styles/game-card.css";
 import StarIcon from "$tmpimg/star.png";
 
 // this is props for the main game card component that will be on the home page and in search results
