@@ -8,8 +8,6 @@ html[data-theme="light"] {
 	--text: #000000;
 	--contrast-text: #ffffff;
 	--black-white: #000000;
-
-	--logo-image: url("/images/.star.png");
 }
 
 /* Colour variables (dark mode) */
@@ -22,6 +20,4 @@ html[data-theme="dark"] {
 	--contrast-text: #000000;
 	--black-white: #ffffff;
 	--search-page-header: #ffffff;
-
-	--logo-image: url("/images/star-darkmode.png");
 }
