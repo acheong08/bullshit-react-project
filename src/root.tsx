@@ -9,6 +9,7 @@ import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
 import { isUserLoggedIn } from "$utils/auth.ts";
+import { AdminReportsPage } from "$pages/admin/reports.tsx";
 
 export function Root(props: { request: Request }) {
 	const isLoggedIn = isUserLoggedIn(props.request);
@@ -47,6 +48,9 @@ function App(props: { url: URL }) {
 	if (pathname.startsWith("/game/")) {
 		const gameId = pathname.split("/")[2];
 		return <GamePage gameId={gameId} />;
+	}
+  	if (pathname === "/admin/reports") {
+		return <AdminReportsPage />;
 	}
 	if (pathname === "/search") {
 		const searchParamsObject = Object.fromEntries(
