@@ -1,139 +1,156 @@
-"use client";
+'use client';
+import { useState } from 'react';
 
-import { useState } from "react";
-
+// Game report type definition
 interface GameReport {
-	id: number;
-	gameId: string;
-	title: string;
-	description: string;
-	image: string;
-	reportReason: string;
-	reportedAt: string;
-	status: "pending" | "resolved";
+  id: number;
+  gameId: string;
+  title: string;
+  description: string;
+  image: string;
+  reportReason: string;
+  reportedAt: string;
+  status: 'pending' | 'resolved';
 }
-
 const mockReports: GameReport[] = [
-	{
-		description: "An intense battle royale game with 100 players",
-		gameId: "game-001",
-		id: 1,
-		image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400",
-		reportedAt: "2025-11-20",
-		reportReason: "Offensive content",
-		status: "pending",
-		title: "Battle Royale Extreme",
-	},
-	{
-		description: "Solve challenging puzzles and unlock new levels",
-		gameId: "game-002",
-		id: 2,
-		image: "https://images.unsplash.com/photo-1606503153255-59d7f9ceb4dc?w=400",
-		reportedAt: "2025-11-21",
-		reportReason: "Incorrect game details",
-		status: "pending",
-		title: "Puzzle Master",
-	},
-	{
-		description: "High-speed racing action with stunning graphics",
-		gameId: "game-003",
-		id: 3,
-		image: "https://images.unsplash.com/photo-1511882150382-421056c89033?w=400",
-		reportedAt: "2025-11-22",
-		reportReason: "Offensive content",
-		status: "pending",
-		title: "Racing Thunder",
-	},
+  {
+    id: 1,
+    gameId: 'game-001',
+    title: 'Battle Royale Extreme',
+    description: 'An intense battle royale game with 100 players',
+    image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400',
+    reportReason: 'Offensive content',
+    reportedAt: '2025-11-20',
+    status: 'pending'
+  },
+  {
+    id: 2,
+    gameId: 'game-002',
+    title: 'Puzzle Master',
+    description: 'Solve challenging puzzles and unlock new levels',
+    image: 'https://images.unsplash.com/photo-1606503153255-59d7f9ceb4dc?w=400',
+    reportReason: 'Incorrect game details',
+    reportedAt: '2025-11-21',
+    status: 'pending'
+  },
+  {
+    id: 3,
+    gameId: 'game-003',
+    title: 'Racing Thunder',
+    description: 'High-speed racing action with stunning graphics',
+    image: 'https://images.unsplash.com/photo-1511882150382-421056c89033?w=400',
+    reportReason: 'Offensive content',
+    reportedAt: '2025-11-22',
+    status: 'pending'
+  }
 ];
-
 export function AdminReportsPage() {
-	const [reports, setReports] = useState<GameReport[]>(mockReports);
-	const [selected, setSelected] = useState<number | null>(null);
+  const [reports, setReports] = useState<GameReport[]>(mockReports);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const selectedReport = reports.find(r => r.id === selectedId);
+  const [editValues, setEditValues] = useState<Omit<GameReport, 'id' | 'gameId' | 'status' | 'reportReason' | 'reportedAt'> | null>(null);
 
-	function markResolved(id: number) {
-		setReports((prev) =>
-			prev.map((r) => (r.id === id ? { ...r, status: "resolved" } : r)),
-		);
-		setSelected(null);
-	}
+  // Select a report and start editing
+  function startEditing(report: GameReport) {
+    setSelectedId(report.id);
+    setEditValues({
+      title: report.title,
+      description: report.description,
+      image: report.image,
+    });
+  }
 
-	function deleteReport(id: number) {
-		if (!confirm("Delete this report and associated game?")) return;
-		setReports((prev) => prev.filter((r) => r.id !== id));
-		setSelected(null);
-	}
+  // Save edits to local state
+  function saveEdits() {
+    if (selectedId && editValues) {
+      setReports(prev =>
+        prev.map(report =>
+          report.id === selectedId
+            ? { ...report, ...editValues }
+            : report
+        )
+      );
+      setSelectedId(null);
+      setEditValues(null);
+    }
+  }
 
-	const pending = reports.filter((r) => r.status === "pending");
-	const selectedReport = reports.find((r) => r.id === selected);
+  function markResolved(id: number) {
+    setReports(prev =>
+      prev.map(report =>
+        report.id === id ? { ...report, status: 'resolved' } : report
+      )
+    );
+    setSelectedId(null);
+    setEditValues(null);
+  }
 
-	return (
-		<main style={{ padding: "2rem" }}>
-			<h2>Game Reports Admin Panel</h2>
-			{pending.length === 0 ? (
-				<p>No pending reports</p>
-			) : (
-				<ul>
-					{pending.map((report) => (
-						<li key={report.id} style={{ marginBottom: "1rem" }}>
-							<strong>{report.title}</strong>{" "}
-							<span>({report.reportReason})</span>
-							<button
-								style={{ marginLeft: "1rem" }}
-								onClick={() => setSelected(report.id)}
-							>
-								Review
-							</button>
-						</li>
-					))}
-				</ul>
-			)}
+  function deleteReport(id: number) {
+    if (window.confirm('Are you sure you want to delete this game?')) {
+      setReports(prev => prev.filter(report => report.id !== id));
+      setSelectedId(null);
+      setEditValues(null);
+    }
+  }
 
-			{selectedReport && (
-				<section
-					style={{
-						border: "1px solid #ddd",
-						marginTop: "2rem",
-						padding: "1rem",
-					}}
-				>
-					<h3>Report Details</h3>
-					<p>
-						<strong>Title:</strong> {selectedReport.title}
-					</p>
-					<p>
-						<strong>Description:</strong> {selectedReport.description}
-					</p>
-					<p>
-						<strong>Reason:</strong> {selectedReport.reportReason}
-					</p>
-					<p>
-						<strong>Date:</strong> {selectedReport.reportedAt}
-					</p>
-					<img
-						src={selectedReport.image}
-						alt={selectedReport.title}
-						style={{ width: "200px" }}
-					/>
+  function cancelEdit() {
+    setSelectedId(null);
+    setEditValues(null);
+  }
 
-					<div style={{ marginTop: "1rem" }}>
-						<button onClick={() => markResolved(selectedReport.id)}>
-							Mark as Resolved
-						</button>
-						<button
-							onClick={() => deleteReport(selectedReport.id)}
-							style={{ color: "red", marginLeft: "1rem" }}
-						>
-							Delete
-						</button>
-						<button
-							onClick={() => setSelected(null)}
-							style={{ marginLeft: "1rem" }}
-						>
-							Close
-						</button>
-					</div>
-				</section>
-			)}
-		</main>
-	);
+  return (
+    <main style={{ padding: '2rem', maxWidth: 700, margin: 'auto' }}>
+      <h2>Game Reports Admin Panel</h2>
+      <ul>
+        {reports.filter(r => r.status === 'pending').map(report => (
+          <li key={report.id} style={{ marginBottom: 15 }}>
+            <strong>{report.title}</strong> ({report.reportReason})
+            <button style={{ marginLeft: 10 }} onClick={() => startEditing(report)}>
+              Review & Edit
+            </button>
+          </li>
+        ))}
+      </ul>
+      {selectedReport && editValues && (
+        <section style={{ border: '1px solid #ddd', marginTop: 30, padding: 15 }}>
+          <h3>Edit Game Details</h3>
+          <label>
+            Title:<br />
+            <input
+              type="text"
+              value={editValues.title}
+              onChange={e => setEditValues(edit => edit ? { ...edit, title: e.target.value } : edit)}
+              style={{ width: '100%', marginBottom: 8 }}
+            />
+          </label><br />
+          <label>
+            Description:<br />
+            <textarea
+              value={editValues.description}
+              onChange={e => setEditValues(edit => edit ? { ...edit, description: e.target.value } : edit)}
+              rows={3}
+              style={{ width: '100%', marginBottom: 8 }}
+            />
+          </label><br />
+          <label>
+            Image URL:<br />
+            <input
+              type="text"
+              value={editValues.image}
+              onChange={e => setEditValues(edit => edit ? { ...edit, image: e.target.value } : edit)}
+              style={{ width: '100%', marginBottom: 8 }}
+            />
+          </label><br />
+          <img src={editValues.image} alt={editValues.title} style={{ width: '200px', marginBottom: 12 }} />
+          <div>
+            <button onClick={saveEdits}>Save Changes</button>
+            <button onClick={() => markResolved(selectedReport.id)} style={{ marginLeft: 10 }}>Mark as Resolved</button>
+            <button onClick={() => deleteReport(selectedReport.id)} style={{ color: 'red', marginLeft: 10 }}>Delete</button>
+            <button onClick={cancelEdit} style={{ marginLeft: 10 }}>Cancel</button>
+          </div>
+        </section>
+      )}
+    </main>
+  );
 }
+
