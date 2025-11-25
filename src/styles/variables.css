@@ -1,9 +1,17 @@
+/* Light mode + Defaults */
 :root {
 	/*Colour variables (light mode)*/
 	--primary-blue: #11167b;
+	--search-page-header: #3531a7;
 	--bg-white: #f5f5f5;
 	--grey-border: #aeaeae;
 	--white: #ffffff;
 	--black: #000000;
 	--shadow: #00000025;
+	--black-white-border: #000000;
+}
+
+html[data-theme="dark"] {
+	--black-white-border: #ffffff;
+	--search-page-header: #ffffff;
 }
