@@ -1,4 +1,4 @@
-import "./game-card.css";
+import "$styles/game-card.css";
 
 export type SpotlightCardProps = {
 	videoUrl: string;

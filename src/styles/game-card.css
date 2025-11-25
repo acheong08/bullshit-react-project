@@ -1,8 +1,8 @@
 .game-card-gallery {
 	display: grid;
 	grid-template-columns: repeat(4, 260px);
-	row-gap: 30px;
-	column-gap: 90px;
+	row-gap: 35px;
+	column-gap: 110px;
 	padding: 20px;
 	justify-content: center;
 }
@@ -10,11 +10,12 @@
 .game-card {
 	width: 260px;
 	height: auto;
-	background: white;
+	background: var(--background);
+	border: #000000;
 	border-radius: 16px;
 	padding: 10px;
 	text-align: center;
-	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2px 18px 10px var(--shadow);
 	transition:
 		transform 0.2s ease,
 		box-shadow 0.2s ease;
@@ -41,7 +42,7 @@ a {
 .game-card h3 {
 	margin: 4px 0;
 	font-size: 1.8rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 700;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -51,7 +52,7 @@ a {
 
 .game-card-genres {
 	margin: 2px 0;
-	color: var(--black);
+	color: var(--text);
 	font-size: 0.9rem;
 }
 
@@ -61,7 +62,7 @@ a {
 	gap: 4px;
 	margin: 2px 0;
 	font-weight: 500;
-	color: var(--black);
+	color: var(--text);
 }
 
 .star-icon {
@@ -70,13 +71,19 @@ a {
 	margin: 0;
 }
 
+html[data-theme="dark"] .star-icon,
+.top-charts-star-icon {
+	filter: invert(1) brightness(1.2);
+	/* This inverts the colors for dark mode */
+}
+
 .game-card-genres {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 0;
 	font-size: 1rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 500;
 }
 
@@ -91,7 +98,7 @@ a {
 	left: 2px;
 	top: 50%;
 	transform: translate(-100%, -50%);
-	color: var(--black);
+	color: var(--text);
 	font-weight: bold;
 }
 
@@ -138,7 +145,7 @@ a {
 	display: grid;
 	grid-template-columns: repeat(3, 400px);
 	row-gap: 20px;
-	column-gap: 50px;
+	column-gap: 80px;
 	padding: 20px;
 	justify-content: center;
 }
@@ -148,12 +155,11 @@ a {
 	align-items: flex-start;
 	gap: 4px;
 	padding: 12px;
-	border: 1px solid var(--grey-border);
 	border-radius: 12px;
 	height: 100px;
 	width: 400px;
-	background-color: var(--white);
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	background-color: var(--background);
+	box-shadow: 0 2px 18px 10px var(--shadow);
 	cursor: pointer;
 	overflow: hidden;
 }
@@ -178,7 +184,7 @@ a {
 .top-charts-card-rank {
 	font-size: 2.5rem;
 	font-weight: 700;
-	color: var(--black);
+	color: var(--text);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -231,7 +237,7 @@ a {
 
 .top-charts-card-title {
 	font-size: 1.7rem;
-	color: var(--black);
+	color: var(--text);
 	margin: 0;
 	padding: 0;
 	line-height: 1.2;
@@ -248,7 +254,7 @@ a {
 	align-items: center;
 	gap: 4px;
 	font-weight: bold;
-	color: var(--black);
+	color: var(--text);
 	font-size: 1rem;
 	margin: 0;
 	padding: 0;
@@ -267,7 +273,7 @@ a {
 	align-items: center;
 	gap: 0;
 	font-size: 1rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 450;
 	margin: 0;
 	line-height: 1.2;
@@ -288,7 +294,7 @@ a {
 	left: 3px;
 	top: 50%;
 	transform: translate(-100%, -50%);
-	color: var(--black);
+	color: var(--text);
 	font-weight: bold;
 }
 
@@ -389,8 +395,8 @@ a {
 	height: 200px;
 	width: fit-content;
 	max-width: 700px;
-	background-color: var(--white);
-	box-shadow: 0 4px 12px var(--shadow);
+	background-color: var(--background);
+	box-shadow: 0 2px 18px 10px var(--shadow);
 	transition:
 		transform 0.2s ease,
 		box-shadow 0.2s ease;
@@ -430,7 +436,7 @@ a {
 
 .wish-list-card-title {
 	font-size: 2rem;
-	color: var(--black);
+	color: var(--text);
 	margin: 0;
 	padding-right: 200px;
 	flex-direction: row;
@@ -455,7 +461,7 @@ a {
 	align-items: center;
 	gap: 6px;
 	font-weight: 700;
-	color: var(--black);
+	color: var(--text);
 	font-size: 1.5rem;
 	margin: 0;
 	padding-left: 40px;
@@ -470,7 +476,7 @@ a {
 
 .wish-list-Number-Of-Reviews {
 	font-size: 1.25rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 700;
 	margin: 0;
 	padding: 0;
@@ -488,7 +494,7 @@ a {
 	align-items: center;
 	gap: 0;
 	font-size: 1.25rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 700;
 	margin: 0;
 	text-align: center;
@@ -501,7 +507,7 @@ a {
 	align-items: center;
 	gap: 0;
 	font-size: 1.25rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 700;
 	margin: 0;
 	text-align: center;
@@ -541,7 +547,7 @@ a {
 	margin: 0;
 	white-space: nowrap;
 	flex-shrink: 0;
-	color: var(--contrast-text);
+	color: var(--text);
 }
 
 .remove-button {
@@ -688,10 +694,11 @@ a {
 	margin: 0;
 }
 .spotlight-game-card {
-	width: min(1300px, 95vw);
-	background: white;
+	width: min(1310px, 90vw);
+	height: auto;
+	background: var(--background);
 	border-radius: 16px;
-	padding: 25px;
+	padding: 30px;
 	margin-top: 10px;
 	margin-bottom: 20px;
 	display: grid;
@@ -699,7 +706,7 @@ a {
 	justify-content: center;
 	align-items: start;
 	gap: 20px;
-	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2px 18px 10px var(--shadow);
 }
 
 .spotlight-video {
@@ -718,14 +725,14 @@ a {
 	font-size: 2.25rem;
 	display: flex;
 	justify-content: flex-start;
-	color: #000000;
+	color: var(--text);
 	margin-top: 0;
 }
 
 .spotlight-game-card-genres {
 	display: flex;
 	justify-content: flex-start;
-	color: #000000;
+	color: var(--text);
 }
 
 .spotlight-game-card-genres span:not(:last-child)::after {
@@ -734,7 +741,7 @@ a {
 }
 
 .spotlight-genre-tag-row {
-	font-size: 1rem;
+	font-size: 1.1rem;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -743,9 +750,9 @@ a {
 
 .spotlight-tag {
 	font-weight: 600;
-	font-size: 1.05rem;
+	font-size: 1.15rem;
 	font-style: italic;
-	color: #000000;
+	color: var(--text);
 	padding-right: 15px;
 }
 
@@ -864,16 +871,16 @@ a {
 
 .popular-games-gallery {
 	display: grid;
-	grid-template-columns: repeat(1, 650px);
+	grid-template-columns: repeat(1, 800px);
 	padding: 5px;
 	justify-content: right;
-	gap: 25px;
+	gap: 10px;
 	margin-left: 45px;
 }
 .popular-game-card {
 	width: 720px;
 	height: 75px;
-	background: white;
+	background: var(--background);
 	border-radius: 16px;
 	padding: 10px;
 	display: flex;
@@ -881,7 +888,7 @@ a {
 	text-align: left;
 	text-decoration: none;
 	color: inherit;
-	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2px 6px 4px var(--shadow);
 	transition:
 		transform 0.2s ease,
 		box-shadow 0.2s ease;
@@ -913,7 +920,7 @@ a {
 	padding-left: 10px;
 	font-size: 1.7rem;
 	font-weight: 700;
-	color: #333;
+	color: var(--text);
 }
 
 .popular-game-card-genres {
@@ -933,7 +940,7 @@ a {
 }
 
 .genre-item {
-	color: black;
+	color: var(--text);
 }
 
 @media (max-width: 768px) {
@@ -1003,14 +1010,14 @@ a {
 .category-card {
 	width: 340px;
 	height: 75px;
-	background: white;
+	background: var(--background);
 	padding: 10px;
 	display: flex;
 	align-items: center;
 	gap: 14px;
 	text-decoration: none;
 	color: inherit;
-	box-shadow: 0 4px 4px rgba(251, 250, 250, 0.08);
+	box-shadow: 0 2px 8px 8px var(--shadow);
 	border-radius: 5px;
 	transition:
 		transform 0.2s ease,
@@ -1018,12 +1025,11 @@ a {
 	overflow: hidden;
 	position: relative;
 }
-
+/* masks to make images have 2 colours for the category cards */
 .masked-icon {
 	width: 120px;
 	height: 120px;
-
-	background: linear-gradient(to left, #11167b, #ffffff);
+	background: linear-gradient(to left, var(--primary-blue), #ffffff);
 
 	-webkit-mask-image: var(--icon-image);
 	-webkit-mask-size: contain;
@@ -1043,7 +1049,7 @@ a {
 	font-size: 2rem;
 	text-transform: capitalize;
 	margin: 0;
-	color: #11167b;
+	color: var(--primary-blue);
 	font-weight: 500;
 }
 
@@ -1058,7 +1064,7 @@ a {
 	display: grid;
 	grid-template-columns: repeat(3, 340px);
 	row-gap: 30px;
-	column-gap: 155px;
+	column-gap: 170px;
 	padding: 20px;
 	justify-content: center;
 }

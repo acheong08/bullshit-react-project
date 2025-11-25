@@ -1,3 +1,10 @@
+main {
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 /* spotlight css */
 .spotlight-wrapper {
 	display: flex;
@@ -5,13 +12,18 @@
 	align-items: center;
 }
 
+.spotlight-section {
+	display: flex;
+	flex-direction: column;
+	max-width: 1400px;
+	margin: 0 auto;
+}
+
 .spotlight-header {
-	align-self: flex-start;
-	margin: 0 0 0 85px;
-	font-size: 2rem;
+	font-size: 2.5rem;
 	font-weight: 650;
 	padding: 15px;
-	color: #7eb0c8;
+	color: var(--primary-blue);
 }
 
 /* home page category bar for recommended, new this week, top charts etc. */
@@ -20,6 +32,8 @@
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
+	max-width: 1360px;
+	margin: 0 auto;
 }
 
 .category-header-row,
@@ -32,23 +46,24 @@
 
 .category-title,
 .games-title {
-	margin: 0 0 0 100px;
-	font-size: 2rem;
+	margin: 0;
+	font-size: 2.5rem;
 	font-weight: 700;
-	color: #7eb0c8;
+	color: var(--primary-blue);
 }
 
 .category-tabs {
 	display: flex;
-	gap: 225px;
+	gap: clamp(60px, 70vw, 200px);
 	flex: 1;
 	justify-content: center;
+	margin-bottom: 30px;
 }
 
 .tab {
 	background: none;
 	border: none;
-	font-size: 1.5rem;
+	font-size: 1.7rem;
 	cursor: pointer;
 	padding: 0;
 	position: relative;
@@ -58,10 +73,11 @@
 	content: "";
 	position: absolute;
 	bottom: -6px;
-	left: 50px;
+	left: 50%;
+	transform: translateX(-50%);
 	width: 50%;
 	height: 2px;
-	background: #7eb0c8;
+	background: var(--primary-blue);
 }
 
 /* css for the dictate buttons */
@@ -70,14 +86,13 @@
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	background: #7eb0c8;
-	color: black;
-	margin: 0 100px 0 0;
-	padding: 8px 16px;
+	background: var(--primary-blue);
+	color: var(--contrast-text);
+	padding: 12px 18px;
 	border-radius: 20px;
 	border: none;
 	cursor: pointer;
-	font-size: 1rem;
+	font-size: 1.5rem;
 }
 
 .dictate-btn .icon,
@@ -86,62 +101,68 @@
 	height: 20px;
 }
 
-/* css layout for popular games and curtors pick */
+html[data-theme="light"] .dictate-btn .icon,
+.filters-dictate-btn .icon  {
+	filter: invert(1) brightness(1.2);
+	/* This inverts the colors for dark mode */
+}
 
+/* css layout for popular games and curators pick */
 .popular-games {
 	display: flex;
 	flex-direction: row;
-}
-
-.curators-pick {
-	align-self: flex-start;
-	margin: 25px 0 0 100px;
-	width: 550px;
-	height: auto;
-	border-radius: 16px;
+	max-width: 1400px;
+	width: 90%;
+	margin: 25px auto;
+	gap: 10px;
 }
 
 .image-card {
 	position: relative;
 	display: inline-block;
+	flex-shrink: 0;
 }
 
 .curators-pick {
-	align-self: flex-start;
-	margin: 25px 0 0 100px;
 	display: block;
-	width: 550px;
+	width: 100%;
+	max-width: 550px;
 	height: auto;
 	border-radius: 16px;
 }
 
 .top-right {
 	position: absolute;
-	top: 40px;
+	top: 15px;
 	right: 10px;
 	color: white;
 	background: black;
 	padding: 10px 15px;
 	border-radius: 10px;
-	font-size: 1rem;
+	font-size: 1.5rem;
 	font-weight: 600;
 }
 
 .bottom-left {
 	position: absolute;
 	bottom: 15px;
-	left: 110px;
+	left: 23%;
+	transform: translateX(-50%);
 	color: black;
 	background: #7eb0c8;
 	padding: 10px 15px;
 	border-radius: 10px;
-	font-size: 1.1rem;
+	font-size: 1.5rem;
 	font-weight: 800;
+}
+
+.popular-games-gallery {
+	flex: 1;
 }
 
 .popular-title {
 	margin-top: 20px;
-	color: #7eb0c8;
+	color: var(--primary-blue);
 	font-size: 2rem;
 	font-weight: 700;
 }
@@ -153,11 +174,11 @@
 
 /* css for the filter dropdown buttons */
 .filters-row {
-	display: flex;
-	gap: 30px;
-	padding: 0 100px;
-	align-items: center;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(2, 160px);
+	column-gap: 25px;
+	margin: 0 auto;
+	max-width: 1360px;
 }
 
 .filter-container {
@@ -165,77 +186,77 @@
 	align-items: center;
 	gap: 10px;
 	margin-top: 10px;
+	margin-bottom: 10px;
 }
 
 .filter-dropdown {
-	padding: 10px 10px;
-	font-size: 1rem;
-	border: 2px solid #cecece;
+	padding: 15px 10px;
+	font-size: 1.5rem;
 	border-radius: 8px;
-	background: white;
-	color: #000000;
+	border: var(--background);
+	background: var(--background);
+	color: var(--text);
 	cursor: pointer;
 	width: auto;
+	box-shadow: 0 2px 6px 3px var(--shadow);
 	flex: 1;
-	max-width: 120px;
+	max-width: 160px;
 	min-width: 0;
 	transition: all 0.3s ease;
 }
 
 .filter-dropdown:hover {
-	border-color: #cecece;
+	box-shadow: 0 2px 18px 10px var(--shadow);
 }
 
 .filter-dropdown:focus {
 	outline: none;
-	border-color: #cecece;
 	box-shadow: 0 0 0 3px rgba(126, 176, 200, 0.2);
 }
 
+/* pagination css */
 .pagination {
 	display: flex;
 	justify-content: center;
 	gap: 10px;
 	padding: 15px;
-	color: black;
+	color: var(--text);
 }
 
 .pagination-btn {
-	background: transparent;
+	background: var(--background);
 	border-radius: 20px;
 	border: none;
 	padding: 8px 16px;
-	font-size: 1rem;
+	font-size: 1.5rem;
 	cursor: pointer;
 	transition: background 0.2s;
-	color: rgb(255, 255, 255);
+	color: var(--text);
 }
-
-/* pagination css */
 
 .pagination-btn:hover {
 	background: #e0e0e0;
-	color: black;
+	color: var(--text);
 }
 
 .pagination-arrow {
 	width: 40px;
 	height: 40px;
 	background: none;
-	border: 2px solid #ffffff;
+	border: 2px solid var(--text);
 	border-radius: 20px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	font-size: 1.2rem;
+	font-size: 1.5rem;
 	transition: all 0.2s;
-	color: rgb(255, 255, 255);
+	color: var(--text);
 }
 
 .pagination-arrow:hover {
-	background: #f0f0f0;
-	color: black;
+	background: var(--background);
+	color: var(--text);
 }
 
 .pagination-number {
@@ -248,26 +269,50 @@
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	font-size: 1rem;
+	font-size: 1.5rem;
 	transition: all 0.2s;
 }
 
 .pagination-number:hover {
-	background: #e0e0e0;
-	color: black;
+	background: var(--background);
+	color: var(--text);
 }
 
 .pagination-number.active {
-	background: #7eb0c8;
-	color: black;
+	background: var(--primary-blue);
+	color: var(--contrast-text);
 	font-weight: bold;
 }
 
-/* css for mobile/table size screens */
+/* css for mobile/tablet size screens */
 @media (max-width: 768px) {
+	.category-bar,
+	.games-bar {
+		width: 95%;
+	}
+
+	.spotlight-wrapper,
+	.spotlight-section,
+	.category-bar,
+	.games-bar,
+	.popular-games,
+	.game-card-gallery,
+	.top-charts-game-card-gallery,
+	.categories-gallery {
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.game-card-gallery {
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
 	.spotlight-header,
 	.category-title {
-		margin-left: 20px;
 		font-size: 1.5rem;
 	}
 
@@ -280,7 +325,6 @@
 	.category-tabs {
 		gap: 40px;
 		justify-content: flex-start;
-		padding-left: 20px;
 	}
 
 	.tab {
@@ -289,22 +333,22 @@
 
 	.tab.active::after {
 		left: 0;
+		transform: none;
 		width: 100%;
 	}
 
-	.dictate-btn {
-		margin: 0 20px 0 20px;
-		align-self: flex-start;
+	.popular-games {
+		flex-direction: column;
+		align-items: center;
+		width: 95%;
 	}
 
 	.curators-pick {
-		margin: 25px 20px 0 20px;
-		width: calc(100% - 40px);
-		max-width: 550px;
+		width: 100%;
+		margin-top: 15px;
 	}
 
 	.bottom-left {
-		left: 20px;
 		font-size: 1rem;
 		padding: 8px 12px;
 	}
@@ -314,68 +358,69 @@
 		font-size: 0.9rem;
 		padding: 8px 12px;
 	}
-
-	.popular-games {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
 }
 
 @media (max-width: 480px) {
 	.main {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 	}
+
+	.category-header-row,
+	.games-row,
+	.popular-games,
+	.game-card-gallery,
+	.categories-gallery,
+	.top-charts-game-card-gallery {
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+	}
+
+	.game-card-gallery {
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
 	.spotlight-header {
-		margin-left: 20px;
 		font-size: 1.5rem;
 	}
 
 	.category-header-row {
 		flex-direction: row;
-		justify-content: flex-start;
-		gap: 35px;
+		justify-content: space-between;
+		gap: 10px;
 		align-items: center;
-		padding: 0 20px;
 	}
 
 	.category-title {
 		margin: 0;
-		font-size: 1.7rem;
+		font-size: 1.4rem;
 	}
 
 	.dictate-btn {
-		margin: 0;
-		padding: 8px 10px;
-		size: 0.8rem;
+		padding: 6px 8px;
+		font-size: 0.8rem;
 	}
+
 	.dictate-btn .icon {
 		width: 15px;
 		height: 15px;
 	}
+
 	.category-tabs {
 		gap: 10px;
 		justify-content: flex-start;
-		padding-left: 20px;
+		flex-wrap: wrap;
 	}
 
 	.tab {
-		font-size: 1rem;
-	}
-
-	.tab.active::after {
-		left: 0;
-		width: 100%;
-	}
-
-	.curators-pick {
-		margin: 20px 15px 0 15px;
-		width: calc(100% - 30px);
+		font-size: 0.9rem;
 	}
 
 	.bottom-left {
-		left: 20px;
 		bottom: 10px;
 		font-size: 0.9rem;
 		padding: 6px 10px;
@@ -389,8 +434,13 @@
 	}
 
 	.popular-games {
-		display: flex;
 		flex-direction: column;
 		align-items: center;
+		width: 95%;
+	}
+
+	.curators-pick {
+		width: 100%;
+		margin-top: 15px;
 	}
 }

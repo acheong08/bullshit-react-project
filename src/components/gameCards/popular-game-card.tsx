@@ -1,4 +1,4 @@
-import "./game-card.css";
+import "$styles/game-card.css";
 
 // these are props for poplur games on the home page recommend section
 export type PopularGameCardProps = {

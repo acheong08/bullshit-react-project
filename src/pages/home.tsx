@@ -17,6 +17,7 @@ import GameCard from "../components/gameCards/game-card";
 import PopularGameCard from "../components/gameCards/popular-game-card";
 import SpotlightGameCard from "../components/gameCards/spotlight-game-card";
 import "../styles/home.css";
+import { SearchBar } from "$components/searchbar";
 import FiltersBar from "../components/filtersbar";
 import CategoriesCard from "../components/gameCards/category-card";
 import TopChartsGameCard from "../components/gameCards/top-charts-game-card";
@@ -37,6 +38,8 @@ export function HomePage() {
 	return (
 		<div id="root">
 			<main>
+				<SearchBar />
+				{/* spotlight which is on every version of the home page */}
 				<div className="spotlight-section">
 					<h1 className="spotlight-header">SPOTLIGHT</h1>
 					<div className="spotlight">
@@ -65,7 +68,7 @@ export function HomePage() {
 							<span>Dictate category</span>
 						</button>
 					</div>
-
+					{/* category tabs for s=switching between secstions of the home page e.g. top charts, categories etc */}
 					<nav className="category-tabs">
 						<button
 							className={`tab ${activeView === "recommended" ? "active" : ""}`}
@@ -147,7 +150,7 @@ export function HomePage() {
 	);
 }
 
-// Recommended View (the current layout)
+// Recommended View (the current layout when page loads)
 function RecommendedView({
 	currentPage,
 	setCurrentPage,
@@ -226,14 +229,14 @@ function RecommendedView({
 						<span>Dictate filters</span>
 					</button>
 				</div>
-
-				<FiltersBar
-					selectedGenre={selectedGenre}
-					setSelectedGenre={setSelectedGenre}
-					selectedDisability={selectedDisability}
-					setSelectedDisability={setSelectedDisability}
-				/>
 			</div>
+
+			<FiltersBar
+				selectedGenre={selectedGenre}
+				setSelectedGenre={setSelectedGenre}
+				selectedDisability={selectedDisability}
+				setSelectedDisability={setSelectedDisability}
+			/>
 
 			<div className="game-card-gallery">
 				{currentGames.map((game) => (
@@ -496,14 +499,14 @@ function TopChartsView({
 						<span>Dictate filters</span>
 					</button>
 				</div>
-
-				<FiltersBar
-					selectedGenre={selectedGenre}
-					setSelectedGenre={setSelectedGenre}
-					selectedDisability={selectedDisability}
-					setSelectedDisability={setSelectedDisability}
-				/>
 			</div>
+			<FiltersBar
+				selectedGenre={selectedGenre}
+				setSelectedGenre={setSelectedGenre}
+				selectedDisability={selectedDisability}
+				setSelectedDisability={setSelectedDisability}
+			/>
+
 			<div className="game-card-gallery">
 				{currentGames.map((game) => (
 					<GameCard
@@ -721,14 +724,13 @@ function CategoriesView({
 						<span>Dictate filters</span>
 					</button>
 				</div>
-
-				<FiltersBar
-					selectedGenre={selectedGenre}
-					setSelectedGenre={setSelectedGenre}
-					selectedDisability={selectedDisability}
-					setSelectedDisability={setSelectedDisability}
-				/>
 			</div>
+			<FiltersBar
+				selectedGenre={selectedGenre}
+				setSelectedGenre={setSelectedGenre}
+				selectedDisability={selectedDisability}
+				setSelectedDisability={setSelectedDisability}
+			/>
 
 			<div className="game-card-gallery">
 				{currentGames.map((game) => (

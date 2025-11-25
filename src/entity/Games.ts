@@ -4,7 +4,6 @@ import {
 	Entity,
 	JoinTable,
 	ManyToMany,
-	ManyToOne,
 	PrimaryGeneratedColumn,
 } from "typeorm";
 
@@ -36,9 +35,6 @@ export class Label extends BaseEntity {
 
 	@Column("text")
 	description: string;
-
-	@ManyToOne(() => Label, { nullable: true })
-	parent: Label | null;
 }
 
 export enum MediaType {
