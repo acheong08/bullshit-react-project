@@ -1,4 +1,4 @@
-import "./game-card.css";
+import "$styles/game-card.css";
 import StarIcon from "$tmpimg/star.png";
 //this is wish list game card  props for what will show up whe a game is added to the wishlist
 

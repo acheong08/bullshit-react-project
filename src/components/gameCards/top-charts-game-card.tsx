@@ -1,4 +1,4 @@
-import "./game-card.css";
+import "$styles/game-card.css";
 import StarIcon from "$tmpimg/star.png";
 // this is props for the top chart games that will be on the home page-top charts section / new this week section
 export type TopChartsGameCardProps = {

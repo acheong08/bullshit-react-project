@@ -75,6 +75,7 @@ export default defineConfig({
 			$entity: path.resolve(__dirname, "./src/entity"),
 			$lib: path.resolve(__dirname, "./src/lib"),
 			$pages: path.resolve(__dirname, "./src/pages"),
+			$styles: path.resolve(__dirname, "./src/styles"),
 			$tmpimg: path.resolve(__dirname, "./public/images"),
 			$utils: path.resolve(__dirname, "./src/utils"),
 		},
