@@ -52,7 +52,7 @@ main {
 	width: 100%;
 	height: 55px;
 	background-color: var(--primary-blue);
-	color: var(--white);
+	color: white;
 	box-shadow: 0 6px 7px 0 var(--shadow);
 	border: 0;
 	outline: 0;
@@ -62,7 +62,7 @@ main {
 
 .navbar-button {
 	background-color: var(--primary-blue);
-	color: var(--white);
+	color: white;
 	box-shadow: 0 6px 7px 0 var(--shadow);
 	border: 0;
 	outline: 0;
@@ -186,6 +186,7 @@ label {
 	font-size: 1rem;
 	padding: 0.6rem 1.2rem;
 }
+
 .filter-button {
 	border: 2px solid black;
 	border-radius: 8px;
@@ -358,7 +359,7 @@ label {
 
 .sun-icon {
 	margin-right: auto;
-	color: var(--black);
+	color: black;
 	font-size: 1.5rem;
 }
 
@@ -408,7 +409,7 @@ label {
 	margin: 5px;
 	width: 30rem;
 	max-width: 40vw;
-	border: 2px solid var(--black);
+	border: 2px solid black;
 	/* Below is inherited from the default button styling, to keep visual consistency */
 	padding: 0.6rem 1.2rem;
 	font-size: 1rem;
@@ -419,13 +420,13 @@ label {
 
 .category-header {
 	list-style-type: none;
-	color: var(--white);
+	color: white;
 	/* CSS doesnt have text-outline stylings, this is a hacky way to do it anyways */
 	text-shadow:
-		1.5px 1.5px 0px var(--black),
-		-1.5px -1.5px 0px var(--black),
-		1.5px -1.5px 0px var(--black),
-		-1.5px 1.5px 0px var(--black);
+		1.5px 1.5px 0px black,
+		-1.5px -1.5px 0px black,
+		1.5px -1.5px 0px black,
+		-1.5px 1.5px 0px black;
 
 	/* Below is inherited from the default button styling, to keep visual consistency */
 	font-size: 1rem;
@@ -438,7 +439,7 @@ label {
 .dropdown-container {
 	background-color: gray;
 	border-radius: 8px;
-	border: 2px solid var(--black);
+	border: 2px solid black;
 	list-style-type: none;
 	display: flex;
 	justify-content: space-around;
@@ -448,7 +449,7 @@ label {
 .sort-dropdown-container {
 	background-color: gray;
 	border-radius: 8px;
-	border: 2px solid var(--black);
+	border: 2px solid black;
 	list-style-type: none;
 	display: flex;
 	flex-direction: column;
@@ -467,9 +468,9 @@ label {
 	font-size: 1rem;
 	font-weight: 500;
 	font-family: inherit;
-	border: 2px solid var(--black);
+	border: 2px solid black;
 	border-radius: 8px;
-	/* background-color: var(--white); */
+	/* background-color: white; */
 	margin: 5px;
 	width: 8rem;
 	display: flex;
