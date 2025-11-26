@@ -22,8 +22,6 @@ interface GameData {
 interface LabelDescriptor {
 	type: LabelType;
 	name: string;
-	path?: string[]; // For hierarchical labels
-	parentKey?: string; // Cache key of parent
 }
 
 export async function seedAdminUser(): Promise<void> {
@@ -63,6 +61,25 @@ export async function seedAdminUser(): Promise<void> {
 		// Don't throw - we don't want to crash the server if seeding fails
 	}
 }
+
+// Hardcoded list of accessibility labels
+const ACCESSIBILITY_LABELS = [
+	"Colorblind Mode",
+	"Subtitles",
+	"Screen Reader Support",
+	"Adjustable Text Size",
+	"High Contrast Mode",
+	"Remappable Controls",
+	"One-handed Mode",
+	"Difficulty Settings",
+	"Auto-aim Assist",
+	"Visual Sound Cues",
+	"Audio Descriptions",
+	"Pause Anytime",
+	"Skip QTE Events",
+	"Reduced Motion Mode",
+	"Adjustable Game Speed",
+];
 
 /**
  * Seeds the database with games from games.jsonl
@@ -115,61 +132,24 @@ export async function seedGames(): Promise<void> {
 				const key = `${LabelType.Platform}-${platform}`;
 				labelMap.set(key, { name: platform, type: LabelType.Platform });
 			}
+		}
 
-			// Accessibility features (hierarchical)
-			for (const feature of gameData.accessibility_features) {
-				const path = feature.nested_categories;
-				for (let i = 0; i < path.length; i++) {
-					const partialPath = path.slice(0, i + 1);
-					const key = `${LabelType.Accessibility}-${partialPath.join(">")}`;
-					const parentKey =
-						i > 0
-							? `${LabelType.Accessibility}-${path.slice(0, i).join(">")}`
-							: undefined;
-
-					labelMap.set(key, {
-						name: path[i],
-						parentKey,
-						path: partialPath,
-						type: LabelType.Accessibility,
-					});
-				}
-			}
+		// Add hardcoded accessibility labels
+		for (const accessLabel of ACCESSIBILITY_LABELS) {
+			const key = `${LabelType.Accessibility}-${accessLabel}`;
+			labelMap.set(key, { name: accessLabel, type: LabelType.Accessibility });
 		}
 
 		console.log(`[Seed] Found ${labelMap.size} unique labels`);
 
-		// Step 3: Create all labels in database (batch by type, respecting hierarchy)
+		// Step 3: Create all labels in database
 		const labelCache = new Map<string, Label>();
 
-		// First, create all non-hierarchical labels
-		const simpleLabels = Array.from(labelMap.entries()).filter(
-			([_, desc]) => desc.type !== LabelType.Accessibility,
-		);
-
-		for (const [key, desc] of simpleLabels) {
+		for (const [key, desc] of labelMap.entries()) {
 			const label = new Label();
 			label.type = desc.type;
 			label.name = desc.name;
 			label.description = "";
-			label.parent = null;
-			await label.save();
-			labelCache.set(key, label);
-		}
-
-		// Then create hierarchical labels (sorted by depth)
-		const hierarchicalLabels = Array.from(labelMap.entries())
-			.filter(([_, desc]) => desc.type === LabelType.Accessibility)
-			.sort(([_, a], [__, b]) => (a.path?.length || 0) - (b.path?.length || 0));
-
-		for (const [key, desc] of hierarchicalLabels) {
-			const label = new Label();
-			label.type = desc.type;
-			label.name = desc.name;
-			label.description = "";
-			label.parent = desc.parentKey
-				? labelCache.get(desc.parentKey) || null
-				: null;
 			await label.save();
 			labelCache.set(key, label);
 		}
@@ -223,10 +203,17 @@ export async function seedGames(): Promise<void> {
 				}
 			}
 
-			// Accessibility features (use the leaf node only)
-			for (const feature of gameData.accessibility_features) {
-				const path = feature.nested_categories;
-				const key = `${LabelType.Accessibility}-${path.join(">")}`;
+			// Accessibility features (randomly select 3-8 labels)
+			const accessibilityLabelKeys = ACCESSIBILITY_LABELS.map(
+				(name) => `${LabelType.Accessibility}-${name}`,
+			);
+			const numLabels = Math.floor(Math.random() * 6) + 3; // Random 3-8
+			const shuffled = [...accessibilityLabelKeys].sort(
+				() => Math.random() - 0.5,
+			);
+			const selectedLabels = shuffled.slice(0, numLabels);
+
+			for (const key of selectedLabels) {
 				const label = labelCache.get(key);
 				if (label) {
 					gameLabelSet.set(label.id, label);
