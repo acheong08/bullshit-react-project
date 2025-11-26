@@ -1,7 +1,8 @@
 .game-card-gallery {
 	display: grid;
 	grid-template-columns: repeat(4, 260px);
-	gap: 50px;
+	row-gap: 35px;
+	column-gap: 110px;
 	padding: 20px;
 	justify-content: center;
 }
@@ -9,11 +10,12 @@
 .game-card {
 	width: 260px;
 	height: auto;
-	background: white;
+	background: var(--background);
+	border: #000000;
 	border-radius: 16px;
 	padding: 10px;
 	text-align: center;
-	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 2px 18px 10px var(--shadow);
 	transition:
 		transform 0.2s ease,
 		box-shadow 0.2s ease;
@@ -40,7 +42,7 @@ a {
 .game-card h3 {
 	margin: 4px 0;
 	font-size: 1.8rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 700;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -50,7 +52,7 @@ a {
 
 .game-card-genres {
 	margin: 2px 0;
-	color: var(--black);
+	color: var(--text);
 	font-size: 0.9rem;
 }
 
@@ -60,7 +62,7 @@ a {
 	gap: 4px;
 	margin: 2px 0;
 	font-weight: 500;
-	color: var(--black);
+	color: var(--text);
 }
 
 .star-icon {
@@ -69,13 +71,19 @@ a {
 	margin: 0;
 }
 
+html[data-theme="dark"] .star-icon,
+.top-charts-star-icon {
+	filter: invert(1) brightness(1.2);
+	/* This inverts the colors for dark mode */
+}
+
 .game-card-genres {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	gap: 0;
-	font-size: 14px;
-	color: var(--black);
+	font-size: 1rem;
+	color: var(--text);
 	font-weight: 500;
 }
 
@@ -90,7 +98,7 @@ a {
 	left: 2px;
 	top: 50%;
 	transform: translate(-100%, -50%);
-	color: var(--black);
+	color: var(--text);
 	font-weight: bold;
 }
 
@@ -135,8 +143,9 @@ a {
 /* top charts card styling */
 .top-charts-game-card-gallery {
 	display: grid;
-	grid-template-columns: repeat(2, 400px);
-	gap: 40px;
+	grid-template-columns: repeat(3, 400px);
+	row-gap: 20px;
+	column-gap: 80px;
 	padding: 20px;
 	justify-content: center;
 }
@@ -146,12 +155,11 @@ a {
 	align-items: flex-start;
 	gap: 4px;
 	padding: 12px;
-	border: 1px solid var(--grey-border);
 	border-radius: 12px;
 	height: 100px;
 	width: 400px;
-	background-color: var(--white);
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	background-color: var(--background);
+	box-shadow: 0 2px 18px 10px var(--shadow);
 	cursor: pointer;
 	overflow: hidden;
 }
@@ -176,7 +184,7 @@ a {
 .top-charts-card-rank {
 	font-size: 2.5rem;
 	font-weight: 700;
-	color: var(--black);
+	color: var(--text);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -229,7 +237,7 @@ a {
 
 .top-charts-card-title {
 	font-size: 1.7rem;
-	color: var(--black);
+	color: var(--text);
 	margin: 0;
 	padding: 0;
 	line-height: 1.2;
@@ -246,7 +254,7 @@ a {
 	align-items: center;
 	gap: 4px;
 	font-weight: bold;
-	color: var(--black);
+	color: var(--text);
 	font-size: 1rem;
 	margin: 0;
 	padding: 0;
@@ -265,7 +273,7 @@ a {
 	align-items: center;
 	gap: 0;
 	font-size: 1rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 450;
 	margin: 0;
 	line-height: 1.2;
@@ -286,7 +294,7 @@ a {
 	left: 3px;
 	top: 50%;
 	transform: translate(-100%, -50%);
-	color: var(--black);
+	color: var(--text);
 	font-weight: bold;
 }
 
@@ -387,8 +395,8 @@ a {
 	height: 200px;
 	width: fit-content;
 	max-width: 700px;
-	background-color: var(--white);
-	box-shadow: 0 4px 12px var(--shadow);
+	background-color: var(--background);
+	box-shadow: 0 2px 18px 10px var(--shadow);
 	transition:
 		transform 0.2s ease,
 		box-shadow 0.2s ease;
@@ -428,7 +436,7 @@ a {
 
 .wish-list-card-title {
 	font-size: 2rem;
-	color: var(--black);
+	color: var(--text);
 	margin: 0;
 	padding-right: 200px;
 	flex-direction: row;
@@ -453,7 +461,7 @@ a {
 	align-items: center;
 	gap: 6px;
 	font-weight: 700;
-	color: var(--black);
+	color: var(--text);
 	font-size: 1.5rem;
 	margin: 0;
 	padding-left: 40px;
@@ -468,7 +476,7 @@ a {
 
 .wish-list-Number-Of-Reviews {
 	font-size: 1.25rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 700;
 	margin: 0;
 	padding: 0;
@@ -486,7 +494,7 @@ a {
 	align-items: center;
 	gap: 0;
 	font-size: 1.25rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 700;
 	margin: 0;
 	text-align: center;
@@ -499,7 +507,7 @@ a {
 	align-items: center;
 	gap: 0;
 	font-size: 1.25rem;
-	color: var(--black);
+	color: var(--text);
 	font-weight: 700;
 	margin: 0;
 	text-align: center;
@@ -539,7 +547,7 @@ a {
 	margin: 0;
 	white-space: nowrap;
 	flex-shrink: 0;
-	color: var(--contrast-text);
+	color: var(--text);
 }
 
 .remove-button {
@@ -673,5 +681,396 @@ a {
 		top: 300px;
 		right: 10px;
 		margin-top: 0;
+	}
+}
+
+/* spotlight game card css */
+
+.spotlight {
+	display: grid;
+	place-items: center;
+	padding: 0;
+	width: 100%;
+	margin: 0;
+}
+.spotlight-game-card {
+	width: min(1310px, 90vw);
+	height: auto;
+	background: var(--background);
+	border-radius: 16px;
+	padding: 30px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+	display: grid;
+	grid-template-columns: 1.2fr 1fr;
+	justify-content: center;
+	align-items: start;
+	gap: 20px;
+	box-shadow: 0 2px 18px 10px var(--shadow);
+}
+
+.spotlight-video {
+	width: 100%;
+	border: 0;
+	border-radius: 10px;
+	height: 100%;
+}
+
+.spotlight-video,
+.spotlight-video iframe {
+	border-radius: 10px;
+}
+
+.spotlight-card-title {
+	font-size: 2.25rem;
+	display: flex;
+	justify-content: flex-start;
+	color: var(--text);
+	margin-top: 0;
+}
+
+.spotlight-game-card-genres {
+	display: flex;
+	justify-content: flex-start;
+	color: var(--text);
+}
+
+.spotlight-game-card-genres span:not(:last-child)::after {
+	content: " | ";
+	margin: 0 5px;
+}
+
+.spotlight-genre-tag-row {
+	font-size: 1.1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.spotlight-tag {
+	font-weight: 600;
+	font-size: 1.15rem;
+	font-style: italic;
+	color: var(--text);
+	padding-right: 15px;
+}
+
+.spotlight-info {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	flex: 1;
+}
+
+.image-previews {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 5px;
+	width: 100%;
+	max-width: 700px;
+}
+
+.image-previews img {
+	width: 100%;
+	height: 110px;
+	object-fit: cover;
+}
+
+.image-previews img:nth-child(1) {
+	border-radius: 10px 0 0 0;
+}
+
+.image-previews img:nth-child(2) {
+	border-radius: 0 10px 0 0;
+}
+
+.image-previews img:nth-child(3) {
+	border-radius: 0 0 0 10px;
+}
+
+.image-previews img:nth-child(4) {
+	border-radius: 0 0 10px 0;
+}
+
+.spotlight-game-card:focus-visible {
+	outline: 3px solid #4da3ff;
+	outline-offset: 2px;
+	transform: scale(1.03);
+	box-shadow: 0 0 12px rgba(77, 163, 255, 0.6);
+}
+
+/* css for different sized screens e.g. mobile and tablet */
+
+@media (max-width: 575px) {
+	.spotlight-game-card {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		text-align: center;
+		padding: 5px;
+		margin: 8px;
+		padding-bottom: 15px;
+	}
+
+	.spotlight-card-title {
+		padding-top: 10px;
+		display: flex;
+		justify-content: center;
+		font-size: 1.7rem;
+	}
+
+	.spotlight-video {
+		max-width: 95%;
+		display: flex;
+		justify-content: center;
+		padding-top: 8px;
+	}
+
+	.spotlight-game-card-genres {
+		padding-left: 5px;
+		font-size: 0.85rem;
+	}
+}
+
+@media (min-width: 576px) and (max-width: 900px) {
+	.spotlight-game-card {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		text-align: center;
+		padding: 8px;
+		margin: 10px;
+		padding-bottom: 20px;
+		max-width: 450px;
+	}
+
+	.spotlight-card-title {
+		margin-top: 75px;
+		display: flex;
+		justify-content: center;
+	}
+
+	.spotlight-video {
+		max-width: 96%;
+		display: flex;
+		justify-content: center;
+		padding-top: 10px;
+	}
+
+	.spotlight-game-card-genres {
+		padding-left: 7px;
+	}
+
+	.image-previews img {
+		width: 100%;
+		height: 120px;
+		object-fit: cover;
+	}
+}
+
+/* popular game card css */
+
+.popular-games-gallery {
+	display: grid;
+	grid-template-columns: repeat(1, 800px);
+	padding: 5px;
+	justify-content: right;
+	gap: 10px;
+	margin-left: 45px;
+}
+.popular-game-card {
+	width: 720px;
+	height: 75px;
+	background: var(--background);
+	border-radius: 16px;
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	text-align: left;
+	text-decoration: none;
+	color: inherit;
+	box-shadow: 0 2px 6px 4px var(--shadow);
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+}
+
+.popular-game-card:hover,
+.category-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.popular-game-card-image {
+	width: 80px;
+	height: 80px;
+	object-fit: cover;
+	border-radius: 12px;
+	flex-shrink: 0;
+}
+
+.popular-game-card-content {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+}
+
+.popular-game-card h3 {
+	margin: 0;
+	padding-left: 10px;
+	font-size: 1.7rem;
+	font-weight: 700;
+	color: var(--text);
+}
+
+.popular-game-card-genres {
+	display: flex;
+	gap: 2px;
+	flex-wrap: wrap;
+	margin: 0;
+	font-size: 1.25rem;
+	padding-right: 50px;
+}
+
+.popular-game-card:focus-visible {
+	outline: 3px solid #4da3ff;
+	outline-offset: 2px;
+	transform: scale(1.03);
+	box-shadow: 0 0 12px rgba(77, 163, 255, 0.6);
+}
+
+.genre-item {
+	color: var(--text);
+}
+
+@media (max-width: 768px) {
+	.popular-games-gallery {
+		grid-template-columns: 1fr;
+		justify-content: center;
+		margin-left: 0;
+		padding: 5px 20px;
+	}
+
+	.popular-game-card {
+		width: 100%;
+		max-width: 500px;
+		height: auto;
+		min-height: 75px;
+		padding: 10px;
+		gap: 10px;
+		align-items: center;
+	}
+
+	.popular-game-card-image {
+		width: 60px;
+		height: 60px;
+	}
+
+	.popular-game-card h3 {
+		font-size: 1.3rem;
+		padding-left: 8px;
+	}
+
+	.popular-game-card-genres {
+		font-size: 1rem;
+		padding-right: 10px;
+		padding-left: 8px;
+	}
+}
+
+@media (max-width: 480px) {
+	.popular-games-gallery {
+		padding: 5px 15px;
+	}
+
+	.popular-game-card {
+		max-width: 100%;
+		padding: 8px;
+	}
+
+	.popular-game-card-image {
+		width: 50px;
+		height: 50px;
+	}
+
+	.popular-game-card h3 {
+		font-size: 1.1rem;
+		padding-left: 6px;
+	}
+
+	.popular-game-card-genres {
+		font-size: 0.9rem;
+		padding-right: 5px;
+		padding-left: 6px;
+	}
+}
+
+/* category cards styling */
+
+.category-card {
+	width: 340px;
+	height: 75px;
+	background: var(--background);
+	padding: 10px;
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	text-decoration: none;
+	color: inherit;
+	box-shadow: 0 2px 8px 8px var(--shadow);
+	border-radius: 5px;
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+	overflow: hidden;
+	position: relative;
+}
+/* masks to make images have 2 colours for the category cards */
+.masked-icon {
+	width: 120px;
+	height: 120px;
+	background: linear-gradient(to left, var(--primary-blue), #ffffff);
+
+	-webkit-mask-image: var(--icon-image);
+	-webkit-mask-size: contain;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+
+	mask-image: var(--icon-image);
+	mask-size: contain;
+	mask-repeat: no-repeat;
+	mask-position: center;
+
+	flex-shrink: 0;
+	margin-left: -10px;
+}
+
+.category-card h3 {
+	font-size: 2rem;
+	text-transform: capitalize;
+	margin: 0;
+	color: var(--primary-blue);
+	font-weight: 500;
+}
+
+.category-card:focus-visible {
+	outline: 3px solid #4da3ff;
+	outline-offset: 2px;
+	transform: scale(1.03);
+	box-shadow: 0 0 12px rgba(77, 163, 255, 0.6);
+}
+
+.category-gallery {
+	display: grid;
+	grid-template-columns: repeat(3, 340px);
+	row-gap: 30px;
+	column-gap: 170px;
+	padding: 20px;
+	justify-content: center;
+}
+
+@media (max-width: 768px) {
+	.category-gallery {
+		grid-template-columns: repeat(1, 340px);
 	}
 }
