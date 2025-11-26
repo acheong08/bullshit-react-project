@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 
+type ReportStatus = "pending" | "reviewed" | "deleted";
+
 // Game report type definition
 interface GameReport {
 	id: number;
@@ -10,7 +12,7 @@ interface GameReport {
 	image: string;
 	reportReason: string;
 	reportedAt: string;
-	status: "pending" | "resolved";
+	status: ReportStatus;
 }
 // Mock data - to be filled in with actual database information ( can edit all fields and images)
 const mockReports: GameReport[] = [
@@ -101,6 +103,11 @@ export function AdminReportsPage() {
 		setSelectedId(null);
 		setEditValues(null);
 	}
+
+  const pendingReports = reports.filter (r => status == "pending");
+  const reviewedReports = reports.filter (r => status == "reviewed");
+  const deletedReports = reports.filter (r => status == "deleted");
+
 
 	return (
 		<main style={{ margin: "auto", maxWidth: 700, padding: "2rem" }}>
@@ -207,3 +214,7 @@ export function AdminReportsPage() {
 		</main>
 	);
 }
+
+//TO BE Finished - instead of using API data - retrieve from database records once they have been added.
+//Include status panels so you can see admin history, appended games, deleted.
+//
