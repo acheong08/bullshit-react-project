@@ -2,6 +2,8 @@ import "dotenv/config";
 import "./styles/variables.css";
 import "./styles/index.css";
 import { Navbar } from "$components/navbar.tsx";
+import { VoiceCommandProvider } from "$components/voice-command-provider.tsx";
+import { VoiceNavigationCommands } from "$components/voice-navigation-commands.tsx";
 import { getAllSortOptions, getFilterMap } from "$lib/db";
 import { GamePage } from "$pages/game.tsx";
 import { HomePage } from "$pages/home.tsx";
@@ -18,7 +20,7 @@ export async function Root(props: { request: Request }) {
 	const filterMap = await getFilterMap();
 
 	return (
-		<html lang="en" data-theme="">
+		<html lang="en" data-theme="dark">
 			<head>
 				<meta charSet="UTF-8" />
 				<link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -26,15 +28,18 @@ export async function Root(props: { request: Request }) {
 				<title>Vite + RSC</title>
 			</head>
 			<body>
-				<Navbar isLoggedIn={isLoggedIn} />
-				<div className="app-container">
-					<App
-						url={new URL(props.request.url)}
-						request={props.request}
-						sortOptions={sortOptions}
-						filterMap={filterMap}
-					/>
-				</div>
+				<VoiceCommandProvider>
+					<VoiceNavigationCommands />
+					<Navbar isLoggedIn={isLoggedIn} />
+					<div className="app-container">
+						<App
+							url={new URL(props.request.url)}
+							request={props.request}
+							sortOptions={sortOptions}
+							filterMap={filterMap}
+						/>
+					</div>
+				</VoiceCommandProvider>
 			</body>
 		</html>
 	);

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { setCookie } from "$utils/cookies";
 import { getTheme } from "$utils/theme";
+import { useVoiceCommands } from "./voice-command-provider";
 
 interface NavbarProps {
 	isLoggedIn: boolean;
@@ -35,6 +36,63 @@ function DarkLightToggle({ isDark, onToggle }: DarkLightToggleProps) {
 		</button>
 	);
 }
+interface VoiceCommandButtonProps {
+	isDark: boolean;
+}
+function VoiceCommandButton({ isDark }: VoiceCommandButtonProps) {
+	const { state, isSupported, startListening, stopListening } =
+		useVoiceCommands();
+
+	if (!isSupported) {
+		return null;
+	}
+
+	const handleClick = () => {
+		if (state === "idle") {
+			startListening();
+		} else {
+			stopListening();
+		}
+	};
+
+	const getStatusText = () => {
+		switch (state) {
+			case "listening":
+				return "Listening...";
+			case "processing":
+				return "Processing...";
+			default:
+				return null;
+		}
+	};
+
+	const statusText = getStatusText();
+
+	return (
+		<button
+			className="clear-button-stylings voice-button"
+			onClick={handleClick}
+			data-state={state}
+			type="button"
+			aria-label={
+				state === "idle" ? "Start voice command" : "Stop voice command"
+			}
+		>
+			<img
+				className="voice-button-icon"
+				src={
+					isDark
+						? "/public/images/darkmode-microphone.png"
+						: "/public/images/lightmode-microphone.png"
+				}
+				alt="Microphone"
+			/>
+			{statusText && (
+				<span className="voice-status-indicator">{statusText}</span>
+			)}
+		</button>
+	);
+}
 
 export function Navbar({ isLoggedIn }: NavbarProps) {
 	const [isDark, setDark] = useState<"dark" | "light">("dark");
@@ -43,7 +101,6 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 		const initialTheme = getTheme();
 		console.log(initialTheme);
 		const applyInitialTheme = async () => {
-			// await setCookie("theme", initialTheme);
 			document.documentElement.setAttribute("data-theme", initialTheme);
 		};
 		applyInitialTheme().catch(console.error);
@@ -82,10 +139,11 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 			</div>
 
 			<div className="navbar-section flex">
+				<VoiceCommandButton isDark={isDark === "dark"} />
 				<DarkLightToggle
 					isDark={isDark === "dark"}
 					onToggle={async () => {
-						setDark(isDark === "dark" ? "dark" : "light");
+						setDark(isDark === "dark" ? "light" : "dark");
 						await setCookie("theme", isDark);
 						document.documentElement.setAttribute("data-theme", isDark);
 					}}

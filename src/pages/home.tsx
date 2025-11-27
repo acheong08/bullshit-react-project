@@ -4,7 +4,6 @@ import ActionIcon from "$tmpimg/action-image.png";
 import curatorsPick from "$tmpimg/animals-vs-aliens.png";
 import BoardIcon from "$tmpimg/board-image.png";
 import CardsIcon from "$tmpimg/cards-image.png";
-import micIcon from "$tmpimg/darkmode-microphone.png";
 import MultiplayerIcon from "$tmpimg/multiplayer-image.png";
 import PuzzleIcon from "$tmpimg/puzzle-image.png";
 import RacingIcon from "$tmpimg/racing-image.png";
@@ -67,11 +66,6 @@ export function HomePage({ sortOptions, filterOptions }: SearchBarProps) {
 				<div className="category-bar">
 					<div className="category-header-row">
 						<h2 className="category-title">CATEGORIES</h2>
-
-						<button className="dictate-btn" type="button">
-							<img src={micIcon} alt="Microphone icon" className="icon" />
-							<span>Dictate category</span>
-						</button>
 					</div>
 					{/* category tabs for s=switching between secstions of the home page e.g. top charts, categories etc */}
 					<nav className="category-tabs">
@@ -228,11 +222,6 @@ function RecommendedView({
 			<div className="games-bar">
 				<div className="games-row">
 					<h2 className="games-title">ALL GAMES</h2>
-
-					<button className="filters-dictate-btn" type="button">
-						<img src={micIcon} alt="Microphone icon" className="icon" />
-						<span>Dictate filters</span>
-					</button>
 				</div>
 			</div>
 
@@ -498,11 +487,6 @@ function TopChartsView({
 			<div className="games-bar">
 				<div className="games-row">
 					<h2 className="games-title">ALL GAMES</h2>
-
-					<button className="filters-dictate-btn" type="button">
-						<img src={micIcon} alt="Microphone icon" className="icon" />
-						<span>Dictate filters</span>
-					</button>
 				</div>
 			</div>
 			<FiltersBar
@@ -723,11 +707,6 @@ function CategoriesView({
 			<div className="games-bar">
 				<div className="games-row">
 					<h2 className="games-title">ALL GAMES</h2>
-
-					<button className="filters-dictate-btn" type="button">
-						<img src={micIcon} alt="Microphone icon" className="icon" />
-						<span>Dictate filters</span>
-					</button>
 				</div>
 			</div>
 			<FiltersBar
