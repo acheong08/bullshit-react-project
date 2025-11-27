@@ -4,7 +4,7 @@
 
 - **Full stack framework** React + Server Components
 - **Database**: PostgreSQL with TypeORM
-- **Testing**: Selenium and Jest
+- **Testing**: Bun test with happy-dom and @testing-library
 - **Documentation**: TypeDoc
 - **Deployment**: Podman and compose
 
@@ -96,6 +96,24 @@ On the running instance you now have of PostgreSQL you should create a database.
 TypeORM will automatically create the required tables and migrations.
 
 </details>
+
+## Testing
+
+Run all tests using:
+
+```bash
+bun run test
+```
+
+**Important:** Use `bun run test` instead of `bun test` directly. The test script runs different test suites with their appropriate configurations:
+
+- `src/tests/lib/` - Library/utility tests (default bun test config)
+- `src/tests/components/` - Component tests using happy-dom (requires `bunfig.component.toml`)
+
+The test suite uses:
+- **Bun test** - Native test runner
+- **happy-dom** - DOM implementation for component testing
+- **@testing-library/react** - React component testing utilities
 
 ## Contributing
 
