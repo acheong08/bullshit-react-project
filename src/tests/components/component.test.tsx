@@ -8,7 +8,6 @@ test("basic math", () => {
 
 test("verify search bar component", async () => {
 	const redirectSpy = vi.spyOn(window.location, "assign");
-	render(<SearchBar />);
 
 	const options = [
 		"Relevance",
@@ -20,7 +19,13 @@ test("verify search bar component", async () => {
 		"Price: High to Low",
 	];
 
-	const filters = [
+	const filterOptions: Map<string, string[]> = new Map([
+		["Genre", ["Action", "Adventure", "RPG", "Strategy"]],
+		["Accessibility", ["Visual", "Auditory", "Motor", "Cognitive"]],
+		["Miscellaneous", ["Multiplayer", "Singleplayer", "Co-op", "Trending"]],
+	]);
+
+	const selectedFilters = [
 		"Action",
 		"Adventure",
 		"RPG",
@@ -34,6 +39,8 @@ test("verify search bar component", async () => {
 		"Co-op",
 		"Trending",
 	];
+
+	render(<SearchBar sortOptions={options} filterOptions={filterOptions} />);
 
 	const searchInput = screen.getByPlaceholderText("Search...");
 	const searchButton = screen.getByText("Search");
@@ -50,7 +57,7 @@ test("verify search bar component", async () => {
 		expect(sortDropdown).toHaveTextContent(option);
 	}
 
-	for (const filter of filters) {
+	for (const filter of selectedFilters) {
 		const filterOption = screen.getByText(filter);
 		expect(filterOption).toBeInTheDocument();
 		fireEvent.click(filterOption);

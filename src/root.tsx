@@ -2,6 +2,7 @@ import "dotenv/config";
 import "./styles/variables.css";
 import "./styles/index.css";
 import { Navbar } from "$components/navbar.tsx";
+import { getAllSortOptions, getFilterMap } from "$lib/db";
 import { GamePage } from "$pages/game.tsx";
 import { HomePage } from "$pages/home.tsx";
 import { LoginPage } from "$pages/login.tsx";
@@ -10,8 +11,11 @@ import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
 import { isUserLoggedIn } from "$utils/auth.ts";
 
-export function Root(props: { request: Request }) {
+export async function Root(props: { request: Request }) {
 	const isLoggedIn = isUserLoggedIn(props.request);
+
+	const sortOptions = await getAllSortOptions();
+	const filterMap = await getFilterMap();
 
 	return (
 		<html lang="en" data-theme="">
@@ -24,19 +28,32 @@ export function Root(props: { request: Request }) {
 			<body>
 				<Navbar isLoggedIn={isLoggedIn} />
 				<div className="app-container">
-					<App url={new URL(props.request.url)} />
+					<App
+						url={new URL(props.request.url)}
+						sortOptions={sortOptions}
+						filterMap={filterMap}
+					/>
 				</div>
 			</body>
 		</html>
 	);
 }
 
-function App(props: { url: URL }) {
+function App(props: {
+	url: URL;
+	sortOptions: string[];
+	filterMap: Map<string, string[]>;
+}) {
 	const pathname = props.url.pathname;
 
 	// Parse route
 	if (pathname === "/") {
-		return <HomePage />;
+		return (
+			<HomePage
+				sortOptions={props.sortOptions}
+				filterOptions={props.filterMap}
+			/>
+		);
 	}
 	if (pathname === "/login") {
 		return <LoginPage />;
@@ -52,7 +69,13 @@ function App(props: { url: URL }) {
 		const searchParamsObject = Object.fromEntries(
 			props.url.searchParams.entries(),
 		);
-		return <SearchPage params={searchParamsObject} />;
+		return (
+			<SearchPage
+				params={searchParamsObject}
+				searchBarSortOptions={props.sortOptions}
+				searchBarFilterOptions={props.filterMap}
+			/>
+		);
 	}
 
 	return <NotFoundPage />;

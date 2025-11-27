@@ -4,6 +4,7 @@ import {
 	type FormEvent,
 	type SetStateAction,
 	useEffect,
+	useRef,
 	useState,
 } from "react";
 
@@ -21,22 +22,17 @@ interface SortDropdownProps {
 	setSelectedOption: Dispatch<SetStateAction<string>>;
 }
 
-function sortDropdown({
-	selectedOption,
-	setSelectedOption,
-}: SortDropdownProps) {
+interface SearchBarProps {
+	sortOptions: string[];
+	filterOptions: Map<string, string[]>;
+}
+
+function sortDropdown(
+	{ selectedOption, setSelectedOption }: SortDropdownProps,
+	sortOptions: string[],
+) {
 	const [open, setOpen] = useState(false);
 	//NOTE: in future these will be pulled from the database
-	const options = [
-		"Relevance",
-		"Release Date",
-		"Popularity",
-		"Alphabetical",
-		"Rating",
-		"Price: Low to High",
-		"Price: High to Low",
-	];
-
 	return (
 		<div className="">
 			<button
@@ -49,7 +45,7 @@ function sortDropdown({
 			</button>
 			{open && (
 				<ul className="sort-dropdown-container">
-					{options.map((option: string) => (
+					{sortOptions.map((option: string) => (
 						<li key={option} className="center">
 							<button
 								type="button"
@@ -129,30 +125,9 @@ function selectedFiltersDisplay({ selectedFilters }: FilterSummaryProps) {
 function searchFilterComponent(
 	{ selectedOption }: SortDropdownProps,
 	{ selectedFilters, setSelectedFilters }: FilterSummaryProps,
+	filterOptions: Map<string, string[]>,
 ) {
 	const [filterOpen, setFilterOpen] = useState(false);
-
-	//NOTE: this is clunky as hell, in future these will be pulled from the database
-	const filters: Map<string, string[]> = new Map([
-		["Genre", ["Action", "Adventure", "RPG", "Strategy"]],
-		["Accessibility", ["Visual", "Auditory", "Motor", "Cognitive"]],
-		["Miscellaneous", ["Multiplayer", "Singleplayer", "Co-op", "Trending"]],
-	]);
-	// const _filtersReversed: Map<string, string> = new Map([
-	//     ["Action", "Genre"],
-	//     ["Adventure", "Genre"],
-	//     ["RPG", "Genre"],
-	//     ["Strategy", "Genre"],
-	//     ["Visual", "Accessibility"],
-	//     ["Auditory", "Accessibility"],
-	//     ["Motor", "Accessibility"],
-	//     ["Cognitive", "Accessibility"],
-	//     ["Multiplayer", "Miscellaneous"],
-	//     ["Singleplayer", "Miscellaneous"],
-	//     ["Co-op", "Miscellaneous"],
-	//     ["Trending", "Miscellaneous"],
-	// ]);
-
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -194,33 +169,25 @@ function searchFilterComponent(
 			{dropdownFilterSelector(
 				{ filterOpen },
 				{ selectedFilters, setSelectedFilters },
-				filters,
+				filterOptions,
 			)}
 			{selectedFiltersDisplay({ selectedFilters, setSelectedFilters })}
 		</div>
 	);
 }
 
-export function SearchBar() {
-	const options = [
-		"Relevance",
-		"Release Date",
-		"Popularity",
-		"Alphabetical",
-		"Rating",
-		"Price: Low to High",
-		"Price: High to Low",
-	];
-
-	const [selectedSort, setSelectedSort] = useState(options[0]);
+export function SearchBar({ sortOptions, filterOptions }: SearchBarProps) {
+	const [selectedSort, setSelectedSort] = useState(sortOptions[0]);
 	const [selectedFilters, setSelectedFilters] = useState<Set<string>>(
 		new Set(),
 	);
 
+	const sortZeroRef = useRef(sortOptions[0]);
+
 	// Initialize state from URL parameters on component mount
 	useEffect(() => {
 		const searchParams = new URLSearchParams(window.location.search);
-		const initialSort = searchParams.get("sort") || options[0];
+		const initialSort = searchParams.get("sort") || sortZeroRef.current;
 		const filterParams = searchParams.get("filters")?.split(",") || [];
 		//TODO: have query also populate search bar input field (defaultValue)
 
@@ -234,11 +201,15 @@ export function SearchBar() {
 				{searchFilterComponent(
 					{ selectedOption: selectedSort, setSelectedOption: setSelectedSort },
 					{ selectedFilters, setSelectedFilters },
+					filterOptions,
 				)}
-				{sortDropdown({
-					selectedOption: selectedSort,
-					setSelectedOption: setSelectedSort,
-				})}
+				{sortDropdown(
+					{
+						selectedOption: selectedSort,
+						setSelectedOption: setSelectedSort,
+					},
+					sortOptions,
+				)}
 			</div>
 		</div>
 	);

@@ -29,7 +29,12 @@ type CategoryView =
 	| "categories"
 	| "new-this-week";
 
-export function HomePage() {
+interface SearchBarProps {
+	sortOptions: string[];
+	filterOptions: Map<string, string[]>;
+}
+
+export function HomePage({ sortOptions, filterOptions }: SearchBarProps) {
 	const [activeView, setActiveView] = useState<CategoryView>("recommended");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [selectedGenre, setSelectedGenre] = useState<string>("all");
@@ -38,7 +43,7 @@ export function HomePage() {
 	return (
 		<div id="root">
 			<main>
-				<SearchBar />
+				<SearchBar sortOptions={sortOptions} filterOptions={filterOptions} />
 				{/* spotlight which is on every version of the home page */}
 				<div className="spotlight-section">
 					<h1 className="spotlight-header">SPOTLIGHT</h1>
