@@ -9,6 +9,7 @@ import {
 } from "@vitejs/plugin-rsc/rsc";
 import type { ReactFormState } from "react-dom/client";
 import { Root } from "../root.tsx";
+import { runWithRequest } from "../utils/request-context";
 import "./init"; // Initialize database and run seed operations
 
 // The schema of payload which is serialized into RSC stream on rsc environment
@@ -44,14 +45,18 @@ export default async function handler(request: Request): Promise<Response> {
 			temporaryReferences = createTemporaryReferenceSet();
 			const args = await decodeReply(body, { temporaryReferences });
 			const action = await loadServerAction(actionId);
-			returnValue = await action.apply(null, args);
+			// Wrap action execution with request context
+			returnValue = await runWithRequest(request, () =>
+				action.apply(null, args),
+			);
 		} else {
 			// otherwise server function is called via `<form action={...}>`
 			// before hydration (e.g. when javascript is disabled).
 			// aka progressive enhancement.
 			const formData = await request.formData();
 			const decodedAction = await decodeAction(formData);
-			const result = await decodedAction();
+			// Wrap action execution with request context
+			const result = await runWithRequest(request, () => decodedAction());
 			formState = await decodeFormState(result, formData);
 		}
 	}

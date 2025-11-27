@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { setCookie } from "../utils/cookies";
-//TODO: make this work with relative imports
-import { getTheme } from "../utils/theme";
+import { useEffect, useState } from "react";
+import { setCookie } from "$utils/cookies";
+import { getTheme } from "$utils/theme";
 
 interface NavbarProps {
 	isLoggedIn: boolean;
@@ -38,20 +37,14 @@ function DarkLightToggle({ isDark, onToggle }: DarkLightToggleProps) {
 }
 
 export function Navbar({ isLoggedIn }: NavbarProps) {
-	const initialTheme = getTheme();
-
-	const [isDark, setDark] = useState(initialTheme === "dark");
-
-	//Do avoid stale closure issues in useEffect
-	const initialDarkRef = useRef(isDark);
+	const [isDark, setDark] = useState<"dark" | "light">("dark");
 
 	useEffect(() => {
+		const initialTheme = getTheme();
+		console.log(initialTheme);
 		const applyInitialTheme = async () => {
-			await setCookie("theme", initialDarkRef.current ? "dark" : "light");
-			document.documentElement.setAttribute(
-				"data-theme",
-				initialDarkRef.current ? "dark" : "light",
-			);
+			// await setCookie("theme", initialTheme);
+			document.documentElement.setAttribute("data-theme", initialTheme);
 		};
 		applyInitialTheme().catch(console.error);
 	}, []);
@@ -90,14 +83,11 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 
 			<div className="navbar-section flex">
 				<DarkLightToggle
-					isDark={isDark}
+					isDark={isDark === "dark"}
 					onToggle={async () => {
-						setDark(!isDark);
-						await setCookie("theme", isDark ? "light" : "dark");
-						document.documentElement.setAttribute(
-							"data-theme",
-							isDark ? "light" : "dark",
-						);
+						setDark(isDark === "dark" ? "dark" : "light");
+						await setCookie("theme", isDark);
+						document.documentElement.setAttribute("data-theme", isDark);
 					}}
 				/>
 				<a href="/user/username/wishlist">

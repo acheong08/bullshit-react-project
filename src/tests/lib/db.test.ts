@@ -2,15 +2,16 @@ import "reflect-metadata";
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { DataSource } from "typeorm";
 import { Game, GameMedia, Label, LabelType, MediaType } from "$entity/Games";
+import { Review } from "$entity/Review";
 import { User } from "$entity/User";
-import { getFilterMap, getGameById } from "$lib/db";
+import { getFilterMap, getGameById, getReviewsByGameId } from "$lib/db";
 
 let testDataSource: DataSource;
 
 beforeEach(async () => {
 	testDataSource = new DataSource({
 		database: ":memory:",
-		entities: [User, Game, GameMedia, Label],
+		entities: [User, Game, GameMedia, Label, Review],
 		synchronize: true,
 		type: "sqlite",
 	});
@@ -224,5 +225,141 @@ describe("getFilterMap", () => {
 
 		const result = await getFilterMap();
 		expect(result.get("Genre")).toEqual(["RPG", "Strategy"]);
+	});
+});
+
+describe("getReviewsByGameId", () => {
+	test("returns empty array for game with no reviews", async () => {
+		const game = new Game();
+		game.name = "Test Game";
+		game.description = "A test game";
+		game.labels = [];
+		game.media = [];
+		await game.save();
+
+		const result = await getReviewsByGameId(game.id);
+		expect(result).toEqual([]);
+	});
+
+	test("returns only reviews with comments", async () => {
+		const user1 = new User();
+		user1.username = "testuser1";
+		user1.email = "test1@example.com";
+		user1.passwordHash = "hash";
+		await user1.save();
+
+		const user2 = new User();
+		user2.username = "testuser2";
+		user2.email = "test2@example.com";
+		user2.passwordHash = "hash";
+		await user2.save();
+
+		const game = new Game();
+		game.name = "Test Game";
+		game.description = "A test game";
+		game.labels = [];
+		game.media = [];
+		await game.save();
+
+		// Create review WITH comment
+		const review1 = new Review();
+		review1.accessibilityRating = 5;
+		review1.enjoyabilityRating = 4;
+		review1.comment = "Great game!";
+		review1.user = user1;
+		review1.game = game;
+		await review1.save();
+
+		// Create review WITHOUT comment (should be filtered out) - different user
+		const review2 = new Review();
+		review2.accessibilityRating = 3;
+		review2.enjoyabilityRating = 3;
+		review2.comment = null;
+		review2.user = user2;
+		review2.game = game;
+		await review2.save();
+
+		const result = await getReviewsByGameId(game.id);
+
+		expect(result).toHaveLength(1);
+		expect(result[0].comment).toBe("Great game!");
+		expect(result[0].accessibilityRating).toBe(5);
+		expect(result[0].enjoyabilityRating).toBe(4);
+	});
+
+	test("returns reviews with user relation loaded", async () => {
+		const user = new User();
+		user.username = "reviewer";
+		user.email = "reviewer@example.com";
+		user.passwordHash = "hash";
+		await user.save();
+
+		const game = new Game();
+		game.name = "Test Game";
+		game.description = "A test game";
+		game.labels = [];
+		game.media = [];
+		await game.save();
+
+		const review = new Review();
+		review.accessibilityRating = 4;
+		review.enjoyabilityRating = 5;
+		review.comment = "Excellent!";
+		review.user = user;
+		review.game = game;
+		await review.save();
+
+		const result = await getReviewsByGameId(game.id);
+
+		expect(result).toHaveLength(1);
+		expect(result[0].user).toBeDefined();
+		expect(result[0].user.username).toBe("reviewer");
+	});
+
+	test("returns multiple reviews from different users", async () => {
+		const user1 = new User();
+		user1.username = "testuser1";
+		user1.email = "test1@example.com";
+		user1.passwordHash = "hash";
+		await user1.save();
+
+		const user2 = new User();
+		user2.username = "testuser2";
+		user2.email = "test2@example.com";
+		user2.passwordHash = "hash";
+		await user2.save();
+
+		const game = new Game();
+		game.name = "Test Game";
+		game.description = "A test game";
+		game.labels = [];
+		game.media = [];
+		await game.save();
+
+		// Create first review
+		const review1 = new Review();
+		review1.accessibilityRating = 4;
+		review1.enjoyabilityRating = 4;
+		review1.comment = "First review";
+		review1.user = user1;
+		review1.game = game;
+		await review1.save();
+
+		// Create second review with different user
+		const review2 = new Review();
+		review2.accessibilityRating = 5;
+		review2.enjoyabilityRating = 5;
+		review2.comment = "Second review";
+		review2.user = user2;
+		review2.game = game;
+		await review2.save();
+
+		const result = await getReviewsByGameId(game.id);
+
+		expect(result).toHaveLength(2);
+		// Verify both reviews are present
+		const comments = result.map((r) => r.comment);
+		expect(comments).toContain("First review");
+		expect(comments).toContain("Second review");
 	});
 });

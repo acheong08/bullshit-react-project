@@ -30,6 +30,7 @@ export async function Root(props: { request: Request }) {
 				<div className="app-container">
 					<App
 						url={new URL(props.request.url)}
+						request={props.request}
 						sortOptions={sortOptions}
 						filterMap={filterMap}
 					/>
@@ -41,6 +42,7 @@ export async function Root(props: { request: Request }) {
 
 function App(props: {
 	url: URL;
+	request: Request;
 	sortOptions: string[];
 	filterMap: Map<string, string[]>;
 }) {
@@ -63,7 +65,7 @@ function App(props: {
 	}
 	if (pathname.startsWith("/game/")) {
 		const gameId = pathname.split("/")[2];
-		return <GamePage gameId={gameId} />;
+		return <GamePage gameId={gameId} request={props.request} />;
 	}
 	if (pathname === "/search") {
 		const searchParamsObject = Object.fromEntries(

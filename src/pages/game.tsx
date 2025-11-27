@@ -3,13 +3,27 @@ import { MediaCarousel } from "$components/media-carousel";
 import { ReviewsSection } from "$components/reviews-section";
 import type { Game, GameMedia } from "$entity/Games";
 import { LabelType } from "$entity/Games";
-import { getGameById } from "$lib/db";
+import { getGameById, getReviewsByGameId } from "$lib/db";
+import { getCurrentUser, isUserLoggedIn } from "$utils/auth";
 
 interface GamePageProps {
 	gameId: string;
+	request: Request;
 }
 
-export async function GamePage({ gameId }: GamePageProps) {
+// Type for serialized review data
+type SerializedReview = {
+	id: number;
+	user: {
+		username: string;
+	};
+	accessibilityRating: number;
+	enjoyabilityRating: number;
+	comment: string;
+	createdAt: string;
+};
+
+export async function GamePage({ gameId, request }: GamePageProps) {
 	// Fetch the game data
 	const gameIdNumber = Number.parseInt(gameId, 10);
 	const game: Game | null = await getGameById(gameIdNumber);
@@ -24,6 +38,15 @@ export async function GamePage({ gameId }: GamePageProps) {
 			</div>
 		);
 	}
+
+	// Fetch reviews for this game
+	const reviews = await getReviewsByGameId(gameIdNumber);
+	const serializedReviews = instanceToPlain(reviews) as SerializedReview[];
+
+	// Check if user is logged in and get username
+	const loggedIn = isUserLoggedIn(request);
+	const currentUser = getCurrentUser(request);
+	const currentUsername = currentUser?.username;
 
 	// Organize labels by type
 
@@ -128,7 +151,12 @@ export async function GamePage({ gameId }: GamePageProps) {
 					{/* Ratings and Reviews Section */}
 					<div className="reviews-section">
 						<h2>Ratings and reviews</h2>
-						<ReviewsSection />
+						<ReviewsSection
+							reviews={serializedReviews}
+							gameId={gameIdNumber}
+							isLoggedIn={loggedIn}
+							currentUsername={currentUsername}
+						/>
 					</div>
 				</div>
 			</main>

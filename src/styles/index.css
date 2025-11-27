@@ -804,11 +804,11 @@ label {
 .game-tag {
 	padding: 0.5rem 1.25rem;
 	border-radius: 2rem;
-	border: 1px solid #ccc;
+	border: 1px solid var(--grey-border);
 	font-size: 0.9rem;
 	font-weight: 600;
-	color: #333;
-	background-color: white;
+	color: var(--black-white);
+	background-color: var(--background);
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -880,7 +880,7 @@ label {
 
 .tab-btn.active {
 	background-color: #2a2a80;
-	color: var(--black-white);
+	color: white;
 	border-color: #2a2a80;
 }
 
@@ -1041,6 +1041,29 @@ label {
 	color: #333;
 }
 
+.delete-review-btn {
+	margin-left: auto;
+	background-color: #dc3545;
+	color: white;
+	border: none;
+	padding: 0.25rem 0.75rem;
+	border-radius: 2rem;
+	font-size: 0.8rem;
+	cursor: pointer;
+	font-weight: 600;
+	transition: all 0.2s;
+}
+
+.delete-review-btn:hover:not(:disabled) {
+	background-color: #c82333;
+	transform: scale(1.05);
+}
+
+.delete-review-btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
 .review-text {
 	line-height: 1.6;
 	color: #333;
@@ -1103,6 +1126,204 @@ label {
 
 	.report-btn {
 		margin-left: 0;
+	}
+}
+
+/* Review Form */
+.review-form {
+	background-color: var(--background);
+	border: 2px solid var(--grey-border);
+	border-radius: 12px;
+	padding: 2rem;
+	margin: 2rem 0;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.review-form h3 {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: var(--primary-blue);
+	margin-bottom: 1.5rem;
+}
+
+.rating-inputs {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.rating-input-group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.rating-input-group label {
+	font-size: 1rem;
+	font-weight: 600;
+	color: var(--black-white);
+}
+
+.rating-input-group input[type="range"] {
+	width: 100%;
+	height: 8px;
+	border-radius: 5px;
+	background: linear-gradient(to right, #ddd 0%, #2a2a80 100%);
+	outline: none;
+	cursor: pointer;
+}
+
+.rating-input-group input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #2a2a80;
+	cursor: pointer;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rating-input-group input[type="range"]::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: #2a2a80;
+	cursor: pointer;
+	border: none;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.comment-input {
+	width: 100%;
+	padding: 1rem;
+	border: 2px solid var(--grey-border);
+	border-radius: 8px;
+	font-family: inherit;
+	font-size: 1rem;
+	line-height: 1.5;
+	resize: vertical;
+	background-color: var(--background);
+	color: var(--black-white);
+	margin-bottom: 1rem;
+}
+
+.comment-input:focus {
+	outline: none;
+	border-color: var(--primary-blue);
+}
+
+.submit-review-btn {
+	padding: 0.75rem 2rem;
+	background-color: var(--primary-blue);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-weight: 600;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.submit-review-btn:hover:not(:disabled) {
+	background-color: #003580;
+	transform: scale(1.02);
+}
+
+.submit-review-btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.success-message {
+	background-color: #e6f4ea;
+	color: #1e7e34;
+	padding: 1rem;
+	border-radius: 8px;
+	margin-bottom: 1rem;
+	font-weight: 600;
+	border: 1px solid #1e7e34;
+}
+
+.error-message {
+	background-color: rgba(255, 0, 0, 0.1);
+	color: red;
+	padding: 1rem;
+	border-radius: 8px;
+	margin-bottom: 1rem;
+	font-weight: 600;
+	border: 1px solid red;
+}
+
+/* Login Prompt Banner */
+.login-prompt-banner {
+	background: linear-gradient(135deg, #2a2a80 0%, #1a1a50 100%);
+	border: 2px solid var(--primary-blue);
+	border-radius: 12px;
+	padding: 2rem;
+	margin: 2rem 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+	box-shadow: 0 4px 12px rgba(42, 42, 128, 0.15);
+}
+
+.login-prompt-banner p {
+	color: white;
+	font-size: 1.1rem;
+	font-weight: 600;
+	margin: 0;
+	text-align: center;
+}
+
+.login-link-btn {
+	padding: 0.75rem 2rem;
+	background-color: white;
+	color: var(--primary-blue);
+	border: none;
+	border-radius: 8px;
+	font-weight: 700;
+	font-size: 1rem;
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.2s;
+	display: inline-block;
+}
+
+.login-link-btn:hover {
+	background-color: #f0f0f0;
+	transform: scale(1.05);
+}
+
+.review-rating-row {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.rating-label {
+	font-weight: 600;
+	font-size: 0.95rem;
+	min-width: 100px;
+}
+
+@media (max-width: 768px) {
+	.review-form {
+		padding: 1.5rem;
+	}
+
+	.rating-inputs {
+		gap: 1rem;
+	}
+
+	.login-prompt-banner {
+		padding: 1.5rem;
+	}
+
+	.login-prompt-banner p {
+		font-size: 1rem;
 	}
 }
 
