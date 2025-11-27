@@ -1,4 +1,4 @@
-import { Game } from "$entity/Games";
+import { Game, Label, LabelType } from "$entity/Games";
 
 export async function getGameById(gameId: number): Promise<Game | null> {
 	try {
@@ -10,5 +10,33 @@ export async function getGameById(gameId: number): Promise<Game | null> {
 	} catch (error) {
 		console.error(`Error fetching game with ID ${gameId}:`, error);
 		return null;
+	}
+}
+
+export async function getAllSortOptions(): Promise<string[]> {
+	return ["Popularity", "Release Date", "Alphabetical", "User Rating"];
+}
+
+export async function getFilterMap(): Promise<Map<string, string[]>> {
+	try {
+		const enumEntries = Object.entries(LabelType).filter(
+			([_, value]) => typeof value === "number",
+		) as [string, number][];
+
+		const filterMap = new Map<string, string[]>();
+		for (const [categoryName, categoryId] of enumEntries) {
+			const labels = await Label.find({
+				where: { type: categoryId },
+			});
+
+			filterMap.set(
+				categoryName,
+				labels.map((label) => label.name as string),
+			);
+		}
+		return filterMap;
+	} catch (error) {
+		console.error("Error fetching filter map:", error);
+		return new Map<string, string[]>();
 	}
 }

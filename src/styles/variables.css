@@ -8,6 +8,7 @@ html[data-theme="light"] {
 	--text: #000000;
 	--contrast-text: #ffffff;
 	--black-white: #000000;
+	--white-black: #ffffff;
 }
 
 /* Colour variables (dark mode) */
@@ -20,4 +21,5 @@ html[data-theme="dark"] {
 	--contrast-text: #000000;
 	--black-white: #ffffff;
 	--search-page-header: #ffffff;
+	--white-black: #000000;
 }

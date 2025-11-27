@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { DataSource } from "typeorm";
 import { Game, GameMedia, Label, LabelType, MediaType } from "$entity/Games";
 import { User } from "$entity/User";
-import { getGameById } from "$lib/db";
+import { getFilterMap, getGameById } from "$lib/db";
 
 let testDataSource: DataSource;
 
@@ -169,5 +169,60 @@ describe("getGameById", () => {
 		expect(result).not.toBeNull();
 		expect(result?.labels).toEqual([]);
 		expect(result?.media).toEqual([]);
+	});
+});
+
+describe("getFilterMap", () => {
+	test("returns correct filter map", async () => {
+		const result = await getFilterMap();
+		expect(result.size).toBe(5);
+		//Since the categories are hardcoded in the enum, we just check for their presence
+		expect(result.get("Genre")).toEqual([]);
+		expect(result.get("Accessibility")).toEqual([]);
+		expect(result.get("Platform")).toEqual([]);
+		expect(result.get("IndustryRating")).toEqual([]);
+		expect(result.get("Misc")).toEqual([]);
+	});
+
+	test("returns labels grouped by category", async () => {
+		const genreLabel = new Label();
+		genreLabel.type = LabelType.Genre;
+		genreLabel.name = "Action";
+		genreLabel.description = "Action games";
+		await genreLabel.save();
+
+		const accessLabel = new Label();
+		accessLabel.type = LabelType.Accessibility;
+		accessLabel.name = "Subtitles";
+		accessLabel.description = "Subtitle support";
+		await accessLabel.save();
+
+		const platformLabel = new Label();
+		platformLabel.type = LabelType.Platform;
+		platformLabel.name = "PC";
+		platformLabel.description = "Personal Computer";
+		await platformLabel.save();
+
+		const result = await getFilterMap();
+		expect(result.get("Genre")).toEqual(["Action"]);
+		expect(result.get("Accessibility")).toEqual(["Subtitles"]);
+		expect(result.get("Platform")).toEqual(["PC"]);
+	});
+
+	test("handles multiple labels in the same category", async () => {
+		const genreLabel1 = new Label();
+		genreLabel1.type = LabelType.Genre;
+		genreLabel1.name = "RPG";
+		genreLabel1.description = "Role-Playing Game";
+		await genreLabel1.save();
+
+		const genreLabel2 = new Label();
+		genreLabel2.type = LabelType.Genre;
+		genreLabel2.name = "Strategy";
+		genreLabel2.description = "Strategy Game";
+		await genreLabel2.save();
+
+		const result = await getFilterMap();
+		expect(result.get("Genre")).toEqual(["RPG", "Strategy"]);
 	});
 });

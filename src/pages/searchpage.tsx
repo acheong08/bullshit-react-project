@@ -5,14 +5,23 @@ import StardewValleyLogo from "$tmpimg/Stardew_Valley_image.png";
 
 interface SearchPageProps {
 	params: Record<string, string>;
+	searchBarSortOptions: string[];
+	searchBarFilterOptions: Map<string, string[]>;
 }
 
-export function SearchPage({ params }: SearchPageProps) {
+export function SearchPage({
+	params,
+	searchBarSortOptions,
+	searchBarFilterOptions,
+}: SearchPageProps) {
 	const query = params.query;
 
 	return (
 		<>
-			<SearchBar />
+			<SearchBar
+				sortOptions={searchBarSortOptions}
+				filterOptions={searchBarFilterOptions}
+			/>
 			<div className="overall-container center">
 				<div className="alignment-container">
 					<div className="flex back-button-container">

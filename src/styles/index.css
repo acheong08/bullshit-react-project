@@ -191,12 +191,11 @@ label {
 	border: 2px solid black;
 	border-radius: 8px;
 	font-size: 1rem;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	width: 12rem;
+	margin: 5px 0;
+	/* width: 12rem; */
+	width: 100%;
 	max-width: calc((100vw - 15rem - 15px) / 3);
-	/* background-color: white; */
-	padding: 0.6rem 1.2rem;
+	padding: 0.6rem;
 	display: flex;
 	justify-content: center;
 }
@@ -236,6 +235,7 @@ label {
 	font-family: inherit;
 	align-items: center;
 	justify-self: center;
+	margin: 0 5px;
 }
 
 .filters-dropdown-container {
@@ -243,11 +243,14 @@ label {
 	border-radius: 8px;
 	border: 2px solid black;
 	list-style-type: none;
-	display: flex;
-	justify-content: space-around;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+	/* justify-content: space-around; */
 	width: 45rem;
 	max-width: calc(100vw - 15rem);
 	/* TODO: make this animate nicely */
+	max-height: 25rem;
+	overflow-y: auto;
 }
 
 .sort-dropdown-container {
@@ -262,10 +265,8 @@ label {
 	align-self: center;
 	justify-self: center;
 	width: 13rem;
-}
-
-.highlight {
-	border: 2px solid blue;
+	max-height: 15rem;
+	overflow-y: auto;
 }
 
 .filters-display {
@@ -387,18 +388,6 @@ label {
 	padding: 0.6rem 1.2rem;
 }
 
-.filter-button {
-	border: 2px solid black;
-	border-radius: 8px;
-	font-size: 1rem;
-	margin-top: 5px;
-	margin-bottom: 5px;
-	width: 12rem;
-	padding: 0.6rem 1.2rem;
-	display: flex;
-	justify-content: center;
-}
-
 .sort-by-button {
 	border: 2px solid black;
 	margin: 5px;
@@ -461,7 +450,7 @@ label {
 }
 
 .highlight {
-	border: 2px solid var(--primary-blue);
+	border: 4px solid var(--primary-blue);
 }
 
 .filter-label {
