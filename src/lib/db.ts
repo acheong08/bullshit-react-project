@@ -1,4 +1,6 @@
+import { IsNull, Not } from "typeorm";
 import { Game, Label, LabelType } from "$entity/Games";
+import { Review } from "$entity/Review";
 
 export async function getGameById(gameId: number): Promise<Game | null> {
 	try {
@@ -38,5 +40,22 @@ export async function getFilterMap(): Promise<Map<string, string[]>> {
 	} catch (error) {
 		console.error("Error fetching filter map:", error);
 		return new Map<string, string[]>();
+	}
+}
+
+export async function getReviewsByGameId(gameId: number): Promise<Review[]> {
+	try {
+		const reviews = await Review.find({
+			order: { createdAt: "DESC" },
+			relations: ["user"],
+			where: {
+				comment: Not(IsNull()), // Only get reviews with comments
+				game: { id: gameId },
+			},
+		});
+		return reviews;
+	} catch (error) {
+		console.error(`Error fetching reviews for game ${gameId}:`, error);
+		return [];
 	}
 }
