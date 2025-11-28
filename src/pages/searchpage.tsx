@@ -59,8 +59,6 @@ export async function SearchPage({
 											0,
 										) / ratings.length
 									: 0;
-							console.log("game.media:", game.media);
-							console.log("previewImage:", previewImage);
 
 							return (
 								<GameCard
