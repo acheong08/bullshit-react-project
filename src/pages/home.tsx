@@ -34,9 +34,14 @@ type CategoryView =
 interface SearchBarProps {
 	sortOptions: string[];
 	filterOptions: Map<string, string[]>;
+	defaultQuery: string | null;
 }
 
-export function HomePage({ sortOptions, filterOptions }: SearchBarProps) {
+export function HomePage({
+	sortOptions,
+	filterOptions,
+	defaultQuery,
+}: SearchBarProps) {
 	const [activeView, setActiveView] = useState<CategoryView>("recommended");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [selectedGenre, setSelectedGenre] = useState<string>("all");
@@ -45,7 +50,11 @@ export function HomePage({ sortOptions, filterOptions }: SearchBarProps) {
 	return (
 		<div id="root">
 			<main>
-				<SearchBar sortOptions={sortOptions} filterOptions={filterOptions} />
+				<SearchBar
+					sortOptions={sortOptions}
+					filterOptions={filterOptions}
+					defaultQuery={defaultQuery}
+				/>
 				{/* spotlight which is on every version of the home page */}
 				<div className="spotlight-section">
 					<h1 className="spotlight-header">SPOTLIGHT</h1>

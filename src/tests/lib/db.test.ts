@@ -4,7 +4,7 @@ import { DataSource } from "typeorm";
 import { Game, GameMedia, Label, LabelType, MediaType } from "$entity/Games";
 import { Review } from "$entity/Review";
 import { User } from "$entity/User";
-import { getFilterMap, getGameById, getReviewsByGameId } from "$lib/db";
+import { getFilterMap, getGameById, searchGames } from "$lib/db";
 
 let testDataSource: DataSource;
 
@@ -362,4 +362,78 @@ describe("getReviewsByGameId", () => {
 		expect(comments).toContain("First review");
 		expect(comments).toContain("Second review");
 	});
+});
+
+describe("searchGames", () => {
+	test("returns all games when no filters or query provided", async () => {
+		const game1 = new Game();
+		game1.name = "Game One";
+		game1.description = "First game";
+		game1.labels = [];
+		game1.media = [];
+		await game1.save();
+
+		const game2 = new Game();
+		game2.name = "Game Two";
+		game2.description = "Second game";
+		game2.labels = [];
+		game2.media = [];
+		await game2.save();
+
+		const results = await searchGames([], "Popularity", "");
+		expect(results).toHaveLength(2);
+	});
+
+	test("filters games by labels", async () => {
+		const labelAction = new Label();
+		labelAction.type = LabelType.Genre;
+		labelAction.name = "Action";
+		labelAction.description = "Action games";
+		await labelAction.save();
+
+		const labelRPG = new Label();
+		labelRPG.type = LabelType.Genre;
+		labelRPG.name = "RPG";
+		labelRPG.description = "Role-Playing Game";
+		await labelRPG.save();
+
+		const game1 = new Game();
+		game1.name = "Action Game";
+		game1.description = "An action-packed game";
+		game1.labels = [labelAction];
+		game1.media = [];
+		await game1.save();
+
+		const game2 = new Game();
+		game2.name = "RPG Game";
+		game2.description = "An immersive RPG experience";
+		game2.labels = [labelRPG];
+		game2.media = [];
+		await game2.save();
+
+		const results = await searchGames(["Action"], "Popularity", "");
+		expect(results).toHaveLength(1);
+		expect(results[0].name).toBe("Action Game");
+	});
+
+	//TODO: SQLite does not support ILIKE, so this test is disabled for now.
+	// test("searches games by query", async () => {
+	//     const game1 = new Game();
+	//     game1.name = "Space Adventure";
+	//     game1.description = "Explore the galaxy";
+	//     game1.labels = [];
+	//     game1.media = [];
+	//     await game1.save();
+	//
+	//     const game2 = new Game();
+	//     game2.name = "Jungle Quest";
+	//     game2.description = "An adventure in the jungle";
+	//     game2.labels = [];
+	//     game2.media = [];
+	//     await game2.save();
+	//
+	//     const results = await searchGames([], "Popularity", "jung");
+	//     expect(results).toHaveLength(1);
+	//     expect(results[0].name).toBe("Jungle Quest");
+	// });
 });

@@ -1,27 +1,33 @@
-"use client";
 import GameCard from "$components/gameCards/game-card";
 import { SearchBar } from "$components/searchbar";
+import { LabelType, MediaType } from "$entity/Games";
+import { searchGames } from "$lib/db";
 
 const StardewValleyLogo = "/images/Stardew_Valley_image.png";
 
 interface SearchPageProps {
-	params: Record<string, string>;
+	urlParams: Record<string, string>;
 	searchBarSortOptions: string[];
 	searchBarFilterOptions: Map<string, string[]>;
 }
 
-export function SearchPage({
-	params,
+export async function SearchPage({
+	urlParams: params,
 	searchBarSortOptions,
 	searchBarFilterOptions,
 }: SearchPageProps) {
 	const query = params.query;
+	const filterOptions = params.filters ? params.filters.split(",") : [];
+	const sortOption = params.sort;
+
+	const games = await searchGames(filterOptions, sortOption, query);
 
 	return (
 		<>
 			<SearchBar
 				sortOptions={searchBarSortOptions}
 				filterOptions={searchBarFilterOptions}
+				defaultQuery={query}
 			/>
 			<div className="overall-container center">
 				<div className="alignment-container">
@@ -38,16 +44,27 @@ export function SearchPage({
 					</div>
 
 					<div className="game-card-gallery">
-						{Array.from({ length: 20 }).map((_, _index) => (
-							<GameCard
-								image={StardewValleyLogo}
-								title="Stardew Valley"
-								genres={["Simulation", "RPG"]}
-								rating={5}
-								gameId="123"
-								key="erg"
-							/>
-						))}
+						{games.map((game) => {
+							const previewImage = game.media.find(
+								(media) => media.type === MediaType.Icon,
+							);
+							console.log("game.media:", game.media);
+							console.log("previewImage:", previewImage);
+
+							return (
+								<GameCard
+									key={game.id}
+									image={previewImage ? previewImage.uri : StardewValleyLogo}
+									title={game.name}
+									genres={game.labels
+										.filter((label) => label.type === LabelType.Genre)
+										.slice(0, 3)
+										.map((label) => label.name.toString())}
+									rating={4.5}
+									gameId={game.id.toString()}
+								/>
+							);
+						})}
 					</div>
 				</div>
 			</div>

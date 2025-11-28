@@ -59,6 +59,7 @@ function App(props: {
 			<HomePage
 				sortOptions={props.sortOptions}
 				filterOptions={props.filterMap}
+				defaultQuery={null}
 			/>
 		);
 	}
@@ -81,7 +82,7 @@ function App(props: {
 		);
 		return (
 			<SearchPage
-				params={searchParamsObject}
+				urlParams={searchParamsObject}
 				searchBarSortOptions={props.sortOptions}
 				searchBarFilterOptions={props.filterMap}
 			/>
