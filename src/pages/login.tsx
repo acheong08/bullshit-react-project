@@ -40,9 +40,9 @@ export function LoginPage() {
 	//TODO: no alt tagged image for banner
 	return (
 		<div id="root">
-			<main className="login-container">
+			<main className="auth-container">
 				{/* Banner image */}
-				<div className="login-banner" />
+				<div className="auth-banner" />
 
 				{/* User credentails form*/}
 				<form onSubmit={handleSubmit} className="auth-form">
@@ -79,6 +79,9 @@ export function LoginPage() {
 					<button type="submit" className="primary-btn" disabled={isLoading}>
 						{isLoading ? "Logging in..." : "Login"}
 					</button>
+					<a href="/register" className="register-link">
+						Don't have an account with us? Register now!
+					</a>
 				</form>
 			</main>
 		</div>

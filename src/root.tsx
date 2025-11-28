@@ -1,4 +1,3 @@
-import "dotenv/config";
 import "./styles/variables.css";
 import "./styles/index.css";
 import { Navbar } from "$components/navbar.tsx";
@@ -10,6 +9,7 @@ import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
 import { isUserLoggedIn } from "$utils/auth.ts";
+import { RegisterPage } from "./pages/register.tsx";
 
 export async function Root(props: { request: Request }) {
 	const isLoggedIn = isUserLoggedIn(props.request);
@@ -59,6 +59,9 @@ function App(props: {
 	}
 	if (pathname === "/login") {
 		return <LoginPage />;
+	}
+	if (pathname === "/register") {
+		return <RegisterPage />;
 	}
 	if (pathname === "/profile") {
 		return <ProfilePage />;
