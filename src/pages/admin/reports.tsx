@@ -14,7 +14,8 @@ interface GameReport {
 	reportedAt: string;
 	status: ReportStatus;
 }
-// Mock data - to be filled in with actual database information ( can edit all fields and images)
+
+// Mock data - to be filled in with actual database information
 const mockReports: GameReport[] = [
 	{
 		description: "An intense battle royale game with 100 players",
@@ -48,15 +49,30 @@ const mockReports: GameReport[] = [
 	},
 ];
 
-//Always remember to remove "default" from export as this mesess things up.
+//Always remember to get rid of defaulf as it messes things up.
 export function AdminReportsPage() {
 	const [reports, setReports] = useState<GameReport[]>(mockReports);
 	const [selectedId, setSelectedId] = useState<number | null>(null);
+	const [activeTab, setActiveTab] = useState<ReportStatus>("pending");
+
 	const selectedReport = reports.find((r) => r.id === selectedId);
 	const [editValues, setEditValues] = useState<Omit<
 		GameReport,
 		"id" | "gameId" | "status" | "reportReason" | "reportedAt"
 	> | null>(null);
+
+	// Filter reports by status
+	const pendingReports = reports.filter((r) => r.status === "pending");
+	const reviewedReports = reports.filter((r) => r.status === "reviewed");
+	const deletedReports = reports.filter((r) => r.status === "deleted");
+
+	// Get current tab's reports
+	const currentReports =
+		activeTab === "pending"
+			? pendingReports
+			: activeTab === "reviewed"
+				? reviewedReports
+				: deletedReports;
 
 	// Select a report and start editing
 	function startEditing(report: GameReport) {
@@ -68,7 +84,7 @@ export function AdminReportsPage() {
 		});
 	}
 
-	// Save edits to local state
+	// Save edits to local state - to be edited for database.
 	function saveEdits() {
 		if (selectedId && editValues) {
 			setReports((prev) =>
@@ -81,19 +97,26 @@ export function AdminReportsPage() {
 		}
 	}
 
+	//report mapping to reviewed section
+
 	function markResolved(id: number) {
 		setReports((prev) =>
 			prev.map((report) =>
-				report.id === id ? { ...report, status: "resolved" } : report,
+				report.id === id ? { ...report, status: "reviewed" } : report,
 			),
 		);
 		setSelectedId(null);
 		setEditValues(null);
 	}
+	// report mapping to deleted section.
 
 	function deleteReport(id: number) {
 		if (window.confirm("Are you sure you want to delete this game?")) {
-			setReports((prev) => prev.filter((report) => report.id !== id));
+			setReports((prev) =>
+				prev.map((report) =>
+					report.id === id ? { ...report, status: "deleted" } : report,
+				),
+			);
 			setSelectedId(null);
 			setEditValues(null);
 		}
@@ -104,35 +127,89 @@ export function AdminReportsPage() {
 		setEditValues(null);
 	}
 
-  const pendingReports = reports.filter (r => status == "pending");
-  const reviewedReports = reports.filter (r => status == "reviewed");
-  const deletedReports = reports.filter (r => status == "deleted");
-
-
 	return (
-		<main style={{ margin: "auto", maxWidth: 700, padding: "2rem" }}>
+		<main style={{ margin: "auto", maxWidth: 900, padding: "2rem" }}>
 			<h2>Game Reports Admin Panel</h2>
-			<ul>
-				{reports
-					.filter((r) => r.status === "pending")
-					.map((report) => (
+
+			{/* Tab Navigation */}
+			<div style={{ marginBottom: "2rem" }}>
+				<button
+					type="button"
+					onClick={() => setActiveTab("pending")}
+					style={{
+						fontWeight: activeTab === "pending" ? "bold" : "normal",
+						marginRight: "10px",
+						padding: "10px 20px",
+						textDecoration: activeTab === "pending" ? "underline" : "none",
+					}}
+				>
+					Pending ({pendingReports.length})
+				</button>
+				<button
+					type="button"
+					onClick={() => setActiveTab("reviewed")}
+					style={{
+						fontWeight: activeTab === "reviewed" ? "bold" : "normal",
+						marginRight: "10px",
+						padding: "10px 20px",
+						textDecoration: activeTab === "reviewed" ? "underline" : "none",
+					}}
+				>
+					Reviewed ({reviewedReports.length})
+				</button>
+				<button
+					type="button"
+					onClick={() => setActiveTab("deleted")}
+					style={{
+						fontWeight: activeTab === "deleted" ? "bold" : "normal",
+						padding: "10px 20px",
+						textDecoration: activeTab === "deleted" ? "underline" : "none",
+					}}
+				>
+					Deleted ({deletedReports.length})
+				</button>
+			</div>
+
+			{/* Reports List */}
+			{currentReports.length === 0 ? (
+				<p>No {activeTab} reports</p>
+			) : (
+				<ul>
+					{currentReports.map((report) => (
 						<li key={report.id} style={{ marginBottom: 15 }}>
-							<strong>{report.title}</strong> ({report.reportReason})
+							<strong>{report.title}</strong> - {report.reportReason}
+							<br />
+							<small>
+								Reported: {report.reportedAt} | Status: {report.status}
+							</small>
+							<br />
 							<button
 								type="button"
-								style={{ marginLeft: 10 }}
+								style={{ marginTop: 5 }}
 								onClick={() => startEditing(report)}
 							>
 								Review & Edit
 							</button>
 						</li>
 					))}
-			</ul>
+				</ul>
+			)}
+
+			{/* Edit Panel */}
 			{selectedReport && editValues && (
 				<section
-					style={{ border: "1px solid #ddd", marginTop: 30, padding: 15 }}
+					style={{ border: "1px solid #ccc", marginTop: 30, padding: 15 }}
 				>
 					<h3>Edit Game Details</h3>
+
+					<p>
+						<strong>Report Reason:</strong> {selectedReport.reportReason}
+						<br />
+						<strong>Reported:</strong> {selectedReport.reportedAt}
+						<br />
+						<strong>Status:</strong> {selectedReport.status}
+					</p>
+
 					<label>
 						Title:
 						<br />
@@ -148,6 +225,7 @@ export function AdminReportsPage() {
 						/>
 					</label>
 					<br />
+
 					<label>
 						Description:
 						<br />
@@ -163,6 +241,7 @@ export function AdminReportsPage() {
 						/>
 					</label>
 					<br />
+
 					<label>
 						Image URL:
 						<br />
@@ -178,26 +257,30 @@ export function AdminReportsPage() {
 						/>
 					</label>
 					<br />
+
 					<img
 						src={editValues.image}
 						alt={editValues.title}
-						style={{ marginBottom: 12, width: "200px" }}
+						style={{ marginBottom: 12, maxWidth: "300px" }}
 					/>
+
 					<div>
 						<button type="button" onClick={saveEdits}>
 							Save Changes
 						</button>
-						<button
-							type="button"
-							onClick={() => markResolved(selectedReport.id)}
-							style={{ marginLeft: 10 }}
-						>
-							Mark as Resolved
-						</button>
+						{selectedReport.status === "pending" && (
+							<button
+								type="button"
+								onClick={() => markResolved(selectedReport.id)}
+								style={{ marginLeft: 10 }}
+							>
+								Mark as Reviewed
+							</button>
+						)}
 						<button
 							type="button"
 							onClick={() => deleteReport(selectedReport.id)}
-							style={{ color: "red", marginLeft: 10 }}
+							style={{ marginLeft: 10 }}
 						>
 							Delete
 						</button>
@@ -214,7 +297,3 @@ export function AdminReportsPage() {
 		</main>
 	);
 }
-
-//TO BE Finished - instead of using API data - retrieve from database records once they have been added.
-//Include status panels so you can see admin history, appended games, deleted.
-//
