@@ -7,7 +7,11 @@ export type CategoryCardProps = {
 
 export default function CategoryCard(props: CategoryCardProps) {
 	return (
-		<a href={"/categories"} className="category-card">
+		<a
+			href="/categories"
+			className="category-card"
+			aria-label={`Category card: ${props.category}`}
+		>
 			{/* Masked gradient image */}
 			<div
 				className="category-card-image masked-icon"
@@ -16,9 +20,12 @@ export default function CategoryCard(props: CategoryCardProps) {
 						"--icon-image": `url(${props.image})`,
 					} as React.CSSProperties
 				}
+				aria-hidden="true" // hides decorative image
 			/>
 
-			<h3>{props.category}</h3>
+			<div className="category-card-title" aria-hidden="true">
+				{props.category}
+			</div>
 		</a>
 	);
 }

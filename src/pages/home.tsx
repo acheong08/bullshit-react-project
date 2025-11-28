@@ -48,7 +48,9 @@ export function HomePage({ sortOptions, filterOptions }: SearchBarProps) {
 				<SearchBar sortOptions={sortOptions} filterOptions={filterOptions} />
 				{/* spotlight which is on every version of the home page */}
 				<div className="spotlight-section">
-					<h1 className="spotlight-header">SPOTLIGHT</h1>
+					<div aria-live="assertive">
+						<h1 className="spotlight-header">SPOTLIGHT</h1>
+					</div>
 					<div className="spotlight">
 						<SpotlightGameCard
 							videoUrl="https://www.youtube.com/embed/gwWiB1C-KBM?si=GbaBQVJqFx8W_R2J"
@@ -70,37 +72,104 @@ export function HomePage({ sortOptions, filterOptions }: SearchBarProps) {
 					<div className="category-header-row">
 						<h2 className="category-title">CATEGORIES</h2>
 					</div>
-					{/* category tabs for s=switching between secstions of the home page e.g. top charts, categories etc */}
-					<nav className="category-tabs">
+
+					<div
+						className="category-tabs"
+						role="tablist"
+						aria-label="Game category tabs"
+					>
 						<button
 							className={`tab ${activeView === "recommended" ? "active" : ""}`}
 							type="button"
+							role="tab"
+							id="tab-recommended"
+							aria-selected={activeView === "recommended"}
+							aria-controls="panel-recommended"
 							onClick={() => setActiveView("recommended")}
 						>
 							Recommended for You
 						</button>
+
 						<button
 							className={`tab ${activeView === "top-charts" ? "active" : ""}`}
 							type="button"
+							role="tab"
+							id="tab-top-charts"
+							aria-selected={activeView === "top-charts"}
+							aria-controls="panel-top-charts"
 							onClick={() => setActiveView("top-charts")}
 						>
 							Top Charts
 						</button>
+
 						<button
 							className={`tab ${activeView === "categories" ? "active" : ""}`}
 							type="button"
+							role="tab"
+							id="tab-categories"
+							aria-selected={activeView === "categories"}
+							aria-controls="panel-categories"
 							onClick={() => setActiveView("categories")}
 						>
 							Categories
 						</button>
+
 						<button
 							className={`tab ${activeView === "new-this-week" ? "active" : ""}`}
 							type="button"
+							role="tab"
+							id="tab-new-this-week"
+							aria-selected={activeView === "new-this-week"}
+							aria-controls="panel-new-this-week"
 							onClick={() => setActiveView("new-this-week")}
 						>
 							New this Week
 						</button>
-					</nav>
+					</div>
+				</div>
+
+				{/* Tab panels */}
+				<div
+					role="tabpanel"
+					id="panel-recommended"
+					aria-labelledby="tab-recommended"
+					hidden={activeView !== "recommended"}
+				/>
+
+				<div
+					role="tabpanel"
+					id="panel-top-charts"
+					aria-labelledby="tab-top-charts"
+					hidden={activeView !== "top-charts"}
+				/>
+
+				<div
+					role="tabpanel"
+					id="panel-categories"
+					aria-labelledby="tab-categories"
+					hidden={activeView !== "categories"}
+				/>
+
+				<div
+					role="tabpanel"
+					id="panel-new-this-week"
+					aria-labelledby="tab-new-this-week"
+					hidden={activeView !== "new-this-week"}
+				/>
+
+				{/* Visually hidden live region to announce active tab when focus leaves the tabs */}
+				<div
+					aria-live="polite"
+					aria-atomic="true"
+					style={{
+						height: "1px",
+						left: "-9999px",
+						overflow: "hidden",
+						position: "absolute",
+						width: "1px",
+					}}
+				>
+					{`You are now on the ${activeView.replace("-", " ")} page`}
 				</div>
 
 				{/* Conditional rendering based on active view */}
@@ -190,18 +259,27 @@ function RecommendedView({
 		<>
 			<div className="popular-games">
 				<div className="image-card">
-					<img
-						src={curatorsPick}
-						alt="animals vs aliens mobile game icon"
-						className="curators-pick"
-					/>
-					<div className="overlay-text">
-						<p className="top-right">Animals vs Aliens</p>
-						<p className="bottom-left">CURATORS PICK</p>
-					</div>
+					<a
+						href="/game/2"
+						className="curators-pick-link"
+						aria-label="Animals vs Aliens, Curators Pick game"
+					>
+						<img
+							src={curatorsPick}
+							alt="animals vs aliens mobile game icon"
+							className="curators-pick"
+						/>
+						<div className="overlay-text">
+							<p className="top-right">Animals vs Aliens</p>
+							<p className="bottom-left">CURATORS PICK</p>
+						</div>
+					</a>
 				</div>
-				<div className="popular-games-gallery">
-					<p className="popular-title">POPULAR</p>
+				<section
+					className="popular-games-gallery"
+					aria-label="Popular Games Section"
+				>
+					<h2 className="popular-title">POPULAR</h2>
 					<PopularGameCard
 						image={StardewValleyLogo}
 						title="Stardew Valley"
@@ -220,12 +298,12 @@ function RecommendedView({
 						genres={["Platformer", "Indie"]}
 						gameId="125"
 					/>
-				</div>
+				</section>
 			</div>
 			<div className="games-bar">
-				<div className="games-row">
+				<section className="games-row">
 					<h2 className="games-title">ALL GAMES</h2>
-				</div>
+				</section>
 			</div>
 
 			<FiltersBar
@@ -235,7 +313,10 @@ function RecommendedView({
 				setSelectedDisability={setSelectedDisability}
 			/>
 
-			<div className="game-card-gallery">
+			<section
+				className="game-card-gallery"
+				aria-label={`${currentGames.length} games displayed`}
+			>
 				{currentGames.map((game) => (
 					<GameCard
 						key={game.gameId}
@@ -246,7 +327,7 @@ function RecommendedView({
 						gameId={game.gameId}
 					/>
 				))}
-			</div>
+			</section>
 
 			<Pagination
 				currentPage={currentPage}
@@ -434,6 +515,7 @@ function TopChartsView({
 					rank={1}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="top-charts"
 				/>
 
 				<TopChartsGameCard
@@ -444,6 +526,7 @@ function TopChartsView({
 					rank={2}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="top-charts"
 				/>
 
 				<TopChartsGameCard
@@ -454,6 +537,7 @@ function TopChartsView({
 					rank={3}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="top-charts"
 				/>
 
 				<TopChartsGameCard
@@ -464,6 +548,7 @@ function TopChartsView({
 					rank={4}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="top-charts"
 				/>
 
 				<TopChartsGameCard
@@ -474,6 +559,7 @@ function TopChartsView({
 					rank={5}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="top-charts"
 				/>
 
 				<TopChartsGameCard
@@ -484,6 +570,7 @@ function TopChartsView({
 					rank={6}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="top-charts"
 				/>
 			</div>
 
@@ -924,6 +1011,7 @@ function NewThisWeekView({
 					rank={1}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="new-this-week"
 				/>
 
 				<TopChartsGameCard
@@ -934,6 +1022,7 @@ function NewThisWeekView({
 					rank={2}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="new-this-week"
 				/>
 
 				<TopChartsGameCard
@@ -944,6 +1033,7 @@ function NewThisWeekView({
 					rank={3}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="new-this-week"
 				/>
 
 				<TopChartsGameCard
@@ -954,6 +1044,7 @@ function NewThisWeekView({
 					rank={4}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="new-this-week"
 				/>
 
 				<TopChartsGameCard
@@ -964,6 +1055,7 @@ function NewThisWeekView({
 					rank={5}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="new-this-week"
 				/>
 
 				<TopChartsGameCard
@@ -974,6 +1066,7 @@ function NewThisWeekView({
 					rank={6}
 					tags={["Epilepsy"]}
 					gameId="204"
+					context="new-this-week"
 				/>
 			</div>
 

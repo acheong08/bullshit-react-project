@@ -1,7 +1,6 @@
 import "$styles/game-card.css";
 
 const StarIcon = "/images/star.png";
-//this is wish list game card  props for what will show up whe a game is added to the wishlist
 
 export type WishListGameCardProps = {
 	image: string;
@@ -16,22 +15,38 @@ export type WishListGameCardProps = {
 };
 
 export default function WishListGameCard(props: WishListGameCardProps) {
+	const tagText = props.tags.join(", ");
+
+	const ariaLabel = `Wish list game card: image: ${props.title} icon, Title: ${props.title}. Rating: ${props.rating} stars. Reviews: ${props.reviews}. Downloads: ${props.downloads}. Age rating: ${props.ageRating}. Tags: ${tagText}. Links to game page.`;
+
 	return (
-		<a href={`/game/${props.gameId}`} className="wish-list-card">
+		<a
+			href={`/game/${props.gameId}`}
+			className="wish-list-card"
+			aria-label={ariaLabel}
+		>
+			{/* Game image */}
 			<img
 				src={props.image}
-				alt={props.title}
+				alt=""
+				aria-hidden="true"
 				className="wish-list-card-image"
 			/>
 
-			<div className="wish-list-card-info">
+			{/* Main info section – hidden from screen readers */}
+			<div className="wish-list-card-info" aria-hidden="true">
 				<h3 className="wish-list-card-title">{props.title}</h3>
 
 				<div className="wish-list-downloads-age">
 					<div className="wish-list-rating-reviews">
 						<p className="wish-list-card-rating">
 							{props.rating}{" "}
-							<img src={StarIcon} alt="Star" className="wish-list-star-icon" />
+							<img
+								src={StarIcon}
+								alt=""
+								aria-hidden="true"
+								className="wish-list-star-icon"
+							/>
 						</p>
 						<p className="wish-list-Number-Of-Reviews">
 							{props.reviews} reviews
@@ -47,7 +62,8 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 					<div className="wish-list-game-age-rating">
 						<img
 							src={props.ageImage}
-							alt={props.ageRating}
+							alt=""
+							aria-hidden="true"
 							className="wish-list-age-rating-icon"
 						/>
 						<p>{props.ageRating}</p>
@@ -63,6 +79,7 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 				</div>
 			</div>
 
+			{/* Remove button remains interactive but separate */}
 			<button type="button" className="remove-button">
 				Remove
 			</button>
