@@ -27,11 +27,7 @@ function DarkLightToggle({ isDark, onToggle }: DarkLightToggleProps) {
 			<div className="dark-light-toggle">
 				<div className="toggle-thumb" />
 				<span className="sun-icon">✶</span>
-				<img
-					className="moon-icon"
-					src="/public/images/moon.png"
-					alt="Moon Icon"
-				/>
+				<img className="moon-icon" src="/images/moon.png" alt="Moon Icon" />
 			</div>
 		</button>
 	);
@@ -82,8 +78,8 @@ function VoiceCommandButton({ isDark }: VoiceCommandButtonProps) {
 				className="voice-button-icon"
 				src={
 					isDark
-						? "/public/images/darkmode-microphone.png"
-						: "/public/images/lightmode-microphone.png"
+						? "/images/darkmode-microphone.png"
+						: "/images/lightmode-microphone.png"
 				}
 				alt="Microphone"
 			/>
@@ -112,7 +108,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 				<a href="/">
 					<img
 						className="navbar-logo"
-						src="/public/images/logo.png"
+						src="/images/logo.png"
 						alt="Company Logo"
 					/>
 				</a>
@@ -121,7 +117,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 						<a href="/user/ExampleUsername123">
 							<img
 								className="navbar-profile-pic"
-								src="/public/images/example-images/example-profile-icon.png"
+								src="/images/example-images/example-profile-icon.png"
 								alt="Profile Icon"
 							/>
 						</a>
@@ -151,7 +147,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 				<a href="/user/username/wishlist">
 					<img
 						className="navbar-image"
-						src="/public/images/wishlist-icon.png"
+						src="/images/wishlist-icon.png"
 						alt="Company Logo"
 					/>
 				</a>

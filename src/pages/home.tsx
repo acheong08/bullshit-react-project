@@ -1,26 +1,29 @@
 "use client";
 import { useState } from "react";
-import ActionIcon from "$tmpimg/action-image.png";
-import curatorsPick from "$tmpimg/animals-vs-aliens.png";
-import BoardIcon from "$tmpimg/board-image.png";
-import CardsIcon from "$tmpimg/cards-image.png";
-import MultiplayerIcon from "$tmpimg/multiplayer-image.png";
-import PuzzleIcon from "$tmpimg/puzzle-image.png";
-import RacingIcon from "$tmpimg/racing-image.png";
-import RPGIcon from "$tmpimg/rpg-image.png";
-import SimulationIcon from "$tmpimg/Simulation-image.png";
-import StardewValleyLogo from "$tmpimg/Stardew_Valley_image.png";
-import SamuraiImage1 from "$tmpimg/samurai_preview_image.png";
-import StrategyIcon from "$tmpimg/strategy-image.png";
-import GameCard from "../components/gameCards/game-card";
-import PopularGameCard from "../components/gameCards/popular-game-card";
-import SpotlightGameCard from "../components/gameCards/spotlight-game-card";
-import "../styles/home.css";
+
+// Images from public directory - use direct paths
+const ActionIcon = "/images/action-image.png";
+const curatorsPick = "/images/animals-vs-aliens.png";
+const BoardIcon = "/images/board-image.png";
+const CardsIcon = "/images/cards-image.png";
+const MultiplayerIcon = "/images/multiplayer-image.png";
+const PuzzleIcon = "/images/puzzle-image.png";
+const RacingIcon = "/images/racing-image.png";
+const RPGIcon = "/images/rpg-image.png";
+const SimulationIcon = "/images/Simulation-image.png";
+const StardewValleyLogo = "/images/Stardew_Valley_image.png";
+const SamuraiImage1 = "/images/samurai_preview_image.png";
+const StrategyIcon = "/images/strategy-image.png";
+
+import GameCard from "$components/gameCards/game-card";
+import PopularGameCard from "$components/gameCards/popular-game-card";
+import SpotlightGameCard from "$components/gameCards/spotlight-game-card";
+import "$styles/home.css";
+import FiltersBar from "$components/filtersbar";
+import CategoriesCard from "$components/gameCards/category-card";
+import TopChartsGameCard from "$components/gameCards/top-charts-game-card";
+import Pagination from "$components/pagination";
 import { SearchBar } from "$components/searchbar";
-import FiltersBar from "../components/filtersbar";
-import CategoriesCard from "../components/gameCards/category-card";
-import TopChartsGameCard from "../components/gameCards/top-charts-game-card";
-import Pagination from "../components/pagination";
 
 type CategoryView =
 	| "recommended"

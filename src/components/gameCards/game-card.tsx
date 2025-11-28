@@ -1,5 +1,6 @@
 import "$styles/game-card.css";
-import StarIcon from "$tmpimg/star.png";
+
+const StarIcon = "/images/star.png";
 
 // this is props for the main game card component that will be on the home page and in search results
 export type GameCardProps = {

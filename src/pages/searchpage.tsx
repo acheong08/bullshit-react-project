@@ -1,7 +1,8 @@
 "use client";
 import GameCard from "$components/gameCards/game-card";
 import { SearchBar } from "$components/searchbar";
-import StardewValleyLogo from "$tmpimg/Stardew_Valley_image.png";
+
+const StardewValleyLogo = "/images/Stardew_Valley_image.png";
 
 interface SearchPageProps {
 	params: Record<string, string>;
