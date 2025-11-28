@@ -776,6 +776,12 @@ label {
 	object-fit: cover;
 }
 
+.video-thumbnail-image {
+	width: 160px;
+	height: 90px;
+	object-fit: cover;
+}
+
 /* About Section */
 .about-section {
 	display: flex;
@@ -1340,4 +1346,21 @@ label {
 		flex-direction: column;
 		gap: 1.5rem;
 	}
+}
+
+.video-thumbnail-container {
+	position: relative;
+	display: inline-block;
+	align-items: center;
+	justify-content: center;
+	width: 160px;
+}
+.play-button-overlay {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 3rem;
+	color: white;
+	opacity: 0.8;
 }
