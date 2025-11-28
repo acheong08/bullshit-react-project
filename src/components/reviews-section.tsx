@@ -127,6 +127,10 @@ export function ReviewsSection({
 					type="button"
 					className={`tab-btn ${activeTab === "Game" ? "active" : ""}`}
 					onClick={() => setActiveTab("Game")}
+					role="tab"
+					aria-selected={activeTab === "Game"}
+					aria-controls="game-review-panel"
+					aria-label="Game review section"
 				>
 					Game
 				</button>
@@ -134,6 +138,10 @@ export function ReviewsSection({
 					type="button"
 					className={`tab-btn ${activeTab === "Accessibility" ? "active" : ""}`}
 					onClick={() => setActiveTab("Accessibility")}
+					role="tab"
+					aria-selected={activeTab === "Accessibility"}
+					aria-controls="accessibility-review-panel"
+					aria-label="Accessibility review section"
 				>
 					Accessibility
 				</button>
@@ -151,11 +159,21 @@ export function ReviewsSection({
 				<div className="rating-bars">
 					{ratingCounts.map((item) => (
 						<div key={item.star} className="rating-bar-row">
-							<span className="star-label">{item.star}</span>
+							<section
+								className="star-label"
+								aria-label={`${item.star} star reviews`}
+							>
+								{item.star}
+							</section>
 							<div className="bar-track">
 								<div className="bar-fill" style={{ width: item.width }} />
 							</div>
-							<span className="count-label">({item.count})</span>
+							<section
+								className="count-label"
+								aria-label={`${item.count} ${item.star}" star reviews"`}
+							>
+								({item.count})
+							</section>
 						</div>
 					))}
 				</div>

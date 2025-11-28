@@ -127,13 +127,13 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sagittis vestibulum justo, eu commodo sapien finibus at. In elementum mattis suscipit. Nullam nec suscipit ligula."}
 						</p>
 
-						<div className="tags-container">
+						<section className="tags-container" aria-label="Game tags">
 							{accessibilityLabels.map((label) => (
 								<span key={label.id} className="game-tag">
 									{label.name}
 								</span>
 							))}
-						</div>
+						</section>
 
 						<div className="meta-info">
 							<div className="meta-item">

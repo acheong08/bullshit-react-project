@@ -275,10 +275,7 @@ function RecommendedView({
 						</div>
 					</a>
 				</div>
-				<section
-					className="popular-games-gallery"
-					aria-label="Popular Games Section"
-				>
+				<section className="popular-games-gallery">
 					<h2 className="popular-title">POPULAR</h2>
 					<PopularGameCard
 						image={StardewValleyLogo}
