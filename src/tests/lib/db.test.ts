@@ -4,7 +4,12 @@ import { DataSource } from "typeorm";
 import { Game, GameMedia, Label, LabelType, MediaType } from "$entity/Games";
 import { Review } from "$entity/Review";
 import { User } from "$entity/User";
-import { getFilterMap, getGameById, searchGames } from "$lib/db";
+import {
+	getFilterMap,
+	getGameById,
+	getReviewsByGameId,
+	searchGames,
+} from "$lib/db";
 
 let testDataSource: DataSource;
 
