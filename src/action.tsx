@@ -1,11 +1,12 @@
 "use server";
 
+import bcrypt from "bcrypt";
 import type { Game } from "$entity/Games";
 import { Review } from "$entity/Review";
 import { User } from "$entity/User";
 import { getCurrentUser } from "$utils/auth";
 import { generateAccessToken } from "$utils/jwt";
-import { verifyPassword } from "$utils/password";
+import { validatePassword, verifyPassword } from "$utils/password";
 import { getRequest } from "$utils/request-context";
 import { AppDataSource } from "./data-source";
 
@@ -220,6 +221,87 @@ export async function deleteReview(
 	} catch (_) {
 		return {
 			error: "An error occurred while deleting the review. Please try again.",
+			success: false,
+		};
+	}
+}
+
+/**
+ * Registers a new user with email, username and password
+ * @param email - The email attached to the created account
+ * @param username - The username associated with new account
+ * @param password - The password used to access the new account
+ */
+export async function registerUser(
+	username: string,
+	password: string,
+	email: string,
+): Promise<LoginResult> {
+	try {
+		// Initialize database connection
+		if (!AppDataSource.isInitialized) {
+			await AppDataSource.initialize();
+		}
+
+		// Hash the password
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(password, salt);
+
+		// Checks to ensure email/username haven't been used
+		const usernameCheck = await User.findOne({
+			where: { username },
+		});
+
+		const emailCheck = await User.findOne({
+			where: { email },
+		});
+
+		if (usernameCheck) {
+			return {
+				error: "Email already exists.",
+				success: false,
+			};
+		}
+
+		if (emailCheck) {
+			return {
+				error: "Username already exists.",
+				success: false,
+			};
+		}
+
+		// Check for password security
+		const check = validatePassword(password);
+		if (!check.isValid) {
+			return {
+				error: check.error,
+				success: check.isValid,
+			};
+		}
+
+		// Create new user record
+		const user = new User();
+		user.email = email;
+		user.passwordHash = hashedPassword;
+		user.username = username;
+		const newUser = await AppDataSource.manager.save(user);
+
+		// Check if user creation failed
+		if (!newUser) {
+			return {
+				error: "Account could not be created. Please try again",
+				success: false,
+			};
+		}
+
+		// Return successful registration
+		return {
+			success: true,
+		};
+	} catch (error) {
+		console.error("Registration error:", error);
+		return {
+			error: "A registration error occurred. Please try again.",
 			success: false,
 		};
 	}
