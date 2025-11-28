@@ -1,6 +1,7 @@
 import GameCard from "$components/gameCards/game-card";
 import { SearchBar } from "$components/searchbar";
 import { LabelType, MediaType } from "$entity/Games";
+import { Review } from "$entity/Review";
 import { searchGames } from "$lib/db";
 
 const StardewValleyLogo = "/images/Stardew_Valley_image.png";
@@ -44,10 +45,20 @@ export async function SearchPage({
 					</div>
 
 					<div className="game-card-gallery">
-						{games.map((game) => {
+						{games.map(async (game) => {
 							const previewImage = game.media.find(
 								(media) => media.type === MediaType.Icon,
 							);
+							const ratings = await Review.find({
+								where: { game: { id: game.id } },
+							});
+							const averageRating =
+								ratings.length > 0
+									? ratings.reduce(
+											(sum, review) => sum + review.enjoyabilityRating,
+											0,
+										) / ratings.length
+									: 0;
 							console.log("game.media:", game.media);
 							console.log("previewImage:", previewImage);
 
@@ -60,7 +71,7 @@ export async function SearchPage({
 										.filter((label) => label.type === LabelType.Genre)
 										.slice(0, 3)
 										.map((label) => label.name.toString())}
-									rating={4.5}
+									rating={averageRating}
 									gameId={game.id.toString()}
 								/>
 							);
