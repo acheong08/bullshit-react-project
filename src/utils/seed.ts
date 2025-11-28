@@ -167,11 +167,19 @@ export async function seedGames(): Promise<void> {
 
 			// Create media
 			if (gameData.image_url) {
+				console.log(
+					`[Seed] Importing image for game '${gameData.title}': ${gameData.image_url}`,
+				);
 				const media = new GameMedia();
 				media.type = MediaType.Icon;
 				media.uri = gameData.image_url;
 				await media.save();
 				game.media.push(media);
+				console.log(game.media);
+			} else {
+				console.warn(
+					`[Seed] Warning: Game '${gameData.title}' is missing an image_url`,
+				);
 			}
 
 			// Collect labels for this game (deduplicated)
@@ -347,6 +355,10 @@ export async function seedGames(): Promise<void> {
 			],
 			["https://www.youtube.com/embed/4pY3hlQEOc0?si=NfQ4SpmFQX1PotiD"],
 		);
+		//Replace (Role Playing Game (RPG)) with (RPG) in genre labels for all games
+		await replaceLabelName("Role-Playing Game (RPG)", "RPG");
+		await replaceLabelName("First-Person Shooter (FPS)", "FPS");
+		await replaceLabelName("Third-Person Shooter (TPS)", "TPS");
 
 		console.log(`[Seed] ✓ Successfully imported ${importedCount} games`);
 	} catch (error) {
@@ -360,7 +372,10 @@ async function populateGameMedia(
 	promoImages: string[],
 	videoUris: string[],
 ) {
-	const game = await Game.findOneBy({ name: gameName });
+	const game = await Game.findOne({
+		relations: ["media"],
+		where: { name: gameName },
+	});
 	if (!game) {
 		console.warn(
 			`[Seed] Warning: Could not find '${gameName}' game to add media`,
@@ -368,14 +383,18 @@ async function populateGameMedia(
 		return;
 	}
 
-	if (!game.media) game.media = [];
+	if (!game.media) {
+		console.warn(
+			`[Seed] Warning: Game '${gameName}' has no media array initialized`,
+		);
+		return;
+	}
+
 	for (const uri of promoImages) {
 		const media = new GameMedia();
 		media.type = MediaType.PreviewImg;
 		media.uri = uri;
 		await media.save();
-		// const newMediaArray = game.media.concat(media);
-		// game.media = newMediaArray;
 		game.media.push(media);
 	}
 	for (let uri of videoUris) {
@@ -391,9 +410,19 @@ async function populateGameMedia(
 		video.type = MediaType.Video;
 		video.uri = uri;
 		await video.save();
-		// const newMediaArray = game.media.concat(video);
-		// game.media = newMediaArray;
 		game.media.push(video);
 	}
 	await game.save();
+}
+
+async function replaceLabelName(
+	oldName: string,
+	newName: string,
+): Promise<void> {
+	const label = await Label.findOne({ where: { name: oldName } });
+	if (label) {
+		label.name = newName;
+		await label.save();
+		console.log(`[Seed] ✓ Replaced label name '${oldName}' with '${newName}'`);
+	}
 }

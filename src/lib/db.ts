@@ -59,3 +59,38 @@ export async function getReviewsByGameId(gameId: number): Promise<Review[]> {
 		return [];
 	}
 }
+
+export async function searchGames(
+	filterOptions: string[],
+	sortOption: string,
+	query: string,
+): Promise<Game[]> {
+	const queryBuilder = Game.createQueryBuilder("game")
+		.leftJoinAndSelect("game.labels", "label")
+		.leftJoinAndSelect("game.media", "media");
+	if (filterOptions.length > 0) {
+		queryBuilder.where("label.name IN (:...filterOptions)", {
+			filterOptions,
+		});
+	}
+
+	if (query && query.trim() !== "") {
+		queryBuilder.andWhere(
+			"game.name ILIKE :query OR game.description ILIKE :query",
+			{
+				query: `%${query}%`,
+			},
+		);
+	}
+
+	switch (sortOption) {
+		case "Alphabetical":
+			queryBuilder.addOrderBy("game.name", "ASC");
+			break;
+		default:
+			queryBuilder.addOrderBy("game.id", "DESC");
+			break;
+	}
+
+	return await queryBuilder.getMany();
+}

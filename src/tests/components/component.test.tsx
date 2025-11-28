@@ -40,7 +40,13 @@ test("verify search bar component", async () => {
 		"Trending",
 	];
 
-	render(<SearchBar sortOptions={options} filterOptions={filterOptions} />);
+	render(
+		<SearchBar
+			sortOptions={options}
+			filterOptions={filterOptions}
+			defaultQuery={null}
+		/>,
+	);
 
 	const searchInput = screen.getByPlaceholderText("Search...");
 	const searchButton = screen.getByText("Search");
