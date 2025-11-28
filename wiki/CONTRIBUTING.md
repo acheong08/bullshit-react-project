@@ -5,32 +5,75 @@ This is a Vite + React Server Components project following the usual standards.
 ```
 root@localhost> tree src
 src
-├── action.tsx
+├── action.tsx              // Server actions
 ├── assets
-│   └── react.svg
-├── client.tsx
+│   ├── games.jsonl         // Game data
+│   └── react.svg
+├── client.tsx              // Client-side entry
 ├── components              // Reusable components
-│   └── navbar.tsx
-├── data-source.ts          // Production database definitions
-├── entity
-│   └── User.ts
+│   ├── gameCards           // Game card variants
+│   │   ├── category-card.tsx
+│   │   ├── game-card.tsx
+│   │   ├── popular-game-card.tsx
+│   │   ├── spotlight-game-card.tsx
+│   │   ├── top-charts-game-card.tsx
+│   │   └── wish-list-game-card.tsx
+│   ├── filtersbar.tsx
+│   ├── media-carousel.tsx
+│   ├── navbar.tsx
+│   ├── pagination.tsx
+│   ├── reviews-section.tsx
+│   ├── searchbar.tsx
+│   ├── voice-command-provider.tsx
+│   └── voice-navigation-commands.tsx
+├── data-source.ts          // TypeORM data source configuration
+├── entity                  // Database entities
+│   ├── Games.ts
+│   ├── Review.ts
+│   └── User.ts
 ├── framework               // Server side entrypoint
-│   ├── entry.browser.tsx
-│   ├── entry.rsc.tsx
-│   └── entry.ssr.tsx
-├── index.css
+│   ├── entry.browser.tsx
+│   ├── entry.rsc.tsx
+│   ├── entry.ssr.tsx
+│   └── init.ts
 ├── lib
-│   └── db                  // Database wrapper
-│       └── db.test.ts
+│   └── db.ts               // Database wrapper
 ├── pages                   // Full page components
-│   ├── game.tsx
-│   ├── home.tsx
-│   ├── login.tsx
-│   ├── not-found.tsx
-│   └── profile.tsx
+│   ├── game.tsx
+│   ├── home.tsx
+│   ├── login.tsx
+│   ├── not-found.tsx
+│   ├── profile.tsx
+│   └── searchpage.tsx
 ├── root.tsx                // React entrypoint and routing
+├── styles                  // CSS stylesheets
+│   ├── game-card.css
+│   ├── home.css
+│   ├── index.css
+│   └── variables.css
+├── tests                   // Test files
+│   ├── components
+│   │   └── component.test.tsx
+│   ├── lib
+│   │   ├── action.test.ts
+│   │   ├── auth.test.ts
+│   │   ├── db.test.ts
+│   │   ├── jwt.test.ts
+│   │   └── password.test.ts
+│   ├── happydom.ts
+│   ├── matchers.d.ts
+│   └── testing-library.ts
 └── utils
-    └── auth.ts
+    ├── voice               // Voice command system
+    │   ├── commands.test.ts
+    │   └── commands.ts
+    ├── auth.ts
+    ├── cookies.ts
+    ├── jwt.ts
+    ├── password.ts
+    ├── request-context.ts
+    ├── seed.ts
+    └── theme.ts
 ```
 
 ## Client and Server interaction in React
@@ -47,7 +90,7 @@ Server-only functions should take a `Request` parameter, even if unused. This en
 
 A server action (not to be confused with server-only functions), when used on client side magically generates an RPC API. **Do not** use `eval` or other unsafe operations on user input in server side code as that could lead to full compromise and data leaks.
 
-The database handler should never be directly accessed by client side components as that would expose us to arbitrary input. All database operations should be wrapped in type-safe code under `utils/db/` with `"user server"` enabled.
+The database handler should never be directly accessed by client side components as that would expose us to arbitrary input. All database operations should be wrapped in type-safe code under `lib/db.ts` with `"use server"` enabled.
 
 ### Authentication
 
@@ -59,18 +102,89 @@ We use [biome](https://biomejs.dev/). Ensure that is run before requesting revie
 
 ## Voice commands (Accessibility)
 
-To ensure the application can be used entirely with voice commands, all actions on the page should be registered with the voice command system. See `src/utils/voice/commands.ts`
+To ensure the application can be used entirely with voice commands, all actions on the page should be registered with the voice command system. See `src/utils/voice/commands.ts`.
+
+### VoiceCommandManager
+
+The `VoiceCommandManager` class handles speech recognition and command matching using the Web Speech API. It supports three states: `idle`, `listening`, and `processing`.
+
+### Registering a command
+
+Commands are registered using the `registerCommand` method:
 
 ```ts
 const vcManager = new VoiceCommandManager();
 vcManager.registerCommand({
-  callback: (input: string | null) => {
-    // Navigate to login page or enter form depending on page
-  },
-  hasInput: false,
   label: "Log in",
+  callback: (input: string | null) => {
+    // Navigate to login page or perform action
+  },
   matches: [/^Log in/i],
+  hasInput: false,
 });
+```
+
+### Command interface
+
+```ts
+interface Command {
+  label: string;                              // Display name for the command
+  callback: (input: string | null) => void;   // Function to execute when matched
+  matches: RegExp[];                          // Regex patterns to match spoken input
+  hasInput: boolean;                          // Whether the command captures input
+}
+```
+
+### Commands with input
+
+For commands that need to capture user input, set `hasInput: true` and use a capture group in your regex:
+
+```ts
+vcManager.registerCommand({
+  label: "Search for",
+  callback: (input: string | null) => {
+    if (input) {
+      // Search for the captured input
+      navigateToSearch(input);
+    }
+  },
+  matches: [/^Search for (.+)/i],
+  hasInput: true,
+});
+```
+
+### Using callbacks
+
+The manager supports optional callbacks for state changes, errors, and command matching:
+
+```ts
+const vcManager = new VoiceCommandManager({
+  onStateChange: (state) => console.log("State:", state),
+  onError: (error) => console.error("Error:", error),
+  onTranscript: (transcript) => console.log("Heard:", transcript),
+  onCommandMatched: (command, input) => console.log("Matched:", command.label),
+  onNoMatch: (transcript) => console.log("No match for:", transcript),
+});
+```
+
+### Component integration
+
+Use the `VoiceCommandProvider` component (`src/components/voice-command-provider.tsx`) to provide voice command context to your React components. Register page-specific commands using `voice-navigation-commands.tsx` as a reference.
+
+### Managing commands
+
+```ts
+vcManager.unregisterCommand("Log in");  // Remove a specific command by label
+vcManager.clearCommands();               // Remove all commands
+vcManager.getCommands();                 // Get all registered commands
+```
+
+### Checking support
+
+```ts
+if (vcManager.isSupported()) {
+  vcManager.startRecognition();
+}
 ```
 
 ## Docker/podman
