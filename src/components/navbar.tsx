@@ -105,7 +105,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 	return (
 		<nav className="navbar">
 			<div className="navbar-section flex">
-				<a href="/">
+				<a href="/" aria-label="TO home page, logo">
 					<img
 						className="navbar-logo"
 						src="/images/logo.png"
@@ -114,7 +114,10 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 				</a>
 				{isLoggedIn ? (
 					<>
-						<a href="/user/ExampleUsername123">
+						<a
+							href="/user/ExampleUsername123"
+							aria-label="Profile icon, press enter to go to profile page"
+						>
 							<img
 								className="navbar-profile-pic"
 								src="/images/example-images/example-profile-icon.png"
@@ -148,7 +151,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 					<img
 						className="navbar-image"
 						src="/images/wishlist-icon.png"
-						alt="Company Logo"
+						alt="wishlist icon"
 					/>
 				</a>
 			</div>
