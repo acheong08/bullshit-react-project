@@ -48,7 +48,12 @@ export function LoginPage() {
 				<form onSubmit={handleSubmit} className="auth-form">
 					<h1 className="form-header">Login</h1>
 
-					{error && <div className="error-banner">{error}</div>}
+					{error && (
+						<div className="error-banner" role="alert" aria-live="assertive">
+							<span className="sr-only">Error: </span>
+							{error}
+						</div>
+					)}
 
 					<div className="input-container">
 						<label htmlFor="username">Username</label>

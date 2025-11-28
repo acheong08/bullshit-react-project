@@ -15,7 +15,7 @@ export default function GameCard(props: GameCardProps) {
 	const genreText = props.genres.join(", ");
 
 	// Build the full accessible label
-	const ariaLabel = `to game page. Game card: image:${props.title}. Title: ${props.title}. Genres: ${genreText}. Rating: ${props.rating} stars. `;
+	const ariaLabel = `to game page. Game card: image:${props.title} icon, Title: ${props.title}. Genres: ${genreText}. Rating: ${props.rating} stars. `;
 
 	return (
 		<a

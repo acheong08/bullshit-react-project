@@ -10,7 +10,7 @@ export type PopularGameCardProps = {
 export default function PopularGameCard(props: PopularGameCardProps) {
 	const genreText = props.genres.join(", ");
 
-	const ariaLabel = `Popular game card: image: ${props.title} icon. Title: ${props.title}. Genres: ${genreText}. Links to game page.`;
+	const ariaLabel = `Popular game card: image: ${props.title} icon, Title: ${props.title}. Genres: ${genreText}. Links to game page.`;
 
 	return (
 		<a
