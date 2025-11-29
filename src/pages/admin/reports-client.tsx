@@ -5,8 +5,9 @@ import {
 	updateGameAction,
 	updateReportStatusAction,
 } from "$actions";
+import { ReportStatus } from "$entity/Report";
 
-type ReportStatus = "pending" | "reviewed" | "deleted";
+//type ReportStatus = "pending" | "reviewed" | "deleted";
 
 interface GameReport {
 	id: number;
@@ -26,7 +27,10 @@ interface Props {
 export function AdminReportsClient({ initialReports }: Props) {
 	const [reports, setReports] = useState<GameReport[]>(initialReports);
 	const [selectedId, setSelectedId] = useState<number | null>(null);
-	const [activeTab, setActiveTab] = useState<ReportStatus>("pending");
+	const [activeTab, setActiveTab] = useState<
+		"pending" | "reviewed" | "deleted"
+	>("pending");
+	//const [activeTab, setActiveTab] = useState<ReportStatus>("pending");
 
 	const selectedReport = reports.find((r) => r.id === selectedId);
 	const [editValues, setEditValues] = useState<{
@@ -86,7 +90,11 @@ export function AdminReportsClient({ initialReports }: Props) {
 	// Mark report as reviewed in database
 	async function markResolved(reportId: number) {
 		try {
-			const result = await updateReportStatusAction(reportId, "reviewed");
+			const result = await updateReportStatusAction(
+				reportId,
+				ReportStatus.Reviewed,
+			);
+			//const result = await updateReportStatusAction(reportId, "reviewed");
 
 			if (!result.success) throw new Error("Failed to update status");
 
