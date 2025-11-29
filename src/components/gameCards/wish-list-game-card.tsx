@@ -1,7 +1,6 @@
 import "$styles/game-card.css";
 
 const StarIcon = "/images/star.png";
-//this is wish list game card  props for what will show up whe a game is added to the wishlist
 
 export type WishListGameCardProps = {
 	image: string;
@@ -13,20 +12,24 @@ export type WishListGameCardProps = {
 	ageImage: string;
 	ageRating: string;
 	gameId: string;
+	remove: () => void;
 };
 
 export default function WishListGameCard(props: WishListGameCardProps) {
 	return (
-		<a href={`/game/${props.gameId}`} className="wish-list-card">
-			<img
-				src={props.image}
-				alt={props.title}
-				className="wish-list-card-image"
-			/>
+		<div className="wish-list-card">
+			<a href={`/game/${props.gameId}`}>
+				<img
+					src={props.image}
+					alt={props.title}
+					className="wish-list-card-image"
+				/>
+			</a>
 
 			<div className="wish-list-card-info">
-				<h3 className="wish-list-card-title">{props.title}</h3>
-
+				<a href={`/game/${props.gameId}`}>
+					<h3 className="wish-list-card-title">{props.title}</h3>
+				</a>
 				<div className="wish-list-downloads-age">
 					<div className="wish-list-rating-reviews">
 						<p className="wish-list-card-rating">
@@ -54,18 +57,21 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 					</div>
 				</div>
 
-				<div className="wish-list-tags-container">
-					{props.tags.map((tag) => (
-						<span key={tag} className="wish-list-card-tag">
-							{tag}
-						</span>
-					))}
-				</div>
+				<a href={`/game/${props.gameId}`}>
+					<div className="wish-list-tags-container">
+						{props.tags.map((tag) => (
+							<span key={tag} className="wish-list-card-tag">
+								{tag}
+							</span>
+						))}
+					</div>
+				</a>
 			</div>
 
-			<button type="button" className="remove-button">
+			<button type="button" className="remove-button" onClick={props.remove}>
 				Remove
 			</button>
-		</a>
+		</div>
 	);
 }
+

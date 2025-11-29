@@ -14,6 +14,7 @@ import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
 import { getCurrentUser, isUserLoggedIn } from "$utils/auth.ts";
+import { WishListPage } from "$pages/wishlist.tsx";
 import { RegisterPage } from "./pages/register.tsx";
 
 export async function Root(props: { request: Request }) {
@@ -107,6 +108,9 @@ async function App(props: {
 		}
 		return <AdminReportsPage />;
 	}
+	if (pathname === "/wishlist") {
+		return <WishListPage />;
+	}
 	if (pathname.startsWith("/game/")) {
 		const gameId = pathname.split("/")[2];
 		return <GamePage gameId={gameId} request={props.request} />;
@@ -125,3 +129,4 @@ async function App(props: {
 	}
 	return <NotFoundPage />;
 }
+

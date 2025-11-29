@@ -6,6 +6,7 @@ import type { Game, GameMedia } from "$entity/Games";
 import { GameAverageRating, LabelType } from "$entity/Games";
 import { getGameById, getReviewsByGameId } from "$lib/db";
 import { getCurrentUser, isUserLoggedIn } from "$utils/auth";
+import { BookmarkButton } from "$components/bookmark-button";
 
 interface GamePageProps {
 	gameId: string;
@@ -63,7 +64,7 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 	const heroImage =
 		game.media && game.media.length > 0
 			? game.media[0].uri
-			: "/placeholder-hero.jpg"; // Fallback if no media
+			: "/placeholder-hero.jpg";
 
 	return (
 		<div id="root">
@@ -81,11 +82,7 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 							<ReportButton gameId={gameIdNumber} gameName={game.name} />
 							<div className="hero-stats">
 								<div className="stat-group">
-									<img
-										src={heroImage} // Using game image as icon placeholder
-										alt="Icon"
-										className="game-icon-small"
-									/>
+									<img src={heroImage} alt="Icon" className="game-icon-small" />
 									<div className="stat-text">
 										<span className="rating-score">
 											{Number(averageRating || 0).toFixed(1)} ★
@@ -109,9 +106,7 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 								<button type="button" className="install-btn">
 									Install
 								</button>
-								<button type="button" className="bookmark-btn">
-									Bookmark
-								</button>
+								<BookmarkButton gameId={gameId} />
 							</div>
 						</div>
 					</div>
@@ -172,3 +167,4 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 		</div>
 	);
 }
+
