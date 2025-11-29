@@ -2,11 +2,21 @@
 
 import bcrypt from "bcrypt";
 import { QueryFailedError } from "typeorm";
+import { instanceToPlain } from "class-transformer";
 import type { Game } from "$entity/Games";
 import { Report, ReportStatus } from "$entity/Report";
 import { Review } from "$entity/Review";
 import { User } from "$entity/User";
-import { deleteGame, updateGame, updateReportStatus } from "$lib/db";
+import {
+	addGameToWishlist,
+	getWishlistByUserId,
+	getWishlistGameIds,
+	isGameInWishlist,
+	removeGameFromWishlist,
+	deleteGame,
+	updateGame,
+	updateReportStatus,
+} from "$lib/db";
 import { getCurrentUser } from "$utils/auth";
 import { generateAccessToken } from "$utils/jwt";
 import { validatePassword, verifyPassword } from "$utils/password";
@@ -48,11 +58,6 @@ export async function loginUser(
 	password: string,
 ): Promise<LoginResult> {
 	try {
-		// Initialize database connection if not already initialized
-		if (!AppDataSource.isInitialized) {
-			await AppDataSource.initialize();
-		}
-
 		// Find user by username
 		const user = await User.findOne({
 			where: { username },
@@ -99,11 +104,6 @@ export async function createReview(
 	input: CreateReviewInput,
 ): Promise<CreateReviewResult> {
 	try {
-		// Initialize database connection if not already initialized
-		if (!AppDataSource.isInitialized) {
-			await AppDataSource.initialize();
-		}
-
 		// Get request from AsyncLocalStorage context
 		const request = getRequest();
 
@@ -190,11 +190,6 @@ export async function deleteReview(
 	reviewId: number,
 ): Promise<DeleteReviewResult> {
 	try {
-		// Initialize database connection if not already initialized
-		if (!AppDataSource.isInitialized) {
-			await AppDataSource.initialize();
-		}
-
 		// Get request from AsyncLocalStorage context
 		const request = getRequest();
 
@@ -255,11 +250,6 @@ export async function registerUser(
 	email: string,
 ): Promise<LoginResult> {
 	try {
-		// Initialize database connection
-		if (!AppDataSource.isInitialized) {
-			await AppDataSource.initialize();
-		}
-
 		// Hash the password
 		const salt = await bcrypt.genSalt(10);
 		const hashedPassword = await bcrypt.hash(password, salt);
@@ -406,5 +396,212 @@ export async function createGameReport(gameId: number, reportReason: string) {
 	} catch (error) {
 		console.error("Error creating report:", error);
 		return { error: "Failed to create report", success: false };
+	}
+}
+
+// Wishlist Server Actions
+// All actions extract user from cookies server-side to prevent OWASP vulnerabilities
+
+export interface WishlistResult {
+	success: boolean;
+	error?: string;
+}
+
+export interface WishlistGamesResult {
+	success: boolean;
+	games?: Game[];
+	error?: string;
+}
+
+export interface WishlistGameIdsResult {
+	success: boolean;
+	gameIds?: number[];
+	error?: string;
+}
+
+export interface WishlistCheckResult {
+	success: boolean;
+	isInWishlist?: boolean;
+	error?: string;
+}
+
+/**
+ * Add a game to the current user's wishlist
+ */
+export async function addToWishlistAction(
+	gameId: number,
+): Promise<WishlistResult> {
+	try {
+		const request = getRequest();
+
+		const currentUser = getCurrentUser(request);
+
+		if (!currentUser) {
+			return {
+				error: "You must be logged in to add games to your wishlist",
+				success: false,
+			};
+		}
+
+		// Validate gameId
+		if (!gameId || gameId <= 0) {
+			return {
+				error: "Invalid game ID",
+				success: false,
+			};
+		}
+
+		const added = await addGameToWishlist(currentUser.userId, gameId);
+
+		if (!added) {
+			return {
+				error: "Failed to add game to wishlist",
+				success: false,
+			};
+		}
+
+		return { success: true };
+	} catch (_) {
+		return {
+			error: "An error occurred while adding to wishlist. Please try again.",
+			success: false,
+		};
+	}
+}
+
+/**
+ * Remove a game from the current user's wishlist
+ */
+export async function removeFromWishlistAction(
+	gameId: number,
+): Promise<WishlistResult> {
+	try {
+		const request = getRequest();
+
+		const currentUser = getCurrentUser(request);
+
+		if (!currentUser) {
+			return {
+				error: "You must be logged in to remove games from your wishlist",
+				success: false,
+			};
+		}
+
+		// Validate gameId
+		if (!gameId || gameId <= 0) {
+			return {
+				error: "Invalid game ID",
+				success: false,
+			};
+		}
+
+		const removed = await removeGameFromWishlist(currentUser.userId, gameId);
+
+		if (!removed) {
+			return {
+				error: "Failed to remove game from wishlist",
+				success: false,
+			};
+		}
+
+		return { success: true };
+	} catch (_) {
+		return {
+			error:
+				"An error occurred while removing from wishlist. Please try again.",
+			success: false,
+		};
+	}
+}
+
+/**
+ * Get all games in the current user's wishlist
+ */
+export async function getWishlistAction(): Promise<WishlistGamesResult> {
+	try {
+		const request = getRequest();
+
+		const currentUser = getCurrentUser(request);
+
+		if (!currentUser) {
+			return {
+				error: "You must be logged in to view your wishlist",
+				success: false,
+			};
+		}
+
+		const games = await getWishlistByUserId(currentUser.userId);
+
+		// Serialize TypeORM entities to plain objects for client components
+		return { games: instanceToPlain(games) as Game[], success: true };
+	} catch (_) {
+		return {
+			error: "An error occurred while fetching wishlist. Please try again.",
+			success: false,
+		};
+	}
+}
+
+/**
+ * Get all game IDs in the current user's wishlist
+ */
+export async function getWishlistGameIdsAction(): Promise<WishlistGameIdsResult> {
+	try {
+		const request = getRequest();
+
+		const currentUser = getCurrentUser(request);
+
+		if (!currentUser) {
+			return {
+				error: "You must be logged in to view your wishlist",
+				success: false,
+			};
+		}
+
+		const gameIds = await getWishlistGameIds(currentUser.userId);
+
+		return { gameIds, success: true };
+	} catch (_) {
+		return {
+			error: "An error occurred while fetching wishlist. Please try again.",
+			success: false,
+		};
+	}
+}
+
+/**
+ * Check if a game is in the current user's wishlist
+ */
+export async function checkWishlistAction(
+	gameId: number,
+): Promise<WishlistCheckResult> {
+	try {
+		const request = getRequest();
+
+		const currentUser = getCurrentUser(request);
+
+		if (!currentUser) {
+			return {
+				error: "You must be logged in to check wishlist status",
+				success: false,
+			};
+		}
+
+		// Validate gameId
+		if (!gameId || gameId <= 0) {
+			return {
+				error: "Invalid game ID",
+				success: false,
+			};
+		}
+
+		const isInWishlist = await isGameInWishlist(currentUser.userId, gameId);
+
+		return { isInWishlist, success: true };
+	} catch (_) {
+		return {
+			error: "An error occurred while checking wishlist. Please try again.",
+			success: false,
+		};
 	}
 }

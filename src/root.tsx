@@ -109,7 +109,7 @@ async function App(props: {
 		return <AdminReportsPage />;
 	}
 	if (pathname === "/wishlist") {
-		return <WishListPage />;
+		return <WishListPage request={props.request} />;
 	}
 	if (pathname.startsWith("/game/")) {
 		const gameId = pathname.split("/")[2];
@@ -129,4 +129,3 @@ async function App(props: {
 	}
 	return <NotFoundPage />;
 }
-

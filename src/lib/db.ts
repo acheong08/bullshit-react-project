@@ -2,6 +2,8 @@ import { IsNull, Not } from "typeorm";
 import { Game, Label, LabelType } from "$entity/Games";
 import { Report, type ReportStatus } from "$entity/Report";
 import { Review } from "$entity/Review";
+import type { User } from "$entity/User";
+import { Wishlist } from "$entity/Wishlist";
 
 export async function getGameById(gameId: number): Promise<Game | null> {
 	try {
@@ -173,4 +175,134 @@ export async function searchGames(
 	}
 
 	return await queryBuilder.getMany();
+}
+
+// Wishlist database operations
+
+/**
+ * Get all games in a user's wishlist
+ * @param userId - The user's ID
+ * @returns Array of games in the wishlist
+ */
+export async function getWishlistByUserId(userId: number): Promise<Game[]> {
+	try {
+		const wishlistItems = await Wishlist.find({
+			order: { addedAt: "DESC" },
+			relations: ["game", "game.labels", "game.media"],
+			where: { user: { id: userId } },
+		});
+		return wishlistItems.map((item) => item.game);
+	} catch (error) {
+		console.error(`Error fetching wishlist for user ${userId}:`, error);
+		return [];
+	}
+}
+
+/**
+ * Get all game IDs in a user's wishlist
+ * @param userId - The user's ID
+ * @returns Array of game IDs in the wishlist
+ */
+export async function getWishlistGameIds(userId: number): Promise<number[]> {
+	try {
+		const wishlistItems = await Wishlist.find({
+			relations: ["game"],
+			where: { user: { id: userId } },
+		});
+		return wishlistItems.map((item) => item.game.id);
+	} catch (error) {
+		console.error(
+			`Error fetching wishlist game IDs for user ${userId}:`,
+			error,
+		);
+		return [];
+	}
+}
+
+/**
+ * Add a game to a user's wishlist
+ * @param userId - The user's ID
+ * @param gameId - The game's ID
+ * @returns True if added successfully, false otherwise
+ */
+export async function addGameToWishlist(
+	userId: number,
+	gameId: number,
+): Promise<boolean> {
+	try {
+		// Check if already in wishlist
+		const existing = await Wishlist.findOne({
+			where: { game: { id: gameId }, user: { id: userId } },
+		});
+
+		if (existing) {
+			return true; // Already in wishlist
+		}
+
+		const wishlistItem = new Wishlist();
+		wishlistItem.user = { id: userId } as User;
+		wishlistItem.game = { id: gameId } as Game;
+		await wishlistItem.save();
+		return true;
+	} catch (error) {
+		console.error(
+			`Error adding game ${gameId} to wishlist for user ${userId}:`,
+			error,
+		);
+		return false;
+	}
+}
+
+/**
+ * Remove a game from a user's wishlist
+ * @param userId - The user's ID
+ * @param gameId - The game's ID
+ * @returns True if removed successfully, false otherwise
+ */
+export async function removeGameFromWishlist(
+	userId: number,
+	gameId: number,
+): Promise<boolean> {
+	try {
+		const wishlistItem = await Wishlist.findOne({
+			where: { game: { id: gameId }, user: { id: userId } },
+		});
+
+		if (!wishlistItem) {
+			return true; // Not in wishlist, nothing to remove
+		}
+
+		await wishlistItem.remove();
+		return true;
+	} catch (error) {
+		console.error(
+			`Error removing game ${gameId} from wishlist for user ${userId}:`,
+			error,
+		);
+		return false;
+	}
+}
+
+/**
+ * Check if a game is in a user's wishlist
+ * @param userId - The user's ID
+ * @param gameId - The game's ID
+ * @returns True if game is in wishlist, false otherwise
+ */
+export async function isGameInWishlist(
+	userId: number,
+	gameId: number,
+): Promise<boolean> {
+	try {
+		const wishlistItem = await Wishlist.findOne({
+			where: { game: { id: gameId }, user: { id: userId } },
+		});
+		return wishlistItem !== null;
+	} catch (error) {
+		console.error(
+			`Error checking wishlist for user ${userId}, game ${gameId}:`,
+			error,
+		);
+		return false;
+	}
 }

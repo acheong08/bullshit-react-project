@@ -4,8 +4,7 @@ main {
 	padding: 0;
 }
 
-
-.wishlist-title{
+.wishlist-title {
 	font-size: 2.5rem;
 	font-weight: 700;
 	color: var(--primary-blue);
@@ -14,7 +13,7 @@ main {
 .wishlist-row {
 	display: flex;
 	width: 100%;
-    max-width: 1400px;
+	max-width: 1400px;
 	justify-content: space-between;
 	align-items: center;
 }
@@ -32,7 +31,7 @@ main {
 	font-size: 1.5rem;
 }
 
-.wishlist-dictate-btn .icon{
+.wishlist-dictate-btn .icon {
 	width: 20px;
 	height: 20px;
 }

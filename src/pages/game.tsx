@@ -1,4 +1,5 @@
 import { instanceToPlain } from "class-transformer";
+import { BookmarkButton } from "$components/bookmark-button";
 import { MediaCarousel } from "$components/media-carousel";
 import { ReportButton } from "$components/report-button";
 import { ReviewsSection } from "$components/reviews-section";
@@ -6,7 +7,6 @@ import type { Game, GameMedia } from "$entity/Games";
 import { GameAverageRating, LabelType } from "$entity/Games";
 import { getGameById, getReviewsByGameId } from "$lib/db";
 import { getCurrentUser, isUserLoggedIn } from "$utils/auth";
-import { BookmarkButton } from "$components/bookmark-button";
 
 interface GamePageProps {
 	gameId: string;
@@ -106,7 +106,7 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 								<button type="button" className="install-btn">
 									Install
 								</button>
-								<BookmarkButton gameId={gameId} />
+								<BookmarkButton gameId={gameId} isLoggedIn={loggedIn} />
 							</div>
 						</div>
 					</div>
@@ -167,4 +167,3 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 		</div>
 	);
 }
-
