@@ -1,17 +1,16 @@
 "use server";
 
-import { Report, ReportStatus } from "$entity/Report";
-import { updateGame, updateReportStatus, deleteGame } from "$lib/db";
 import bcrypt from "bcrypt";
 import type { Game } from "$entity/Games";
+import type { ReportStatus } from "$entity/Report";
 import { Review } from "$entity/Review";
 import { User } from "$entity/User";
+import { deleteGame, updateGame, updateReportStatus } from "$lib/db";
 import { getCurrentUser } from "$utils/auth";
 import { generateAccessToken } from "$utils/jwt";
 import { validatePassword, verifyPassword } from "$utils/password";
 import { getRequest } from "$utils/request-context";
 import { AppDataSource } from "./data-source";
-
 
 export interface LoginResult {
 	success: boolean;
@@ -311,7 +310,6 @@ export async function registerUser(
 }
 
 // admin section - adding contents of my action.ts file to current one on main
-
 
 /**
  * Server action to update a game's details
