@@ -70,6 +70,7 @@ export default defineConfig({
 	],
 	resolve: {
 		alias: {
+			$actions: path.resolve(__dirname, "./src/action.ts"),
 			$assets: path.resolve(__dirname, "./src/assets"),
 			$components: path.resolve(__dirname, "./src/components"),
 			$entity: path.resolve(__dirname, "./src/entity"),
@@ -78,7 +79,7 @@ export default defineConfig({
 			$styles: path.resolve(__dirname, "./src/styles"),
 			$tmpimg: path.resolve(__dirname, "./public/images"),
 			$utils: path.resolve(__dirname, "./src/utils"),
-      $actions: path.resolve(__dirname, "./src/action.ts"),
 		},
 	},
+	server: { allowedHosts: ["testing.duti.dev"] },
 });

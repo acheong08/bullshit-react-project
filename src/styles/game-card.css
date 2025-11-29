@@ -10,7 +10,7 @@
 .game-card {
 	width: 260px;
 	height: auto;
-	background: var(--background);
+	background: var(--white-black);
 	border: #000000;
 	border-radius: 16px;
 	padding: 10px;
@@ -32,6 +32,7 @@ a {
 
 .game-card-image {
 	width: 240px;
+	height: 240px;
 	display: block;
 	margin: 0 auto 8px auto;
 	border-radius: 8px;

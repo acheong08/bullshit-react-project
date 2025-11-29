@@ -1,27 +1,29 @@
 "use client";
 import { useState } from "react";
-import ActionIcon from "$tmpimg/action-image.png";
-import curatorsPick from "$tmpimg/animals-vs-aliens.png";
-import BoardIcon from "$tmpimg/board-image.png";
-import CardsIcon from "$tmpimg/cards-image.png";
-import micIcon from "$tmpimg/darkmode-microphone.png";
-import MultiplayerIcon from "$tmpimg/multiplayer-image.png";
-import PuzzleIcon from "$tmpimg/puzzle-image.png";
-import RacingIcon from "$tmpimg/racing-image.png";
-import RPGIcon from "$tmpimg/rpg-image.png";
-import SimulationIcon from "$tmpimg/Simulation-image.png";
-import StardewValleyLogo from "$tmpimg/Stardew_Valley_image.png";
-import SamuraiImage1 from "$tmpimg/samurai_preview_image.png";
-import StrategyIcon from "$tmpimg/strategy-image.png";
-import GameCard from "../components/gameCards/game-card";
-import PopularGameCard from "../components/gameCards/popular-game-card";
-import SpotlightGameCard from "../components/gameCards/spotlight-game-card";
-import "../styles/home.css";
+
+// Images from public directory - use direct paths
+const ActionIcon = "/images/action-image.png";
+const curatorsPick = "/images/animals-vs-aliens.png";
+const BoardIcon = "/images/board-image.png";
+const CardsIcon = "/images/cards-image.png";
+const MultiplayerIcon = "/images/multiplayer-image.png";
+const PuzzleIcon = "/images/puzzle-image.png";
+const RacingIcon = "/images/racing-image.png";
+const RPGIcon = "/images/rpg-image.png";
+const SimulationIcon = "/images/Simulation-image.png";
+const StardewValleyLogo = "/images/Stardew_Valley_image.png";
+const SamuraiImage1 = "/images/samurai_preview_image.png";
+const StrategyIcon = "/images/strategy-image.png";
+
+import GameCard from "$components/gameCards/game-card";
+import PopularGameCard from "$components/gameCards/popular-game-card";
+import SpotlightGameCard from "$components/gameCards/spotlight-game-card";
+import "$styles/home.css";
+import FiltersBar from "$components/filtersbar";
+import CategoriesCard from "$components/gameCards/category-card";
+import TopChartsGameCard from "$components/gameCards/top-charts-game-card";
+import Pagination from "$components/pagination";
 import { SearchBar } from "$components/searchbar";
-import FiltersBar from "../components/filtersbar";
-import CategoriesCard from "../components/gameCards/category-card";
-import TopChartsGameCard from "../components/gameCards/top-charts-game-card";
-import Pagination from "../components/pagination";
 
 type CategoryView =
 	| "recommended"
@@ -29,7 +31,17 @@ type CategoryView =
 	| "categories"
 	| "new-this-week";
 
-export function HomePage() {
+interface SearchBarProps {
+	sortOptions: string[];
+	filterOptions: Map<string, string[]>;
+	defaultQuery: string | null;
+}
+
+export function HomePage({
+	sortOptions,
+	filterOptions,
+	defaultQuery,
+}: SearchBarProps) {
 	const [activeView, setActiveView] = useState<CategoryView>("recommended");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [selectedGenre, setSelectedGenre] = useState<string>("all");
@@ -38,7 +50,11 @@ export function HomePage() {
 	return (
 		<div id="root">
 			<main>
-				<SearchBar />
+				<SearchBar
+					sortOptions={sortOptions}
+					filterOptions={filterOptions}
+					defaultQuery={defaultQuery}
+				/>
 				{/* spotlight which is on every version of the home page */}
 				<div className="spotlight-section">
 					<h1 className="spotlight-header">SPOTLIGHT</h1>
@@ -62,11 +78,6 @@ export function HomePage() {
 				<div className="category-bar">
 					<div className="category-header-row">
 						<h2 className="category-title">CATEGORIES</h2>
-
-						<button className="dictate-btn" type="button">
-							<img src={micIcon} alt="Microphone icon" className="icon" />
-							<span>Dictate category</span>
-						</button>
 					</div>
 					{/* category tabs for s=switching between secstions of the home page e.g. top charts, categories etc */}
 					<nav className="category-tabs">
@@ -223,11 +234,6 @@ function RecommendedView({
 			<div className="games-bar">
 				<div className="games-row">
 					<h2 className="games-title">ALL GAMES</h2>
-
-					<button className="filters-dictate-btn" type="button">
-						<img src={micIcon} alt="Microphone icon" className="icon" />
-						<span>Dictate filters</span>
-					</button>
 				</div>
 			</div>
 
@@ -493,11 +499,6 @@ function TopChartsView({
 			<div className="games-bar">
 				<div className="games-row">
 					<h2 className="games-title">ALL GAMES</h2>
-
-					<button className="filters-dictate-btn" type="button">
-						<img src={micIcon} alt="Microphone icon" className="icon" />
-						<span>Dictate filters</span>
-					</button>
 				</div>
 			</div>
 			<FiltersBar
@@ -718,11 +719,6 @@ function CategoriesView({
 			<div className="games-bar">
 				<div className="games-row">
 					<h2 className="games-title">ALL GAMES</h2>
-
-					<button className="filters-dictate-btn" type="button">
-						<img src={micIcon} alt="Microphone icon" className="icon" />
-						<span>Dictate filters</span>
-					</button>
 				</div>
 			</div>
 			<FiltersBar

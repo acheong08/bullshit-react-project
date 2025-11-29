@@ -26,7 +26,7 @@ export default function SpotlightGameCard(props: SpotlightCardProps) {
 
 			{/* Game Info Section */}
 			<div className="spotlight-info">
-				<a href={`/game/${props.gameId}`} className="spotlight-info-link">
+				<div className="spotlight-info-link">
 					<h3 className="spotlight-card-title">{props.title}</h3>
 					<div className="spotlight-genre-tag-row">
 						<p className="spotlight-game-card-genres">
@@ -38,7 +38,7 @@ export default function SpotlightGameCard(props: SpotlightCardProps) {
 						</p>
 						<p className="spotlight-tag">{props.tag}</p>
 					</div>
-				</a>
+				</div>
 
 				{/* Image Previews */}
 				<div className="image-previews">

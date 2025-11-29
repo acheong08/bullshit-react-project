@@ -1,11 +1,11 @@
 "use server";
 
+import type { ReportStatus } from "$entity/Report";
 import { User } from "$entity/User";
+import { deleteGame, updateGame, updateReportStatus } from "$lib/db";
 import { generateAccessToken } from "$utils/jwt";
 import { verifyPassword } from "$utils/password";
 import { AppDataSource } from "./data-source";
-import { updateGame, updateReportStatus, deleteGame } from "$lib/db";
-import { ReportStatus } from "$entity/Report";
 
 export interface LoginResult {
 	success: boolean;
@@ -76,7 +76,7 @@ export async function loginUser(
  */
 export async function updateGameAction(
 	gameId: number,
-	data: { name: string; description: string; imageUri: string }
+	data: { name: string; description: string; imageUri: string },
 ) {
 	try {
 		const success = await updateGame(gameId, data);
@@ -95,7 +95,7 @@ export async function updateGameAction(
  */
 export async function updateReportStatusAction(
 	reportId: number,
-	status: ReportStatus
+	status: ReportStatus,
 ) {
 	try {
 		const success = await updateReportStatus(reportId, status);
@@ -120,4 +120,3 @@ export async function deleteGameAction(gameId: number) {
 		return { success: false };
 	}
 }
-

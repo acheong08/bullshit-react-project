@@ -1,18 +1,35 @@
-"use client";
 import GameCard from "$components/gameCards/game-card";
 import { SearchBar } from "$components/searchbar";
-import StardewValleyLogo from "$tmpimg/Stardew_Valley_image.png";
+import { LabelType, MediaType } from "$entity/Games";
+import { Review } from "$entity/Review";
+import { searchGames } from "$lib/db";
+
+const StardewValleyLogo = "/images/Stardew_Valley_image.png";
 
 interface SearchPageProps {
-	params: Record<string, string>;
+	urlParams: Record<string, string>;
+	searchBarSortOptions: string[];
+	searchBarFilterOptions: Map<string, string[]>;
 }
 
-export function SearchPage({ params }: SearchPageProps) {
+export async function SearchPage({
+	urlParams: params,
+	searchBarSortOptions,
+	searchBarFilterOptions,
+}: SearchPageProps) {
 	const query = params.query;
+	const filterOptions = params.filters ? params.filters.split(",") : [];
+	const sortOption = params.sort;
+
+	const games = await searchGames(filterOptions, sortOption, query);
 
 	return (
 		<>
-			<SearchBar />
+			<SearchBar
+				sortOptions={searchBarSortOptions}
+				filterOptions={searchBarFilterOptions}
+				defaultQuery={query}
+			/>
 			<div className="overall-container center">
 				<div className="alignment-container">
 					<div className="flex back-button-container">
@@ -28,16 +45,35 @@ export function SearchPage({ params }: SearchPageProps) {
 					</div>
 
 					<div className="game-card-gallery">
-						{Array.from({ length: 20 }).map((_, _index) => (
-							<GameCard
-								image={StardewValleyLogo}
-								title="Stardew Valley"
-								genres={["Simulation", "RPG"]}
-								rating={5}
-								gameId="123"
-								key="erg"
-							/>
-						))}
+						{games.map(async (game) => {
+							const previewImage = game.media.find(
+								(media) => media.type === MediaType.Icon,
+							);
+							const ratings = await Review.find({
+								where: { game: { id: game.id } },
+							});
+							const averageRating =
+								ratings.length > 0
+									? ratings.reduce(
+											(sum, review) => sum + review.enjoyabilityRating,
+											0,
+										) / ratings.length
+									: 0;
+
+							return (
+								<GameCard
+									key={game.id}
+									image={previewImage ? previewImage.uri : StardewValleyLogo}
+									title={game.name}
+									genres={game.labels
+										.filter((label) => label.type === LabelType.Genre)
+										.slice(0, 3)
+										.map((label) => label.name.toString())}
+									rating={averageRating}
+									gameId={game.id.toString()}
+								/>
+							);
+						})}
 					</div>
 				</div>
 			</div>

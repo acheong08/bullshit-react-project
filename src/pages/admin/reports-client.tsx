@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
-import { updateGameAction, updateReportStatusAction, deleteGameAction } from "$actions";
+import {
+	deleteGameAction,
+	updateGameAction,
+	updateReportStatusAction,
+} from "$actions";
 
 type ReportStatus = "pending" | "reviewed" | "deleted";
 
@@ -57,24 +61,24 @@ export function AdminReportsClient({ initialReports }: Props) {
 
 		try {
 			const result = await updateGameAction(Number(selectedReport.gameId), {
-				name: editValues.title,
 				description: editValues.description,
 				imageUri: editValues.image,
+				name: editValues.title,
 			});
 
-			if (!result.success) throw new Error('Failed to update game');
+			if (!result.success) throw new Error("Failed to update game");
 
 			setReports((prev) =>
 				prev.map((report) =>
 					report.id === selectedId ? { ...report, ...editValues } : report,
 				),
 			);
-			
-			alert('Game updated successfully!');
+
+			alert("Game updated successfully!");
 			setSelectedId(null);
 			setEditValues(null);
 		} catch (error) {
-			alert('Error updating game');
+			alert("Error updating game");
 			console.error(error);
 		}
 	}
@@ -84,7 +88,7 @@ export function AdminReportsClient({ initialReports }: Props) {
 		try {
 			const result = await updateReportStatusAction(reportId, "reviewed");
 
-			if (!result.success) throw new Error('Failed to update status');
+			if (!result.success) throw new Error("Failed to update status");
 
 			setReports((prev) =>
 				prev.map((report) =>
@@ -94,7 +98,7 @@ export function AdminReportsClient({ initialReports }: Props) {
 			setSelectedId(null);
 			setEditValues(null);
 		} catch (error) {
-			alert('Error updating report status');
+			alert("Error updating report status");
 			console.error(error);
 		}
 	}
@@ -106,7 +110,7 @@ export function AdminReportsClient({ initialReports }: Props) {
 		try {
 			const result = await deleteGameAction(Number(gameId));
 
-			if (!result.success) throw new Error('Failed to delete game');
+			if (!result.success) throw new Error("Failed to delete game");
 
 			setReports((prev) =>
 				prev.map((report) =>
@@ -115,10 +119,10 @@ export function AdminReportsClient({ initialReports }: Props) {
 			);
 			setSelectedId(null);
 			setEditValues(null);
-			
-			alert('Game deleted successfully!');
+
+			alert("Game deleted successfully!");
 		} catch (error) {
-			alert('Error deleting game');
+			alert("Error deleting game");
 			console.error(error);
 		}
 	}

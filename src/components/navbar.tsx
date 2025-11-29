@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { setCookie } from "../utils/cookies";
-//TODO: make this work with relative imports
-import { getTheme } from "../utils/theme";
+import { useEffect, useState } from "react";
+import { setCookie } from "$utils/cookies";
+import { getTheme } from "$utils/theme";
+import { useVoiceCommands } from "./voice-command-provider";
 
 interface NavbarProps {
 	isLoggedIn: boolean;
@@ -27,31 +27,77 @@ function DarkLightToggle({ isDark, onToggle }: DarkLightToggleProps) {
 			<div className="dark-light-toggle">
 				<div className="toggle-thumb" />
 				<span className="sun-icon">✶</span>
-				<img
-					className="moon-icon"
-					src="/public/images/moon.png"
-					alt="Moon Icon"
-				/>
+				<img className="moon-icon" src="/images/moon.png" alt="Moon Icon" />
 			</div>
+		</button>
+	);
+}
+interface VoiceCommandButtonProps {
+	isDark: boolean;
+}
+function VoiceCommandButton({ isDark }: VoiceCommandButtonProps) {
+	const { state, isSupported, startListening, stopListening } =
+		useVoiceCommands();
+
+	if (!isSupported) {
+		return null;
+	}
+
+	const handleClick = () => {
+		if (state === "idle") {
+			startListening();
+		} else {
+			stopListening();
+		}
+	};
+
+	const getStatusText = () => {
+		switch (state) {
+			case "listening":
+				return "Listening...";
+			case "processing":
+				return "Processing...";
+			default:
+				return null;
+		}
+	};
+
+	const statusText = getStatusText();
+
+	return (
+		<button
+			className="clear-button-stylings voice-button"
+			onClick={handleClick}
+			data-state={state}
+			type="button"
+			aria-label={
+				state === "idle" ? "Start voice command" : "Stop voice command"
+			}
+		>
+			<img
+				className="voice-button-icon"
+				src={
+					isDark
+						? "/images/darkmode-microphone.png"
+						: "/images/lightmode-microphone.png"
+				}
+				alt="Microphone"
+			/>
+			{statusText && (
+				<span className="voice-status-indicator">{statusText}</span>
+			)}
 		</button>
 	);
 }
 
 export function Navbar({ isLoggedIn }: NavbarProps) {
-	const initialTheme = getTheme();
-
-	const [isDark, setDark] = useState(initialTheme === "dark");
-
-	//Do avoid stale closure issues in useEffect
-	const initialDarkRef = useRef(isDark);
+	const [isDark, setDark] = useState<"dark" | "light">("dark");
 
 	useEffect(() => {
+		const initialTheme = getTheme();
+		console.log(initialTheme);
 		const applyInitialTheme = async () => {
-			await setCookie("theme", initialDarkRef.current ? "dark" : "light");
-			document.documentElement.setAttribute(
-				"data-theme",
-				initialDarkRef.current ? "dark" : "light",
-			);
+			document.documentElement.setAttribute("data-theme", initialTheme);
 		};
 		applyInitialTheme().catch(console.error);
 	}, []);
@@ -62,7 +108,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 				<a href="/">
 					<img
 						className="navbar-logo"
-						src="/public/images/logo.png"
+						src="/images/logo.png"
 						alt="Company Logo"
 					/>
 				</a>
@@ -71,7 +117,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 						<a href="/user/ExampleUsername123">
 							<img
 								className="navbar-profile-pic"
-								src="/public/images/example-images/example-profile-icon.png"
+								src="/images/example-images/example-profile-icon.png"
 								alt="Profile Icon"
 							/>
 						</a>
@@ -89,21 +135,19 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 			</div>
 
 			<div className="navbar-section flex">
+				<VoiceCommandButton isDark={isDark === "dark"} />
 				<DarkLightToggle
-					isDark={isDark}
+					isDark={isDark === "dark"}
 					onToggle={async () => {
-						setDark(!isDark);
-						await setCookie("theme", isDark ? "light" : "dark");
-						document.documentElement.setAttribute(
-							"data-theme",
-							isDark ? "light" : "dark",
-						);
+						setDark(isDark === "dark" ? "light" : "dark");
+						await setCookie("theme", isDark);
+						document.documentElement.setAttribute("data-theme", isDark);
 					}}
 				/>
 				<a href="/user/username/wishlist">
 					<img
 						className="navbar-image"
-						src="/public/images/wishlist-icon.png"
+						src="/images/wishlist-icon.png"
 						alt="Company Logo"
 					/>
 				</a>

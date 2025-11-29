@@ -1,5 +1,7 @@
-import { Game } from "$entity/Games";
+import { IsNull, Not } from "typeorm";
+import { Game, Label, LabelType } from "$entity/Games";
 import { Report, ReportStatus } from "$entity/Report";
+import { Review } from "$entity/Review";
 
 export async function getGameById(gameId: number): Promise<Game | null> {
 	try {
@@ -13,14 +15,13 @@ export async function getGameById(gameId: number): Promise<Game | null> {
 		return null;
 	}
 }
+
 // Fetch all reports from the database
-// The Report entity has eager: true on the game relationship,
-// so it automatically loads the full game data with each report
 export async function getAllReports(): Promise<Report[]> {
 	try {
 		const reports = await Report.find({
-			order: { reportedAt: "DESC" }, // Most recent reports first
-			relations: ["game", "game.media", "game.labels"], // Load game with its media and labels
+			order: { reportedAt: "DESC" },
+			relations: ["game", "game.media", "game.labels"],
 		});
 		return reports;
 	} catch (error) {
@@ -29,19 +30,17 @@ export async function getAllReports(): Promise<Report[]> {
 	}
 }
 
-// Update a report's status (pending → reviewed → deleted)
+// Update a report's status
 export async function updateReportStatus(
 	reportId: number,
 	status: ReportStatus,
 ): Promise<boolean> {
 	try {
-		// Find the report by ID
 		const report = await Report.findOne({ where: { id: reportId } });
 		if (!report) return false;
 
-		// Update the status
 		report.status = status;
-		await report.save(); // Save changes to database
+		await report.save();
 		return true;
 	} catch (error) {
 		console.error(`Error updating report ${reportId}:`, error);
@@ -49,32 +48,27 @@ export async function updateReportStatus(
 	}
 }
 
-// Update a game's details (name, description, and first image)
+// Update a game's details
 export async function updateGame(
 	gameId: number,
 	updates: { name?: string; description?: string; imageUri?: string },
 ): Promise<boolean> {
 	try {
-		// Find the game with its media relation
 		const game = await Game.findOne({
 			relations: ["media"],
 			where: { id: gameId },
 		});
 		if (!game) return false;
 
-		// Update basic text fields
 		if (updates.name !== undefined) game.name = updates.name;
 		if (updates.description !== undefined)
 			game.description = updates.description;
 
-		// Update the first media item's URI if an image URL is provided
-		// This assumes the first media item is the main/hero image
 		if (updates.imageUri && game.media && game.media.length > 0) {
 			game.media[0].uri = updates.imageUri;
-			await game.media[0].save(); // Save the media item
+			await game.media[0].save();
 		}
 
-		// Save the game changes
 		await game.save();
 		return true;
 	} catch (error) {
@@ -84,25 +78,102 @@ export async function updateGame(
 }
 
 // Delete a game from the database
-// This also marks all reports for this game as deleted
 export async function deleteGame(gameId: number): Promise<boolean> {
 	try {
 		const game = await Game.findOne({ where: { id: gameId } });
 		if (!game) return false;
 
-		// Mark all reports for this game as deleted before removing the game
 		await Report.update(
 			{ game: { id: gameId } },
 			{ status: ReportStatus.Deleted },
 		);
 
-		// Remove the game from database
-		// Note: This will also remove related media and label associations
-		// due to cascade settings (if configured)
 		await game.remove();
 		return true;
 	} catch (error) {
 		console.error(`Error deleting game ${gameId}:`, error);
 		return false;
 	}
+}
+
+// Search/filter functions
+export async function getAllSortOptions(): Promise<string[]> {
+	return ["Popularity", "Release Date", "Alphabetical", "User Rating"];
+}
+
+export async function getFilterMap(): Promise<Map<string, string[]>> {
+	try {
+		const enumEntries = Object.entries(LabelType).filter(
+			([_, value]) => typeof value === "number",
+		) as [string, number][];
+
+		const filterMap = new Map<string, string[]>();
+		for (const [categoryName, categoryId] of enumEntries) {
+			const labels = await Label.find({
+				where: { type: categoryId },
+			});
+
+			filterMap.set(
+				categoryName,
+				labels.map((label) => label.name as string),
+			);
+		}
+		return filterMap;
+	} catch (error) {
+		console.error("Error fetching filter map:", error);
+		return new Map<string, string[]>();
+	}
+}
+
+export async function getReviewsByGameId(gameId: number): Promise<Review[]> {
+	try {
+		const reviews = await Review.find({
+			order: { createdAt: "DESC" },
+			relations: ["user"],
+			where: {
+				comment: Not(IsNull()),
+				game: { id: gameId },
+			},
+		});
+		return reviews;
+	} catch (error) {
+		console.error(`Error fetching reviews for game ${gameId}:`, error);
+		return [];
+	}
+}
+
+export async function searchGames(
+	filterOptions: string[],
+	sortOption: string,
+	query: string,
+): Promise<Game[]> {
+	const queryBuilder = Game.createQueryBuilder("game")
+		.leftJoinAndSelect("game.labels", "label")
+		.leftJoinAndSelect("game.media", "media");
+
+	if (filterOptions.length > 0) {
+		queryBuilder.where("label.name IN (:...filterOptions)", {
+			filterOptions,
+		});
+	}
+
+	if (query && query.trim() !== "") {
+		queryBuilder.andWhere(
+			"game.name ILIKE :query OR game.description ILIKE :query",
+			{
+				query: `%${query}%`,
+			},
+		);
+	}
+
+	switch (sortOption) {
+		case "Alphabetical":
+			queryBuilder.addOrderBy("game.name", "ASC");
+			break;
+		default:
+			queryBuilder.addOrderBy("game.id", "DESC");
+			break;
+	}
+
+	return await queryBuilder.getMany();
 }

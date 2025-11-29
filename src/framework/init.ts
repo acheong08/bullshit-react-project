@@ -21,7 +21,7 @@ export async function initialize(): Promise<void> {
 		console.log("[Init] Running database seed operations...");
 		await seedAdminUser();
 		await seedGames();
-    await seedReports();
+		await seedReports();
 		console.log("[Init] Seed operations complete");
 	} catch (error) {
 		console.error("[Init] Seed operations failed:", error);
