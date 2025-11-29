@@ -9,7 +9,6 @@ export type WishListGameCardProps = {
 	reviews: string;
 	tags: string[];
 	downloads: string;
-	ageImage: string;
 	ageRating: string;
 	gameId: string;
 	remove: () => void;
@@ -27,9 +26,12 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 			</a>
 
 			<div className="wish-list-card-info">
-				<a href={`/game/${props.gameId}`}>
-					<h3 className="wish-list-card-title">{props.title}</h3>
-				</a>
+				<div className="wish-list-card-header">
+					<a href={`/game/${props.gameId}`}>
+						<h3 className="wish-list-card-title">{props.title}</h3>
+					</a>
+				</div>
+
 				<div className="wish-list-downloads-age">
 					<div className="wish-list-rating-reviews">
 						<p className="wish-list-card-rating">
@@ -48,29 +50,22 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 					</p>
 
 					<div className="wish-list-game-age-rating">
-						<img
-							src={props.ageImage}
-							alt={props.ageRating}
-							className="wish-list-age-rating-icon"
-						/>
+						<p>Rating</p>
 						<p>{props.ageRating}</p>
 					</div>
 				</div>
 
-				<a href={`/game/${props.gameId}`}>
-					<div className="wish-list-tags-container">
-						{props.tags.map((tag) => (
-							<span key={tag} className="wish-list-card-tag">
-								{tag}
-							</span>
-						))}
-					</div>
-				</a>
+				<div className="wish-list-tags-container">
+					{props.tags.map((tag) => (
+						<span key={tag} className="wish-list-card-tag">
+							{tag}
+						</span>
+					))}
+				</div>
+				<button type="button" className="remove-button" onClick={props.remove}>
+					Remove
+				</button>
 			</div>
-
-			<button type="button" className="remove-button" onClick={props.remove}>
-				Remove
-			</button>
 		</div>
 	);
 }

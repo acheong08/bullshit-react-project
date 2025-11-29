@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { User } from "$utils/auth";
 import { deleteCookie, setCookie } from "$utils/cookies";
 import { getTheme } from "$utils/theme";
 import { useVoiceCommands } from "./voice-command-provider";
 
 interface NavbarProps {
-	isLoggedIn: boolean;
+	user: User | null;
 }
 
 interface DarkLightToggleProps {
@@ -90,7 +91,7 @@ function VoiceCommandButton({ isDark }: VoiceCommandButtonProps) {
 	);
 }
 
-export function Navbar({ isLoggedIn }: NavbarProps) {
+export function Navbar({ user }: NavbarProps) {
 	const [isDark, setDark] = useState<"dark" | "light">("dark");
 
 	useEffect(() => {
@@ -112,17 +113,17 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 						alt="Company Logo"
 					/>
 				</a>
-				{isLoggedIn ? (
+				{user ? (
 					<>
-						<a href="/user/ExampleUsername123">
+						<a href="/profile">
 							<img
 								className="navbar-profile-pic"
 								src="/images/example-images/example-profile-icon.png"
 								alt="Profile Icon"
 							/>
 						</a>
-						<a href="/user/ExampleUsername123" className="navbar-username">
-							ExampleUsername123
+						<a href="/profile" className="navbar-username">
+							{user.username}
 						</a>
 					</>
 				) : (
@@ -135,7 +136,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 			</div>
 
 			<div className="navbar-section flex">
-				{isLoggedIn && (
+				{user !== null && (
 					<button
 						type="button"
 						onClick={async () => {
@@ -156,7 +157,7 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 						document.documentElement.setAttribute("data-theme", isDark);
 					}}
 				/>
-				<a href="/user/username/wishlist">
+				<a href="/wishlist">
 					<img
 						className="navbar-image"
 						src="/images/wishlist-icon.png"

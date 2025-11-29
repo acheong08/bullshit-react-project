@@ -23,7 +23,6 @@ html[data-theme="light"] {
 body {
 	background-color: var(--background);
 	font-family: system-ui;
-	font-size: 1.25rem;
 	line-height: 1.5;
 	min-height: 100vh;
 }
@@ -427,9 +426,11 @@ label {
 	0% {
 		box-shadow: 0 0 0 0 rgba(0, 71, 171, 0.4);
 	}
+
 	70% {
 		box-shadow: 0 0 0 10px rgba(0, 71, 171, 0);
 	}
+
 	100% {
 		box-shadow: 0 0 0 0 rgba(0, 71, 171, 0);
 	}
@@ -1427,6 +1428,7 @@ label {
 	justify-content: center;
 	width: 160px;
 }
+
 .play-button-overlay {
 	position: absolute;
 	top: 50%;

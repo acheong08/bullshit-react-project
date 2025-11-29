@@ -13,12 +13,13 @@ import { LoginPage } from "$pages/login.tsx";
 import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
-import { getCurrentUser, isUserLoggedIn } from "$utils/auth.ts";
 import { WishListPage } from "$pages/wishlist.tsx";
+import { getCurrentUser } from "$utils/auth.ts";
 import { RegisterPage } from "./pages/register.tsx";
 
 export async function Root(props: { request: Request }) {
-	const isLoggedIn = isUserLoggedIn(props.request);
+	const user = getCurrentUser(props.request);
+
 	const sortOptions = await getAllSortOptions();
 	const filterMap = await getFilterMap();
 	return (
@@ -32,7 +33,7 @@ export async function Root(props: { request: Request }) {
 			<body>
 				<VoiceCommandProvider>
 					<VoiceNavigationCommands />
-					<Navbar isLoggedIn={isLoggedIn} />
+					<Navbar user={user} />
 					<div className="app-container">
 						<App
 							url={new URL(props.request.url)}
@@ -69,10 +70,6 @@ async function App(props: {
 		const popularGameCards = allGames.slice(1, 4);
 		const currentGames = allGames;
 		const topChartsGameCards = allGames.slice(4, 10);
-		console.log("spotlightGame:", spotlightGame);
-		console.log("popularGameCards:", popularGameCards);
-		console.log("currentGames:", currentGames);
-		console.log("topChartsGameCards:", topChartsGameCards);
 
 		const allRatings = await GameAverageRating.find();
 

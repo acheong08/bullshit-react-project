@@ -1,19 +1,19 @@
 "use server";
 
 import bcrypt from "bcrypt";
-import { QueryFailedError } from "typeorm";
 import { instanceToPlain } from "class-transformer";
+import { QueryFailedError } from "typeorm";
 import type { Game } from "$entity/Games";
 import { Report, ReportStatus } from "$entity/Report";
 import { Review } from "$entity/Review";
 import { User } from "$entity/User";
 import {
 	addGameToWishlist,
+	deleteGame,
 	getWishlistByUserId,
 	getWishlistGameIds,
 	isGameInWishlist,
 	removeGameFromWishlist,
-	deleteGame,
 	updateGame,
 	updateReportStatus,
 } from "$lib/db";

@@ -127,7 +127,6 @@ export default function WishListPageClient({
 								.map((l) => l.name) || []
 						}
 						downloads="1M+"
-						ageImage="/placeholder.jpg"
 						ageRating={
 							game.labels
 								?.filter((l) => l.type === LabelType.IndustryRating)
