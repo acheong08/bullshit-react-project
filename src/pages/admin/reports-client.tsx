@@ -100,7 +100,9 @@ export function AdminReportsClient({ initialReports }: Props) {
 
 			setReports((prev) =>
 				prev.map((report) =>
-					report.id === reportId ? { ...report, status: "reviewed" } : report,
+					report.id === reportId
+						? { ...report, status: ReportStatus.Reviewed }
+						: report,
 				),
 			);
 			setSelectedId(null);
@@ -122,7 +124,9 @@ export function AdminReportsClient({ initialReports }: Props) {
 
 			setReports((prev) =>
 				prev.map((report) =>
-					report.id === reportId ? { ...report, status: "deleted" } : report,
+					report.id === reportId
+						? { ...report, status: ReportStatus.Deleted }
+						: report,
 				),
 			);
 			setSelectedId(null);
