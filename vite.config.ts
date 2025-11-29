@@ -78,6 +78,7 @@ export default defineConfig({
 			$styles: path.resolve(__dirname, "./src/styles"),
 			$tmpimg: path.resolve(__dirname, "./public/images"),
 			$utils: path.resolve(__dirname, "./src/utils"),
+      $actions: path.resolve(__dirname, "./src/action.ts"),
 		},
 	},
 });

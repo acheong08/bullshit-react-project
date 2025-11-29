@@ -1,4 +1,4 @@
-import { seedAdminUser, seedGames } from "$utils/seed";
+import { seedAdminUser, seedGames, seedReports } from "$utils/seed";
 import { AppDataSource } from "../data-source";
 
 /**
@@ -21,6 +21,7 @@ export async function initialize(): Promise<void> {
 		console.log("[Init] Running database seed operations...");
 		await seedAdminUser();
 		await seedGames();
+    await seedReports();
 		console.log("[Init] Seed operations complete");
 	} catch (error) {
 		console.error("[Init] Seed operations failed:", error);

@@ -1,10 +1,12 @@
 import { DataSource } from "typeorm";
 import { Game, GameMedia, Label } from "$entity/Games";
 import { User } from "$entity/User";
+import { Report } from "$entity/Report";
+
 
 export const AppDataSource = new DataSource({
 	database: process.env.POSTGRES_DB || "test",
-	entities: [User, Game, GameMedia, Label],
+	entities: [User, Game, GameMedia, Label, Report],
 	host: process.env.POSTGRES_HOST || "postgres",
 	logging: process.env.POSTGRES_LOGGING === "true" || false,
 	migrations: [],
