@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import WishListGameCard from "$components/gameCards/wish-list-game-card";
 import type { Game } from "$entity/Games";
-import { LabelType } from "$entity/Games";
+import { LabelType, MediaType } from "$entity/Games";
 import { getLocalWishlist, removeFromLocalWishlist } from "$utils/wishlist";
 import { getWishlistAction, removeFromWishlistAction } from "../action";
 
@@ -105,29 +105,39 @@ export default function WishListPageClient({
 
 	return (
 		<>
-			{games.map((game) => (
-				<WishListGameCard
-					key={game.id}
-					image={game.media?.[0]?.uri || "/placeholder.jpg"}
-					title={game.name}
-					rating={4.5}
-					reviews="11.7K"
-					tags={
-						game.labels
-							?.filter((l) => l.type === LabelType.Accessibility)
-							.map((l) => l.name) || []
-					}
-					downloads="1M+"
-					ageImage="/placeholder.jpg"
-					ageRating={
-						game.labels
-							?.filter((l) => l.type === LabelType.IndustryRating)
-							.pop()?.name || "No rating"
-					}
-					gameId={String(game.id)}
-					remove={() => handleRemove(String(game.id))}
-				/>
-			))}
+			{games.map((game) => {
+				// Get icon image, falling back to preview image, excluding videos
+				const iconMedia = game.media?.find((m) => m.type === MediaType.Icon);
+				const previewMedia = game.media?.find(
+					(m) => m.type === MediaType.PreviewImg,
+				);
+				const gameImage =
+					iconMedia?.uri || previewMedia?.uri || "/placeholder.jpg";
+
+				return (
+					<WishListGameCard
+						key={game.id}
+						image={gameImage}
+						title={game.name}
+						rating={4.5}
+						reviews="11.7K"
+						tags={
+							game.labels
+								?.filter((l) => l.type === LabelType.Accessibility)
+								.map((l) => l.name) || []
+						}
+						downloads="1M+"
+						ageImage="/placeholder.jpg"
+						ageRating={
+							game.labels
+								?.filter((l) => l.type === LabelType.IndustryRating)
+								.pop()?.name || "No rating"
+						}
+						gameId={String(game.id)}
+						remove={() => handleRemove(String(game.id))}
+					/>
+				);
+			})}
 		</>
 	);
 }
