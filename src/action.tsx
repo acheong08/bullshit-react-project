@@ -1,5 +1,7 @@
 "use server";
 
+import { Report, ReportStatus } from "$entity/Report";
+import { updateGame, updateReportStatus, deleteGame } from "$lib/db";
 import bcrypt from "bcrypt";
 import type { Game } from "$entity/Games";
 import { Review } from "$entity/Review";
@@ -9,6 +11,7 @@ import { generateAccessToken } from "$utils/jwt";
 import { validatePassword, verifyPassword } from "$utils/password";
 import { getRequest } from "$utils/request-context";
 import { AppDataSource } from "./data-source";
+
 
 export interface LoginResult {
 	success: boolean;
@@ -304,5 +307,61 @@ export async function registerUser(
 			error: "A registration error occurred. Please try again.",
 			success: false,
 		};
+	}
+}
+
+// admin section - adding contents of my action.ts file to current one on main
+
+
+/**
+ * Server action to update a game's details
+ * @param gameId - The ID of the game to update
+ * @param data - Object containing name, description, and imageUri
+ * @returns Object with success boolean
+ */
+export async function updateGameAction(
+	gameId: number,
+	data: { name: string; description: string; imageUri: string },
+) {
+	try {
+		const success = await updateGame(gameId, data);
+		return { success };
+	} catch (error) {
+		console.error("Error updating game:", error);
+		return { success: false };
+	}
+}
+
+/**
+ * Server action to update a report's status
+ * @param reportId - The ID of the report to update
+ * @param status - The new status (pending, reviewed, or deleted)
+ * @returns Object with success boolean
+ */
+export async function updateReportStatusAction(
+	reportId: number,
+	status: ReportStatus,
+) {
+	try {
+		const success = await updateReportStatus(reportId, status);
+		return { success };
+	} catch (error) {
+		console.error("Error updating report status:", error);
+		return { success: false };
+	}
+}
+
+/**
+ * Server action to delete a game
+ * @param gameId - The ID of the game to delete
+ * @returns Object with success boolean
+ */
+export async function deleteGameAction(gameId: number) {
+	try {
+		const success = await deleteGame(gameId);
+		return { success };
+	} catch (error) {
+		console.error("Error deleting game:", error);
+		return { success: false };
 	}
 }
