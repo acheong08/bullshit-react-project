@@ -11,7 +11,7 @@ import { LoginPage } from "$pages/login.tsx";
 import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
-import { isUserLoggedIn } from "$utils/auth.ts";
+import { getCurrentUser, isUserLoggedIn } from "$utils/auth.ts";
 import { RegisterPage } from "./pages/register.tsx";
 
 export async function Root(props: { request: Request }) {
@@ -51,6 +51,7 @@ function App(props: {
 	filterMap: Map<string, string[]>;
 }) {
 	const pathname = props.url.pathname;
+	const user = getCurrentUser(props.request);
 
 	if (pathname === "/") {
 		return (
@@ -71,6 +72,10 @@ function App(props: {
 		return <ProfilePage />;
 	}
 	if (pathname === "/admin/reports") {
+		// The first user is the admin
+		if (user?.userId !== 1) {
+			return <h1>Permission Denied</h1>;
+		}
 		return <AdminReportsPage />;
 	}
 	if (pathname.startsWith("/game/")) {

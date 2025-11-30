@@ -173,17 +173,6 @@ export function AdminReportsClient({ initialReports }: Props) {
 				>
 					Reviewed ({reviewedReports.length})
 				</button>
-				<button
-					type="button"
-					onClick={() => setActiveTab("deleted")}
-					style={{
-						fontWeight: activeTab === "deleted" ? "bold" : "normal",
-						padding: "10px 20px",
-						textDecoration: activeTab === "deleted" ? "underline" : "none",
-					}}
-				>
-					Deleted ({deletedReports.length})
-				</button>
 			</div>
 
 			{currentReports.length === 0 ? (

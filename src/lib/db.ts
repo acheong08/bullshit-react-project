@@ -1,6 +1,6 @@
 import { IsNull, Not } from "typeorm";
 import { Game, Label, LabelType } from "$entity/Games";
-import { Report, ReportStatus } from "$entity/Report";
+import { Report, type ReportStatus } from "$entity/Report";
 import { Review } from "$entity/Review";
 
 export async function getGameById(gameId: number): Promise<Game | null> {
@@ -83,15 +83,12 @@ export async function deleteGame(gameId: number): Promise<boolean> {
 		const game = await Game.findOne({ where: { id: gameId } });
 		if (!game) return false;
 
-		await Report.update(
-			{ game: { id: gameId } },
-			{ status: ReportStatus.Deleted },
-		);
+		await Report.delete({ game: { id: gameId } });
 
 		await game.remove();
 		return true;
 	} catch (error) {
-		console.error(`Error deleting game ${gameId}:`, error);
+		console.log(`Error deleting game ${gameId}:`, error);
 		return false;
 	}
 }

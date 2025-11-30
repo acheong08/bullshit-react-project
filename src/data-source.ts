@@ -3,6 +3,7 @@ import { Game, GameMedia, Label } from "$entity/Games";
 import { Report } from "$entity/Report";
 import { Review } from "$entity/Review";
 import { User } from "$entity/User";
+import "dotenv/config";
 
 export const AppDataSource = new DataSource({
 	database: process.env.POSTGRES_DB || "test",

@@ -6,8 +6,6 @@ export async function AdminReportsPage() {
 	// Fetch all reports from the database
 	const reports = await getAllReports();
 
-	console.log("Fetched reports from database:", reports.length);
-
 	// Transform the data to match the format expected by the client component
 	const reportsData = reports.map((report) => ({
 		description: report.game.description,
@@ -24,8 +22,6 @@ export async function AdminReportsPage() {
 	}));
 	//This is very very messy and not my code - This was Claude AI, not entierly sure how its changing the data,
 	//its very unreadable and looks so messy but it does work.
-
-	console.log("Transformed reports:", reportsData);
 
 	// Pass the data to the client component
 	return <AdminReportsClient initialReports={reportsData} />;

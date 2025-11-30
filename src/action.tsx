@@ -358,8 +358,7 @@ export async function deleteGameAction(gameId: number) {
 	try {
 		const success = await deleteGame(gameId);
 		return { success };
-	} catch (error) {
-		console.error("Error deleting game:", error);
+	} catch (_) {
 		return { success: false };
 	}
 }
