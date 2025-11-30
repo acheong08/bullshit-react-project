@@ -1539,3 +1539,36 @@ label {
 .report-game-btn:hover {
 	background: #c82333;
 }
+
+
+/* Modal Header with Close Button */
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+}
+
+.modal-header h3 {
+	margin: 0;
+}
+
+.modal-close {
+	background: none;
+	border: none;
+	font-size: 2rem;
+	line-height: 1;
+	cursor: pointer;
+	padding: 0;
+	width: 2rem;
+	height: 2rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #666;
+	transition: color 0.2s;
+}
+
+.modal-close:hover {
+	color: #000;
+}

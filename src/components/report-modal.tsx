@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import { createGameReport } from "$actions";
 
 interface ReportModalProps {
@@ -22,6 +23,18 @@ export function ReportModal({ gameId, gameName, onClose }: ReportModalProps) {
 		"Other (specify below)",
 	];
 
+	// Handle escape key globally
+	useEffect(() => {
+		const handleEscape = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				onClose();
+			}
+		};
+
+		document.addEventListener("keydown", handleEscape);
+		return () => document.removeEventListener("keydown", handleEscape);
+	}, [onClose]);
+
 	async function handleSubmit() {
 		const reason =
 			selectedReason === "Other (specify below)"
@@ -34,6 +47,7 @@ export function ReportModal({ gameId, gameName, onClose }: ReportModalProps) {
 		}
 
 		setIsSubmitting(true);
+
 		const result = await createGameReport(gameId, reason);
 
 		if (result.success) {
@@ -42,23 +56,29 @@ export function ReportModal({ gameId, gameName, onClose }: ReportModalProps) {
 		} else {
 			alert(result.error || "Failed to submit report. Please try again.");
 		}
+
 		setIsSubmitting(false);
 	}
 
 	return (
-		<div
-			className="modal-overlay"
-			onClick={onClose}
-			onKeyDown={(e) => e.key === "Escape" && onClose()}
-			role="presentation"
-		>
+		<div className="modal-overlay">
 			<div
 				className="modal-content"
-				onClick={(e) => e.stopPropagation()}
-				onKeyDown={(e) => e.stopPropagation()}
 				role="dialog"
+				aria-labelledby="modal-title"
+				aria-modal="true"
 			>
-				<h3>Report: {gameName}</h3>
+				<div className="modal-header">
+					<h3 id="modal-title">Report: {gameName}</h3>
+					<button
+						type="button"
+						className="modal-close"
+						onClick={onClose}
+						aria-label="Close modal"
+					>
+						×
+					</button>
+				</div>
 
 				<p>Help us improve by reporting issues with this game.</p>
 
@@ -91,12 +111,15 @@ export function ReportModal({ gameId, gameName, onClose }: ReportModalProps) {
 
 				<div className="modal-actions">
 					<button
+						type="button"
 						onClick={handleSubmit}
 						disabled={isSubmitting || !selectedReason}
 					>
 						{isSubmitting ? "Submitting..." : "Submit Report"}
 					</button>
-					<button onClick={onClose}>Cancel</button>
+					<button type="button" onClick={onClose}>
+						Cancel
+					</button>
 				</div>
 			</div>
 		</div>
