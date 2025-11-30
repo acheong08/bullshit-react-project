@@ -1,5 +1,6 @@
 import { IsNull, Not } from "typeorm";
 import { Game, Label, LabelType } from "$entity/Games";
+import { Report, type ReportStatus } from "$entity/Report";
 import { Review } from "$entity/Review";
 
 export async function getGameById(gameId: number): Promise<Game | null> {
@@ -15,6 +16,84 @@ export async function getGameById(gameId: number): Promise<Game | null> {
 	}
 }
 
+// Fetch all reports from the database
+export async function getAllReports(): Promise<Report[]> {
+	try {
+		const reports = await Report.find({
+			order: { reportedAt: "DESC" },
+			relations: ["game", "game.media", "game.labels"],
+		});
+		return reports;
+	} catch (error) {
+		console.error("Error fetching reports:", error);
+		return [];
+	}
+}
+
+// Update a report's status
+export async function updateReportStatus(
+	reportId: number,
+	status: ReportStatus,
+): Promise<boolean> {
+	try {
+		const report = await Report.findOne({ where: { id: reportId } });
+		if (!report) return false;
+
+		report.status = status;
+		await report.save();
+		return true;
+	} catch (error) {
+		console.error(`Error updating report ${reportId}:`, error);
+		return false;
+	}
+}
+
+// Update a game's details
+export async function updateGame(
+	gameId: number,
+	updates: { name?: string; description?: string; imageUri?: string },
+): Promise<boolean> {
+	try {
+		const game = await Game.findOne({
+			relations: ["media"],
+			where: { id: gameId },
+		});
+		if (!game) return false;
+
+		if (updates.name !== undefined) game.name = updates.name;
+		if (updates.description !== undefined)
+			game.description = updates.description;
+
+		if (updates.imageUri && game.media && game.media.length > 0) {
+			game.media[0].uri = updates.imageUri;
+			await game.media[0].save();
+		}
+
+		await game.save();
+		return true;
+	} catch (error) {
+		console.error(`Error updating game ${gameId}:`, error);
+		return false;
+	}
+}
+
+// Delete a game from the database
+export async function deleteGame(gameId: number): Promise<boolean> {
+	try {
+		const game = await Game.findOne({ where: { id: gameId } });
+		if (!game) return false;
+
+		await Report.delete({ game: { id: gameId } });
+
+		await game.remove();
+		return true;
+	} catch (error) {
+		console.log(`Error deleting game ${gameId}:`, error);
+		return false;
+	}
+}
+
+// Search/filter functions
 export async function getAllSortOptions(): Promise<string[]> {
 	return ["Popularity", "Release Date", "Alphabetical", "User Rating"];
 }
@@ -49,7 +128,7 @@ export async function getReviewsByGameId(gameId: number): Promise<Review[]> {
 			order: { createdAt: "DESC" },
 			relations: ["user"],
 			where: {
-				comment: Not(IsNull()), // Only get reviews with comments
+				comment: Not(IsNull()),
 				game: { id: gameId },
 			},
 		});
@@ -68,6 +147,7 @@ export async function searchGames(
 	const queryBuilder = Game.createQueryBuilder("game")
 		.leftJoinAndSelect("game.labels", "label")
 		.leftJoinAndSelect("game.media", "media");
+
 	if (filterOptions.length > 0) {
 		queryBuilder.where("label.name IN (:...filterOptions)", {
 			filterOptions,

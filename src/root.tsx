@@ -4,21 +4,20 @@ import { Navbar } from "$components/navbar.tsx";
 import { VoiceCommandProvider } from "$components/voice-command-provider.tsx";
 import { VoiceNavigationCommands } from "$components/voice-navigation-commands.tsx";
 import { getAllSortOptions, getFilterMap } from "$lib/db";
+import { AdminReportsPage } from "$pages/admin/reports.tsx";
 import { GamePage } from "$pages/game.tsx";
 import { HomePage } from "$pages/home.tsx";
 import { LoginPage } from "$pages/login.tsx";
 import { NotFoundPage } from "$pages/not-found.tsx";
 import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
-import { isUserLoggedIn } from "$utils/auth.ts";
+import { getCurrentUser, isUserLoggedIn } from "$utils/auth.ts";
 import { RegisterPage } from "./pages/register.tsx";
 
 export async function Root(props: { request: Request }) {
 	const isLoggedIn = isUserLoggedIn(props.request);
-
 	const sortOptions = await getAllSortOptions();
 	const filterMap = await getFilterMap();
-
 	return (
 		<html lang="en" data-theme="dark">
 			<head>
@@ -52,8 +51,8 @@ function App(props: {
 	filterMap: Map<string, string[]>;
 }) {
 	const pathname = props.url.pathname;
+	const user = getCurrentUser(props.request);
 
-	// Parse route
 	if (pathname === "/") {
 		return (
 			<HomePage
@@ -72,6 +71,13 @@ function App(props: {
 	if (pathname === "/profile") {
 		return <ProfilePage />;
 	}
+	if (pathname === "/admin/reports") {
+		// The first user is the admin
+		if (user?.userId !== 1) {
+			return <h1>Permission Denied</h1>;
+		}
+		return <AdminReportsPage />;
+	}
 	if (pathname.startsWith("/game/")) {
 		const gameId = pathname.split("/")[2];
 		return <GamePage gameId={gameId} request={props.request} />;
@@ -88,6 +94,5 @@ function App(props: {
 			/>
 		);
 	}
-
 	return <NotFoundPage />;
 }
