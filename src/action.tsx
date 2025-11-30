@@ -2,7 +2,7 @@
 
 import bcrypt from "bcrypt";
 import type { Game } from "$entity/Games";
-import type { ReportStatus } from "$entity/Report";
+import { Report, ReportStatus } from "$entity/Report";
 import { Review } from "$entity/Review";
 import { User } from "$entity/User";
 import { deleteGame, updateGame, updateReportStatus } from "$lib/db";
@@ -361,5 +361,40 @@ export async function deleteGameAction(gameId: number) {
 	} catch (error) {
 		console.error("Error deleting game:", error);
 		return { success: false };
+	}
+}
+
+
+/**
+ * Server action to create a new game report
+ * @param gameId - The ID of the game being reported
+ * @param reportReason - Why the game is being reported
+ */
+export async function createGameReport(
+	gameId: number,
+	reportReason: string
+) {
+	try {
+		if (!AppDataSource.isInitialized) {
+			await AppDataSource.initialize();
+		}
+
+		// Validate inputs
+		if (!reportReason.trim()) {
+			return { success: false, error: "Report reason is required" };
+		}
+
+		// Create the report
+		const report = new Report();
+		report.game = { id: gameId } as Game;
+		report.reportReason = reportReason.trim();
+		report.status = ReportStatus.Pending;
+
+		await report.save();
+
+		return { success: true };
+	} catch (error) {
+		console.error("Error creating report:", error);
+		return { success: false, error: "Failed to create report" };
 	}
 }

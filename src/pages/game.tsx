@@ -1,6 +1,7 @@
 import { instanceToPlain } from "class-transformer";
 import { MediaCarousel } from "$components/media-carousel";
 import { ReviewsSection } from "$components/reviews-section";
+import { ReportButton } from "$components/report-button";
 import type { Game, GameMedia } from "$entity/Games";
 import { LabelType } from "$entity/Games";
 import { getGameById, getReviewsByGameId } from "$lib/db";
@@ -72,6 +73,7 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 					<div className="hero-content-wrapper">
 						<div className="hero-details">
 							<h1 className="game-title">{game.name}</h1>
+              <ReportButton gameId={gameIdNumber} gameName={game.name} />
 							<div className="hero-stats">
 								<div className="stat-group">
 									<img
