@@ -364,16 +364,12 @@ export async function deleteGameAction(gameId: number) {
 	}
 }
 
-
 /**
  * Server action to create a new game report
  * @param gameId - The ID of the game being reported
  * @param reportReason - Why the game is being reported
  */
-export async function createGameReport(
-	gameId: number,
-	reportReason: string
-) {
+export async function createGameReport(gameId: number, reportReason: string) {
 	try {
 		if (!AppDataSource.isInitialized) {
 			await AppDataSource.initialize();
@@ -381,7 +377,7 @@ export async function createGameReport(
 
 		// Validate inputs
 		if (!reportReason.trim()) {
-			return { success: false, error: "Report reason is required" };
+			return { error: "Report reason is required", success: false };
 		}
 
 		// Create the report
@@ -395,6 +391,6 @@ export async function createGameReport(
 		return { success: true };
 	} catch (error) {
 		console.error("Error creating report:", error);
-		return { success: false, error: "Failed to create report" };
+		return { error: "Failed to create report", success: false };
 	}
 }

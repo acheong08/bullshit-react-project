@@ -12,7 +12,7 @@ export function ReportButton({ gameId, gameName }: ReportButtonProps) {
 
 	return (
 		<>
-			<button 
+			<button
 				type="button"
 				onClick={() => setShowModal(true)}
 				className="report-game-btn"

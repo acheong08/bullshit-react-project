@@ -22,8 +22,8 @@ export async function AdminReportsPage() {
 		status: report.status,
 		title: report.game.name,
 	}));
-  //This is very very messy and not my code - This was Claude AI, not entierly sure how its changing the data,
-  //its very unreadable and looks so messy but it does work. 
+	//This is very very messy and not my code - This was Claude AI, not entierly sure how its changing the data,
+	//its very unreadable and looks so messy but it does work.
 
 	console.log("Transformed reports:", reportsData);
 

@@ -19,13 +19,14 @@ export function ReportModal({ gameId, gameName, onClose }: ReportModalProps) {
 		"Broken image link",
 		"Wrong genre classification",
 		"Inappropriate for age rating",
-		"Other (specify below)"
+		"Other (specify below)",
 	];
 
 	async function handleSubmit() {
-		const reason = selectedReason === "Other (specify below)" 
-			? customReason.trim()
-			: selectedReason;
+		const reason =
+			selectedReason === "Other (specify below)"
+				? customReason.trim()
+				: selectedReason;
 
 		if (!reason) {
 			alert("Please select or enter a reason for reporting");
@@ -34,7 +35,7 @@ export function ReportModal({ gameId, gameName, onClose }: ReportModalProps) {
 
 		setIsSubmitting(true);
 		const result = await createGameReport(gameId, reason);
-		
+
 		if (result.success) {
 			alert("Report submitted successfully. Our team will review it shortly.");
 			onClose();
@@ -45,21 +46,33 @@ export function ReportModal({ gameId, gameName, onClose }: ReportModalProps) {
 	}
 
 	return (
-		<div className="modal-overlay" onClick={onClose}>
-			<div className="modal-content" onClick={(e) => e.stopPropagation()}>
+		<div
+			className="modal-overlay"
+			onClick={onClose}
+			onKeyDown={(e) => e.key === "Escape" && onClose()}
+			role="presentation"
+		>
+			<div
+				className="modal-content"
+				onClick={(e) => e.stopPropagation()}
+				onKeyDown={(e) => e.stopPropagation()}
+				role="dialog"
+			>
 				<h3>Report: {gameName}</h3>
-				
+
 				<p>Help us improve by reporting issues with this game.</p>
 
 				<label>
 					Select a reason:
-					<select 
-						value={selectedReason} 
+					<select
+						value={selectedReason}
 						onChange={(e) => setSelectedReason(e.target.value)}
 					>
 						<option value="">-- Choose a reason --</option>
-						{predefinedReasons.map(reason => (
-							<option key={reason} value={reason}>{reason}</option>
+						{predefinedReasons.map((reason) => (
+							<option key={reason} value={reason}>
+								{reason}
+							</option>
 						))}
 					</select>
 				</label>
@@ -77,7 +90,10 @@ export function ReportModal({ gameId, gameName, onClose }: ReportModalProps) {
 				)}
 
 				<div className="modal-actions">
-					<button onClick={handleSubmit} disabled={isSubmitting || !selectedReason}>
+					<button
+						onClick={handleSubmit}
+						disabled={isSubmitting || !selectedReason}
+					>
 						{isSubmitting ? "Submitting..." : "Submit Report"}
 					</button>
 					<button onClick={onClose}>Cancel</button>
