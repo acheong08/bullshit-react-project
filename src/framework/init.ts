@@ -28,3 +28,5 @@ export async function initialize(): Promise<void> {
 		// Don't throw - we don't want to crash the server if seeding fails
 	}
 }
+
+await initialize();
