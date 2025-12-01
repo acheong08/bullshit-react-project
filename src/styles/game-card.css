@@ -78,8 +78,7 @@ a {
 	margin: 0;
 }
 
-html[data-theme="dark"] .star-icon,
-.top-charts-star-icon {
+html[data-theme="dark"] .star-icon {
 	filter: invert(1) brightness(1.2);
 	/* This inverts the colors for dark mode */
 }

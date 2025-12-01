@@ -53,7 +53,7 @@ export default function TopChartsGameCard(props: TopChartsGameCardProps) {
 								src={StarIcon}
 								alt=""
 								aria-hidden="true"
-								className="top-charts-star-icon"
+								className="star-icon"
 							/>
 						</p>
 					</div>

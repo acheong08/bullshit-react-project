@@ -442,6 +442,7 @@ function TopChartsView({
 								?.map((label: Label) => label.name) || []
 						}
 						gameId={game.id.toString()}
+						context="top-charts"
 					/>
 				))}
 			</div>
@@ -652,10 +653,15 @@ function NewThisWeekView({
 								?.map((label: Label) => label.name) || []
 						}
 						gameId={game.id.toString()}
+						context="new-this-week"
 					/>
 				))}
 			</div>
-
+			<div className="games-bar">
+				<div className="games-row">
+					<h2 className="games-title">ALL GAMES</h2>
+				</div>
+			</div>
 			<div className="game-card-gallery">
 				{currentGames.map((game) => (
 					<GameCard
