@@ -163,19 +163,15 @@ export function ProfilePage() {
 			return;
 		}
 
-		// Convert file to base64
+		// Convert file to base64 data URL
 		const reader = new FileReader();
 		reader.onloadend = async () => {
-			const base64String = reader.result as string;
+			const dataUrl = reader.result as string;
 
-			const result = await updateProfileImage(
-				token,
-				base64String,
-				newImageFile.type,
-			);
+			const result = await updateProfileImage(token, dataUrl);
 
 			if (result.success) {
-				setProfileImage(base64String);
+				setProfileImage(dataUrl);
 				window.location.reload();
 			} else {
 				console.error(result.error);

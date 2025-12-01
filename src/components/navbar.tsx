@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getCookie, setCookie } from "$utils/cookies";
+import type { User } from "$entity/User.ts";
+import { setCookie } from "$utils/cookies";
 import { getTheme } from "$utils/theme";
-import { getUserData } from "../action.tsx";
 import { useVoiceCommands } from "./voice-command-provider";
 
 interface NavbarProps {
-	isLoggedIn: boolean;
+	user: User | null;
 }
 
 interface DarkLightToggleProps {
@@ -91,28 +91,8 @@ function VoiceCommandButton({ isDark }: VoiceCommandButtonProps) {
 	);
 }
 
-export function Navbar({ isLoggedIn }: NavbarProps) {
+export function Navbar({ user }: NavbarProps) {
 	const [isDark, setDark] = useState<"dark" | "light">("dark");
-
-	const [username, setUsername] = useState<string>("");
-	const [profileImage, setProfileImage] = useState<string>(
-		"/images/example-images/example-profile-icon.png",
-	);
-
-	// Load user data
-	useEffect(() => {
-		async function loadUser() {
-			const token = await getCookie("authToken");
-			if (!token) return;
-
-			const userData = await getUserData(token);
-			if (userData?.success) {
-				if (userData.username) setUsername(userData.username);
-				if (userData.profileImage) setProfileImage(userData.profileImage);
-			}
-		}
-		loadUser().catch((error) => console.error(error));
-	}, []);
 
 	// Load theme
 	useEffect(() => {
@@ -131,20 +111,23 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 					/>
 				</a>
 
-				{isLoggedIn ? (
+				{user ? (
 					<>
 						{/* Profile picture */}
 						<a href={"/profile"}>
 							<img
 								className="navbar-profile-pic"
-								src={profileImage}
+								src={
+									user.profileImage ||
+									"/images/example-images/example-profile-icon.png"
+								}
 								alt="Profile Icon"
 							/>
 						</a>
 
 						{/* Username */}
 						<a href={"/profile"} className="navbar-username">
-							{username}
+							{user.username}
 						</a>
 					</>
 				) : (

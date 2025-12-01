@@ -1,5 +1,4 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import type { Settings } from "../action.tsx";
 
 @Entity()
 export class User extends BaseEntity {
@@ -15,12 +14,9 @@ export class User extends BaseEntity {
 	@Column({ length: 128, type: "varchar" })
 	email: string;
 
-	@Column({ nullable: true, type: "bytea" })
-	profileImage: Buffer | null;
+	@Column({ nullable: true, type: "text" })
+	profileImage: string | null;
 
-	@Column({ length: 50, nullable: true, type: "varchar" })
-	imageType: string | null;
-
-	@Column({ nullable: true, type: "jsonb" })
-	accessibilitySettings: Settings | null;
+	@Column({ nullable: true, type: "text" })
+	accessibilitySettings: string | null;
 }

@@ -5,6 +5,7 @@ import { Navbar } from "$components/navbar.tsx";
 import { VoiceCommandProvider } from "$components/voice-command-provider.tsx";
 import { VoiceNavigationCommands } from "$components/voice-navigation-commands.tsx";
 import { Game, GameAverageRating } from "$entity/Games.ts";
+import { User } from "$entity/User.ts";
 import { getAllSortOptions, getFilterMap } from "$lib/db";
 import { AdminReportsPage } from "$pages/admin/reports.tsx";
 import { GamePage } from "$pages/game.tsx";
@@ -18,7 +19,12 @@ import { getCurrentUser } from "$utils/auth.ts";
 import { RegisterPage } from "./pages/register.tsx";
 
 export async function Root(props: { request: Request }) {
-	const user = getCurrentUser(props.request);
+	const tmpUser = getCurrentUser(props.request);
+	const user = tmpUser
+		? await User.findOne({
+				where: { username: tmpUser.username },
+			})
+		: null;
 
 	const sortOptions = await getAllSortOptions();
 	const filterMap = await getFilterMap();
@@ -33,7 +39,7 @@ export async function Root(props: { request: Request }) {
 			<body>
 				<VoiceCommandProvider>
 					<VoiceNavigationCommands />
-					<Navbar user={user} />
+					<Navbar user={user ? (instanceToPlain(user) as User) : null} />
 					<div className="app-container">
 						<App
 							url={new URL(props.request.url)}
