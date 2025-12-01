@@ -18,10 +18,22 @@ import {
 	updateReportStatus,
 } from "$lib/db";
 import { getCurrentUser } from "$utils/auth";
-import { generateAccessToken } from "$utils/jwt";
+import { generateAccessToken, verifyAccessToken } from "$utils/jwt";
 import { validatePassword, verifyPassword } from "$utils/password";
 import { getRequest } from "$utils/request-context";
 import { AppDataSource } from "./data-source";
+export interface Settings {
+	captions: boolean;
+	captionStyle: string;
+	audioDescriptions: boolean;
+	soundFeedback: boolean;
+
+	voiceControls: boolean;
+	keyboardNavigation: boolean;
+	buttonSize: string;
+	gestureSensitivity: string;
+	scrollSpeed: string;
+}
 
 export interface LoginResult {
 	success: boolean;
@@ -375,10 +387,6 @@ export async function deleteGameAction(gameId: number) {
  */
 export async function createGameReport(gameId: number, reportReason: string) {
 	try {
-		if (!AppDataSource.isInitialized) {
-			await AppDataSource.initialize();
-		}
-
 		// Validate inputs
 		if (!reportReason.trim()) {
 			return { error: "Report reason is required", success: false };
@@ -601,6 +609,189 @@ export async function checkWishlistAction(
 	} catch (_) {
 		return {
 			error: "An error occurred while checking wishlist. Please try again.",
+			success: false,
+		};
+	}
+}
+
+/**
+ * Updates a username
+ * @param token - Token of user being updated
+ * @param newUsername - Updated username
+ */
+export async function updateUser(
+	token: string,
+	newUsername: string,
+): Promise<LoginResult> {
+	try {
+		const payload = verifyAccessToken(token);
+		if (!payload || !payload.userId) {
+			return { error: "Invalid authentication token.", success: false };
+		}
+
+		const user = await User.findOne({
+			where: { id: payload.userId },
+		});
+
+		if (!user) {
+			return { error: "User not found.", success: false };
+		}
+
+		user.username = newUsername;
+		await user.save();
+
+		const newToken = generateAccessToken(user.id, user.username);
+		return { success: true, token: newToken };
+	} catch (err) {
+		console.error("Update user error:", err);
+		return {
+			error: "An unexpected error occurred while updating username.",
+			success: false,
+		};
+	}
+}
+
+export interface UserData {
+	success: boolean;
+	username: string;
+	profileImage?: string;
+	accessibilitySettings?: Settings;
+	error?: string;
+}
+export interface UserDataErr {
+	success: false;
+	error: string;
+}
+
+/**
+ * Gets user data
+ * @param token - Token of user whose data is being fetched
+ */
+export async function getUserData(
+	token: string,
+): Promise<UserData | UserDataErr> {
+	try {
+		const payload = verifyAccessToken(token);
+		if (!payload || !payload.userId) {
+			return { error: "Invalid authentication token.", success: false };
+		}
+
+		const user = await User.findOne({
+			where: { id: payload.userId },
+		});
+
+		if (!user) {
+			return { error: "User not found.", success: false };
+		}
+
+		// Return profile image directly if it exists (already stored as data URL)
+		const profileImage = user.profileImage || undefined;
+
+		// Parse accessibility settings from JSON string
+		let accessibilitySettings: Settings | undefined;
+		if (user.accessibilitySettings) {
+			try {
+				accessibilitySettings = JSON.parse(user.accessibilitySettings);
+			} catch {
+				accessibilitySettings = undefined;
+			}
+		}
+
+		return {
+			accessibilitySettings,
+			profileImage,
+			success: true,
+			username: user.username,
+		};
+	} catch (err) {
+		console.error("Get user data error:", err);
+		return {
+			error: "An unexpected error occurred while fetching user data.",
+			success: false,
+		};
+	}
+}
+
+/**
+ * Updates user profile image
+ * @param token - Token of user whose info is being updated
+ * @param imageDataUrl - Data URL of the image (e.g., data:image/png;base64,...)
+ */
+export async function updateProfileImage(
+	token: string,
+	imageDataUrl: string,
+): Promise<LoginResult> {
+	try {
+		const payload = verifyAccessToken(token);
+		if (!payload || !payload.userId) {
+			return { error: "Invalid authentication token.", success: false };
+		}
+
+		const user = await User.findOne({
+			where: { id: payload.userId },
+		});
+
+		if (!user) {
+			return { error: "User not found.", success: false };
+		}
+
+		// Validate that it's a proper data URL
+		if (!imageDataUrl.startsWith("data:image/")) {
+			return { error: "Invalid image format.", success: false };
+		}
+
+		// Validate file size (e.g., 5MB limit) - estimate from base64 length
+		const base64Data = imageDataUrl.replace(/^data:image\/\w+;base64,/, "");
+		const estimatedSize = (base64Data.length * 3) / 4;
+		const maxSize = 5 * 1024 * 1024;
+		if (estimatedSize > maxSize) {
+			return { error: "Image size must be less than 5MB.", success: false };
+		}
+
+		user.profileImage = imageDataUrl;
+		await user.save();
+
+		return { success: true };
+	} catch (err) {
+		console.error("Update profile image error:", err);
+		return {
+			error: "An unexpected error occurred while updating profile image.",
+			success: false,
+		};
+	}
+}
+
+/**
+ *  Apply new accessibility settings to user account
+ *  @param token - Token of user being edited
+ *  @param settings - Settings being added to an account
+ */
+export async function updateAccessibilitySettings(
+	token: string,
+	settings: Settings,
+): Promise<LoginResult> {
+	try {
+		// Validate token
+		const payload = verifyAccessToken(token);
+		if (!payload || !payload.userId) {
+			return { error: "Invalid authentication token.", success: false };
+		}
+
+		// Fetch user
+		const user = await User.findOne({ where: { id: payload.userId } });
+		if (!user) {
+			return { error: "User not found.", success: false };
+		}
+
+		// Save settings as JSON string
+		user.accessibilitySettings = JSON.stringify(settings);
+		await user.save();
+
+		return { success: true };
+	} catch (err) {
+		console.error("Update settings error:", err);
+		return {
+			error: "Unexpected error occurred while saving settings.",
 			success: false,
 		};
 	}

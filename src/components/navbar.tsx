@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { User } from "$utils/auth";
-import { deleteCookie, setCookie } from "$utils/cookies";
+import type { User } from "$entity/User.ts";
+import { setCookie } from "$utils/cookies";
 import { getTheme } from "$utils/theme";
 import { useVoiceCommands } from "./voice-command-provider";
 
@@ -94,13 +94,10 @@ function VoiceCommandButton({ isDark }: VoiceCommandButtonProps) {
 export function Navbar({ user }: NavbarProps) {
 	const [isDark, setDark] = useState<"dark" | "light">("dark");
 
+	// Load theme
 	useEffect(() => {
 		const initialTheme = getTheme();
-		console.log(initialTheme);
-		const applyInitialTheme = async () => {
-			document.documentElement.setAttribute("data-theme", initialTheme);
-		};
-		applyInitialTheme().catch(console.error);
+		document.documentElement.setAttribute("data-theme", initialTheme);
 	}, []);
 
 	return (
@@ -113,16 +110,23 @@ export function Navbar({ user }: NavbarProps) {
 						alt="Company Logo"
 					/>
 				</a>
+
 				{user ? (
 					<>
-						<a href="/profile">
+						{/* Profile picture */}
+						<a href={"/profile"}>
 							<img
 								className="navbar-profile-pic"
-								src="/images/example-images/example-profile-icon.png"
+								src={
+									user.profileImage ||
+									"/images/example-images/example-profile-icon.png"
+								}
 								alt="Profile Icon"
 							/>
 						</a>
-						<a href="/profile" className="navbar-username">
+
+						{/* Username */}
+						<a href={"/profile"} className="navbar-username">
 							{user.username}
 						</a>
 					</>
@@ -136,19 +140,8 @@ export function Navbar({ user }: NavbarProps) {
 			</div>
 
 			<div className="navbar-section flex">
-				{user !== null && (
-					<button
-						type="button"
-						onClick={async () => {
-							await deleteCookie("authToken");
-							window.location.assign("/");
-						}}
-						className="primary-btn"
-					>
-						Logout
-					</button>
-				)}
 				<VoiceCommandButton isDark={isDark === "dark"} />
+
 				<DarkLightToggle
 					isDark={isDark === "dark"}
 					onToggle={async () => {
@@ -157,11 +150,12 @@ export function Navbar({ user }: NavbarProps) {
 						document.documentElement.setAttribute("data-theme", isDark);
 					}}
 				/>
-				<a href="/wishlist">
+
+				<a href="/user/username/wishlist">
 					<img
 						className="navbar-image"
 						src="/images/wishlist-icon.png"
-						alt="Company Logo"
+						alt="Wishlist Icon"
 					/>
 				</a>
 			</div>
