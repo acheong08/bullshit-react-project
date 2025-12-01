@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { removeFromWishlistAction } from "../../action";
 import "$styles/game-card.css";
 
 const StarIcon = "/images/star.png";
@@ -11,13 +15,25 @@ export type WishListGameCardProps = {
 	downloads: string;
 	ageRating: string;
 	gameId: string;
-	remove: () => void;
 };
 
 export default function WishListGameCard(props: WishListGameCardProps) {
-	const tagText = props.tags.join(", ");
+	const [isRemoved, setIsRemoved] = useState(false);
+	const [isRemoving, setIsRemoving] = useState(false);
 
-	const ariaLabel = `Wish list game card: image: ${props.title} icon, Title: ${props.title}. Rating: ${props.rating} stars. Reviews: ${props.reviews}. Downloads: ${props.downloads}. Age rating: ${props.ageRating}. Tags: ${tagText}. Links to game page.`;
+	const handleRemove = async () => {
+		setIsRemoving(true);
+		const result = await removeFromWishlistAction(Number(props.gameId));
+		if (result.success) {
+			setIsRemoved(true);
+		}
+		setIsRemoving(false);
+	};
+
+	// Hide the card after successful removal
+	if (isRemoved) {
+		return null;
+	}
 
 	return (
 		<div className="wish-list-card">
@@ -41,13 +57,8 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 				<div className="wish-list-downloads-age">
 					<div className="wish-list-rating-reviews">
 						<p className="wish-list-card-rating">
-							{props.rating}{" "}
-							<img
-								src={StarIcon}
-								alt="star icon"
-								aria-hidden="true"
-								className="wish-list-star-icon"
-							/>
+							{props.rating.toFixed(1)}{" "}
+							<img src={StarIcon} alt="Star" className="wish-list-star-icon" />
 						</p>
 						<p className="wish-list-Number-Of-Reviews">
 							{props.reviews} reviews
@@ -73,8 +84,13 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 						</span>
 					))}
 				</div>
-				<button type="button" className="remove-button" onClick={props.remove}>
-					Remove
+				<button
+					type="button"
+					className="remove-button"
+					onClick={handleRemove}
+					disabled={isRemoving}
+				>
+					{isRemoving ? "Removing..." : "Remove"}
 				</button>
 			</div>
 

@@ -79,7 +79,6 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 					<div className="hero-content-wrapper">
 						<div className="hero-details">
 							<h1 className="game-title">{game.name}</h1>
-							<ReportButton gameId={gameIdNumber} gameName={game.name} />
 							<div className="hero-stats">
 								<div className="stat-group">
 									<img src={heroImage} alt="Icon" className="game-icon-small" />
@@ -107,6 +106,7 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 									Install
 								</button>
 								<BookmarkButton gameId={gameId} isLoggedIn={loggedIn} />
+								<ReportButton gameId={gameIdNumber} gameName={game.name} />
 							</div>
 						</div>
 					</div>
