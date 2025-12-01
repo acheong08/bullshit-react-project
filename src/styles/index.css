@@ -750,13 +750,12 @@ label {
 }
 
 .install-btn {
-	background-color: #0047ab;
-	/* Deep blue */
+	background-color: var(--primary-blue);
 	color: white;
 }
 
 .bookmark-btn {
-	background-color: #0047ab;
+	background-color: var(--primary-blue);
 	color: white;
 	display: flex;
 	align-items: center;
@@ -766,7 +765,7 @@ label {
 .install-btn:hover,
 .bookmark-btn:hover {
 	transform: scale(1.05);
-	background-color: #003580;
+	background-color: var(--primary-blue);
 }
 
 /* Content Container */
@@ -958,9 +957,9 @@ label {
 }
 
 .tab-btn.active {
-	background-color: #2a2a80;
+	background-color: var(--primary-blue);
 	color: white;
-	border-color: #2a2a80;
+	border-color: var(--primary-blue);
 }
 
 .rating-overview {
@@ -1024,7 +1023,7 @@ label {
 
 .bar-fill {
 	height: 100%;
-	background-color: #2a2a80;
+	background-color: var(--primary-blue);
 	border-radius: 5px;
 }
 
@@ -1035,7 +1034,7 @@ label {
 
 .leave-review-btn {
 	padding: 0.75rem 1.5rem;
-	background-color: #2a2a80;
+	background-color: var(--primary-blue);
 	color: white;
 	border: none;
 	border-radius: 8px;
@@ -1248,7 +1247,7 @@ label {
 	width: 100%;
 	height: 8px;
 	border-radius: 5px;
-	background: linear-gradient(to right, #ddd 0%, #2a2a80 100%);
+	background: linear-gradient(to right, #ddd 0%, var(--primary-blue) 100%);
 	outline: none;
 	cursor: pointer;
 }
