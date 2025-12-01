@@ -15,9 +15,12 @@ import { ProfilePage } from "$pages/profile.tsx";
 import { SearchPage } from "$pages/searchpage.tsx";
 import { WishListPage } from "$pages/wishlist.tsx";
 import { getCurrentUser } from "$utils/auth.ts";
+import { initialize } from "./framework/init.ts";
 import { RegisterPage } from "./pages/register.tsx";
 
 export async function Root(props: { request: Request }) {
+	// Initialize just in case
+	await initialize();
 	const user = getCurrentUser(props.request);
 
 	const sortOptions = await getAllSortOptions();
