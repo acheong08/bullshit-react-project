@@ -8,8 +8,8 @@ import {
 	renderToReadableStream,
 } from "@vitejs/plugin-rsc/rsc";
 import type { ReactFormState } from "react-dom/client";
+import { runWithRequest } from "$utils/request-context";
 import { Root } from "../root.tsx";
-import { runWithRequest } from "../utils/request-context";
 import "./init"; // Initialize database and run seed operations
 
 // The schema of payload which is serialized into RSC stream on rsc environment
@@ -71,7 +71,10 @@ export default async function handler(request: Request): Promise<Response> {
 		root: <Root request={request} />,
 	};
 	const rscOptions = { temporaryReferences };
-	const rscStream = renderToReadableStream<RscPayload>(rscPayload, rscOptions);
+	// Wrap RSC rendering with request context so server components can access getRequest()
+	const rscStream = await runWithRequest(request, () =>
+		renderToReadableStream<RscPayload>(rscPayload, rscOptions),
+	);
 
 	// respond RSC stream without HTML rendering based on framework's convention.
 	// here we use request header `content-type`.

@@ -28,6 +28,3 @@ export async function initialize(): Promise<void> {
 		// Don't throw - we don't want to crash the server if seeding fails
 	}
 }
-
-// NOTE: Do we want to await this? Slower server startup but makes sure we don't have race conditions
-await initialize();

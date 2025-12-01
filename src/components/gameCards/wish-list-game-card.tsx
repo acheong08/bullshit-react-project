@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { removeFromWishlistAction } from "../../action";
 import "$styles/game-card.css";
 
 const StarIcon = "/images/star.png";
@@ -11,10 +15,26 @@ export type WishListGameCardProps = {
 	downloads: string;
 	ageRating: string;
 	gameId: string;
-	remove: () => void;
 };
 
 export default function WishListGameCard(props: WishListGameCardProps) {
+	const [isRemoved, setIsRemoved] = useState(false);
+	const [isRemoving, setIsRemoving] = useState(false);
+
+	const handleRemove = async () => {
+		setIsRemoving(true);
+		const result = await removeFromWishlistAction(Number(props.gameId));
+		if (result.success) {
+			setIsRemoved(true);
+		}
+		setIsRemoving(false);
+	};
+
+	// Hide the card after successful removal
+	if (isRemoved) {
+		return null;
+	}
+
 	return (
 		<div className="wish-list-card">
 			<a href={`/game/${props.gameId}`}>
@@ -35,7 +55,7 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 				<div className="wish-list-downloads-age">
 					<div className="wish-list-rating-reviews">
 						<p className="wish-list-card-rating">
-							{props.rating}{" "}
+							{props.rating.toFixed(1)}{" "}
 							<img src={StarIcon} alt="Star" className="wish-list-star-icon" />
 						</p>
 						<p className="wish-list-Number-Of-Reviews">
@@ -62,8 +82,13 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 						</span>
 					))}
 				</div>
-				<button type="button" className="remove-button" onClick={props.remove}>
-					Remove
+				<button
+					type="button"
+					className="remove-button"
+					onClick={handleRemove}
+					disabled={isRemoving}
+				>
+					{isRemoving ? "Removing..." : "Remove"}
 				</button>
 			</div>
 		</div>
