@@ -39,7 +39,9 @@ export function ProfilePage() {
 	});
 	const [newUsername, setNewUsername] = useState("");
 	const [oldUsername, setOldUsername] = useState("");
-	const [profileImage, setProfileImage] = useState<string>("/images/example-images/example-profile-icon.png");
+	const [profileImage, setProfileImage] = useState<string>(
+		"/images/example-images/example-profile-icon.png",
+	);
 	const [newImageFile, setNewImageFile] = useState<File | null>(null);
 	const [imagePreview, setImagePreview] = useState<string>("");
 
