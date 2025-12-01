@@ -151,7 +151,7 @@ export function Navbar({ user }: NavbarProps) {
 					}}
 				/>
 
-				<a href="/user/username/wishlist">
+				<a href="/wishlist">
 					<img
 						className="navbar-image"
 						src="/images/wishlist-icon.png"
