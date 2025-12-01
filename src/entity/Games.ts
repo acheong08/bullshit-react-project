@@ -2,9 +2,12 @@ import {
 	BaseEntity,
 	Column,
 	Entity,
+	Index,
 	JoinTable,
 	ManyToMany,
 	PrimaryGeneratedColumn,
+	ViewColumn,
+	ViewEntity,
 } from "typeorm";
 
 export enum LabelType {
@@ -72,4 +75,31 @@ export class Game extends BaseEntity {
 	@ManyToMany(() => GameMedia)
 	@JoinTable()
 	media: GameMedia[];
+}
+
+@ViewEntity({
+	expression: (dataSource) =>
+		dataSource
+			.createQueryBuilder()
+			.select("game.id", "gameId")
+			.addSelect("AVG(review.enjoyabilityRating)", "averageEnjoyabilityRating")
+			.addSelect(
+				"AVG(review.accessibilityRating)",
+				"averageAccessibilityRating",
+			)
+			.from(Game, "game")
+			.leftJoin("review", "review", "review.gameId = game.id")
+			.groupBy("game.id"),
+	materialized: true,
+})
+export class GameAverageRating extends BaseEntity {
+	@ViewColumn()
+	@Index({ unique: true })
+	gameId: number;
+
+	@ViewColumn()
+	averageEnjoyabilityRating: number;
+
+	@ViewColumn()
+	averageAccessibilityRating: number;
 }

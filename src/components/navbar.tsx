@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { setCookie } from "$utils/cookies";
+import { deleteCookie, setCookie } from "$utils/cookies";
 import { getTheme } from "$utils/theme";
 import { useVoiceCommands } from "./voice-command-provider";
 
@@ -135,6 +135,18 @@ export function Navbar({ isLoggedIn }: NavbarProps) {
 			</div>
 
 			<div className="navbar-section flex">
+				{isLoggedIn && (
+					<button
+						type="button"
+						onClick={async () => {
+							await deleteCookie("authToken");
+							window.location.assign("/");
+						}}
+						className="primary-btn"
+					>
+						Logout
+					</button>
+				)}
 				<VoiceCommandButton isDark={isDark === "dark"} />
 				<DarkLightToggle
 					isDark={isDark === "dark"}

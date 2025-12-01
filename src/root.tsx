@@ -1,8 +1,10 @@
 import "./styles/variables.css";
 import "./styles/index.css";
+import { instanceToPlain } from "class-transformer";
 import { Navbar } from "$components/navbar.tsx";
 import { VoiceCommandProvider } from "$components/voice-command-provider.tsx";
 import { VoiceNavigationCommands } from "$components/voice-navigation-commands.tsx";
+import { Game, GameAverageRating } from "$entity/Games.ts";
 import { getAllSortOptions, getFilterMap } from "$lib/db";
 import { AdminReportsPage } from "$pages/admin/reports.tsx";
 import { GamePage } from "$pages/game.tsx";
@@ -44,7 +46,7 @@ export async function Root(props: { request: Request }) {
 	);
 }
 
-function App(props: {
+async function App(props: {
 	url: URL;
 	request: Request;
 	sortOptions: string[];
@@ -54,11 +56,38 @@ function App(props: {
 	const user = getCurrentUser(props.request);
 
 	if (pathname === "/") {
+		const [spotlightGame, allGames] = await Promise.all([
+			Game.findOne({
+				relations: ["media", "labels"],
+				where: { id: 1 },
+			}),
+			await Game.find({
+				relations: ["media", "labels"],
+			}),
+		]);
+		const popularGameCards = allGames.slice(1, 4);
+		const currentGames = allGames;
+		const topChartsGameCards = allGames.slice(4, 10);
+		console.log("spotlightGame:", spotlightGame);
+		console.log("popularGameCards:", popularGameCards);
+		console.log("currentGames:", currentGames);
+		console.log("topChartsGameCards:", topChartsGameCards);
+
+		const allRatings = await GameAverageRating.find();
+
+		//NOTE: cannot return objects
 		return (
 			<HomePage
-				sortOptions={props.sortOptions}
-				filterOptions={props.filterMap}
+				searchBarSortOptions={props.sortOptions}
+				searchBarFilterOptions={props.filterMap}
 				defaultQuery={null}
+				spotlightGame={
+					spotlightGame ? (instanceToPlain(spotlightGame) as Game) : null
+				}
+				popularGames={instanceToPlain(popularGameCards) as Game[]}
+				currentGames={instanceToPlain(currentGames) as Game[]}
+				topChartsGames={instanceToPlain(topChartsGameCards) as Game[]}
+				allRatings={instanceToPlain(allRatings) as GameAverageRating[]}
 			/>
 		);
 	}

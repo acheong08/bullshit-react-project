@@ -60,6 +60,10 @@ main {
 	font-size: 20px;
 }
 
+.primary-btn:hover {
+	cursor: pointer;
+}
+
 .navbar-button {
 	background-color: var(--primary-blue);
 	color: white;

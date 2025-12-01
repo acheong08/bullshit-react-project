@@ -3,7 +3,7 @@ import { MediaCarousel } from "$components/media-carousel";
 import { ReportButton } from "$components/report-button";
 import { ReviewsSection } from "$components/reviews-section";
 import type { Game, GameMedia } from "$entity/Games";
-import { LabelType } from "$entity/Games";
+import { GameAverageRating, LabelType } from "$entity/Games";
 import { getGameById, getReviewsByGameId } from "$lib/db";
 import { getCurrentUser, isUserLoggedIn } from "$utils/auth";
 
@@ -49,6 +49,11 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 	const currentUser = getCurrentUser(request);
 	const currentUsername = currentUser?.username;
 
+	const rating = await GameAverageRating.findOne({
+		where: { gameId: game.id },
+	});
+	const averageRating = rating?.averageEnjoyabilityRating || 0;
+
 	// Organize labels by type
 
 	const accessibilityLabels =
@@ -82,7 +87,9 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 										className="game-icon-small"
 									/>
 									<div className="stat-text">
-										<span className="rating-score">4.5 ★</span>
+										<span className="rating-score">
+											{Number(averageRating || 0).toFixed(1)} ★
+										</span>
 										<span className="review-count">11.7K reviews</span>
 									</div>
 								</div>

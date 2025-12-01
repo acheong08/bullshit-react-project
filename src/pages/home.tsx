@@ -12,18 +12,24 @@ const RacingIcon = "/images/racing-image.png";
 const RPGIcon = "/images/rpg-image.png";
 const SimulationIcon = "/images/Simulation-image.png";
 const StardewValleyLogo = "/images/Stardew_Valley_image.png";
-const SamuraiImage1 = "/images/samurai_preview_image.png";
 const StrategyIcon = "/images/strategy-image.png";
 
 import GameCard from "$components/gameCards/game-card";
 import PopularGameCard from "$components/gameCards/popular-game-card";
 import SpotlightGameCard from "$components/gameCards/spotlight-game-card";
 import "$styles/home.css";
-import FiltersBar from "$components/filtersbar";
 import CategoriesCard from "$components/gameCards/category-card";
 import TopChartsGameCard from "$components/gameCards/top-charts-game-card";
 import Pagination from "$components/pagination";
 import { SearchBar } from "$components/searchbar";
+import {
+	type Game,
+	type GameAverageRating,
+	type GameMedia,
+	type Label,
+	LabelType,
+	MediaType,
+} from "$entity/Games";
 
 type CategoryView =
 	| "recommended"
@@ -31,21 +37,61 @@ type CategoryView =
 	| "categories"
 	| "new-this-week";
 
-interface SearchBarProps {
-	sortOptions: string[];
-	filterOptions: Map<string, string[]>;
+const SamuraiImage1 = "/images/samurai_preview_image.png";
+
+interface HomePageProps {
+	searchBarSortOptions: string[];
+	searchBarFilterOptions: Map<string, string[]>;
 	defaultQuery: string | null;
+	spotlightGame: Game | null;
+	popularGames: Game[];
+	currentGames: Game[];
+	topChartsGames: Game[];
+	allRatings: GameAverageRating[];
 }
 
 export function HomePage({
-	sortOptions,
-	filterOptions,
+	searchBarSortOptions: sortOptions,
+	searchBarFilterOptions: filterOptions,
 	defaultQuery,
-}: SearchBarProps) {
+	spotlightGame,
+	popularGames,
+	currentGames,
+	topChartsGames,
+	allRatings,
+}: HomePageProps) {
 	const [activeView, setActiveView] = useState<CategoryView>("recommended");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [selectedGenre, setSelectedGenre] = useState<string>("all");
 	const [selectedDisability, setSelectedDisability] = useState<string>("all");
+
+	console.log("Spotlight Game:", spotlightGame);
+	console.log("Popular Games:", popularGames);
+	console.log("Current Games:", currentGames);
+	console.log("Top Charts Games:", topChartsGames);
+
+	const spotlightTitle = spotlightGame ? spotlightGame.name : "Samurai Saga";
+	const spotlightGenres = spotlightGame
+		? spotlightGame.labels
+				.filter((label: Label) => label.type === LabelType.Genre)
+				.map((label: Label) => label.name)
+		: ["Action", "RPG"];
+	const spotlightVideo = spotlightGame
+		? spotlightGame.media.filter(
+				(media: GameMedia) => media.type === MediaType.Video,
+			)[0].uri
+		: "https://www.youtube.com/embed/gwWiB1C-KBM?si=GbaBQVJqFx8W_R2J";
+	const spotlightAccessibilityTags = spotlightGame
+		? spotlightGame.labels
+				.filter((label: Label) => label.type === LabelType.Accessibility)
+				.map((label: Label) => label.name)
+		: ["Epilepsy", "Colorblind"];
+	const spotlightImages = spotlightGame
+		? spotlightGame.media
+				.filter((media: GameMedia) => media.type === MediaType.PreviewImg)
+				.map((media: GameMedia) => media.uri)
+		: [SamuraiImage1, SamuraiImage1, SamuraiImage1, SamuraiImage1];
+	const spotlightId = spotlightGame ? spotlightGame.id.toString() : "1";
 
 	return (
 		<div id="root">
@@ -60,17 +106,12 @@ export function HomePage({
 					<h1 className="spotlight-header">SPOTLIGHT</h1>
 					<div className="spotlight">
 						<SpotlightGameCard
-							videoUrl="https://www.youtube.com/embed/gwWiB1C-KBM?si=GbaBQVJqFx8W_R2J"
-							title="Samurai Showdown R"
-							genres={["Role Playing", "MMORPG"]}
-							tag="Dexterity Impairments"
-							imagePreview={[
-								SamuraiImage1,
-								SamuraiImage1,
-								SamuraiImage1,
-								SamuraiImage1,
-							]}
-							gameId="123"
+							videoUrl={spotlightVideo}
+							title={spotlightTitle}
+							genres={spotlightGenres}
+							accessibilityTags={spotlightAccessibilityTags}
+							imagePreview={spotlightImages}
+							gameId={spotlightId}
 						/>
 					</div>
 				</div>
@@ -121,6 +162,9 @@ export function HomePage({
 						setSelectedGenre={setSelectedGenre}
 						selectedDisability={selectedDisability}
 						setSelectedDisability={setSelectedDisability}
+						popularGameCards={popularGames}
+						allGames={currentGames}
+						allRatings={allRatings}
 					/>
 				)}
 
@@ -132,6 +176,9 @@ export function HomePage({
 						setSelectedGenre={setSelectedGenre}
 						selectedDisability={selectedDisability}
 						setSelectedDisability={setSelectedDisability}
+						allGames={currentGames}
+						topChartsGames={topChartsGames}
+						allRatings={allRatings}
 					/>
 				)}
 
@@ -143,6 +190,8 @@ export function HomePage({
 						setSelectedGenre={setSelectedGenre}
 						selectedDisability={selectedDisability}
 						setSelectedDisability={setSelectedDisability}
+						allGames={currentGames}
+						allRatings={allRatings}
 					/>
 				)}
 
@@ -154,6 +203,9 @@ export function HomePage({
 						setSelectedGenre={setSelectedGenre}
 						selectedDisability={selectedDisability}
 						setSelectedDisability={setSelectedDisability}
+						allGames={currentGames}
+						topChartsGames={topChartsGames}
+						allRatings={allRatings}
 					/>
 				)}
 			</main>
@@ -165,10 +217,9 @@ export function HomePage({
 function RecommendedView({
 	currentPage,
 	setCurrentPage,
-	selectedGenre,
-	setSelectedGenre,
-	selectedDisability,
-	setSelectedDisability,
+	popularGameCards,
+	allGames,
+	allRatings,
 }: {
 	currentPage: number;
 	setCurrentPage: (page: number) => void;
@@ -176,19 +227,11 @@ function RecommendedView({
 	setSelectedGenre: (genre: string) => void;
 	selectedDisability: string;
 	setSelectedDisability: (disability: string) => void;
+	popularGameCards: Game[];
+	allGames: Game[];
+	allRatings: GameAverageRating[];
 }) {
 	const gamesPerPage = 8;
-
-	// Sample game data
-	const allGames = Array(20)
-		.fill(null)
-		.map((_, i) => ({
-			gameId: `${123 + i}`,
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: `Stardew Valley ${i + 1}`,
-		}));
 
 	const totalPages = Math.ceil(allGames.length / gamesPerPage);
 	const indexOfLastGame = currentPage * gamesPerPage;
@@ -211,24 +254,23 @@ function RecommendedView({
 				</div>
 				<div className="popular-games-gallery">
 					<p className="popular-title">POPULAR</p>
-					<PopularGameCard
-						image={StardewValleyLogo}
-						title="Stardew Valley"
-						genres={["Simulation", "RPG"]}
-						gameId="123"
-					/>
-					<PopularGameCard
-						image={StardewValleyLogo}
-						title="Hollow Knight"
-						genres={["Action", "Adventure"]}
-						gameId="124"
-					/>
-					<PopularGameCard
-						image={StardewValleyLogo}
-						title="Celeste"
-						genres={["Platformer", "Indie"]}
-						gameId="125"
-					/>
+					{popularGameCards.map((game) => (
+						<PopularGameCard
+							key={game.id}
+							image={
+								game.media.filter(
+									(m: GameMedia) => m.type === MediaType.Icon,
+								)[0]?.uri || StardewValleyLogo
+							}
+							title={game.name}
+							genres={
+								game.labels
+									?.filter((label: Label) => label.type === LabelType.Genre)
+									?.map((label: Label) => label.name) || []
+							}
+							gameId={game.id.toString()}
+						/>
+					))}
 				</div>
 			</div>
 			<div className="games-bar">
@@ -237,24 +279,30 @@ function RecommendedView({
 				</div>
 			</div>
 
-			<FiltersBar
-				selectedGenre={selectedGenre}
-				setSelectedGenre={setSelectedGenre}
-				selectedDisability={selectedDisability}
-				setSelectedDisability={setSelectedDisability}
-			/>
-
 			<div className="game-card-gallery">
-				{currentGames.map((game) => (
-					<GameCard
-						key={game.gameId}
-						image={game.image}
-						title={game.title}
-						genres={game.genres}
-						rating={game.rating}
-						gameId={game.gameId}
-					/>
-				))}
+				{currentGames.map((game) => {
+					return (
+						<GameCard
+							key={game.id}
+							image={
+								game.media.filter(
+									(m: GameMedia) => m.type === MediaType.Icon,
+								)[0]?.uri || StardewValleyLogo
+							}
+							title={game.name}
+							genres={game.labels
+								.filter((label: Label) => label.type === LabelType.Genre)
+								.map((label: Label) => label.name)}
+							rating={Number(
+								Number(
+									allRatings.find((rating) => rating.gameId === game.id)
+										?.averageEnjoyabilityRating || 0,
+								).toFixed(1),
+							)}
+							gameId={game.id.toString()}
+						/>
+					);
+				})}
 			</div>
 
 			<Pagination
@@ -270,10 +318,9 @@ function RecommendedView({
 function TopChartsView({
 	currentPage,
 	setCurrentPage,
-	selectedGenre,
-	setSelectedGenre,
-	selectedDisability,
-	setSelectedDisability,
+	allGames,
+	topChartsGames,
+	allRatings,
 }: {
 	currentPage: number;
 	setCurrentPage: (page: number) => void;
@@ -281,152 +328,11 @@ function TopChartsView({
 	setSelectedGenre: (genre: string) => void;
 	selectedDisability: string;
 	setSelectedDisability: (disability: string) => void;
+	allGames: Game[];
+	topChartsGames: Game[];
+	allRatings: GameAverageRating[];
 }) {
 	const gamesPerPage = 8;
-
-	// Sample game data
-	const allGames = [
-		{
-			gameId: "101",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "102",
-			genres: ["Action", "Adventure"],
-			image: StardewValleyLogo,
-			rating: 4.8,
-			title: "Hollow Knight",
-		},
-		{
-			gameId: "103",
-			genres: ["Platformer", "Indie"],
-			image: StardewValleyLogo,
-			rating: 4.7,
-			title: "Celeste",
-		},
-		{
-			gameId: "104",
-			genres: ["Racing", "Sports"],
-			image: StardewValleyLogo,
-			rating: 4.5,
-			title: "Racing Rivals",
-		},
-		{
-			gameId: "105",
-			genres: ["Puzzle", "Casual"],
-			image: StardewValleyLogo,
-			rating: 4.3,
-			title: "Puzzle Quest",
-		},
-		{
-			gameId: "106",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "107",
-			genres: ["Action", "Adventure"],
-			image: StardewValleyLogo,
-			rating: 4.8,
-			title: "Hollow Knight",
-		},
-		{
-			gameId: "108",
-			genres: ["Platformer", "Indie"],
-			image: StardewValleyLogo,
-			rating: 4.7,
-			title: "Celeste",
-		},
-		{
-			gameId: "109",
-			genres: ["Racing", "Sports"],
-			image: StardewValleyLogo,
-			rating: 4.5,
-			title: "Racing Rivals",
-		},
-		{
-			gameId: "110",
-			genres: ["Puzzle", "Casual"],
-			image: StardewValleyLogo,
-			rating: 4.3,
-			title: "Puzzle Quest",
-		},
-		{
-			gameId: "111",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "112",
-			genres: ["Action", "Adventure"],
-			image: StardewValleyLogo,
-			rating: 4.8,
-			title: "Hollow Knight",
-		},
-		{
-			gameId: "113",
-			genres: ["Platformer", "Indie"],
-			image: StardewValleyLogo,
-			rating: 4.7,
-			title: "Celeste",
-		},
-		{
-			gameId: "114",
-			genres: ["Racing", "Sports"],
-			image: StardewValleyLogo,
-			rating: 4.5,
-			title: "Racing Rivals",
-		},
-		{
-			gameId: "115",
-			genres: ["Puzzle", "Casual"],
-			image: StardewValleyLogo,
-			rating: 4.3,
-			title: "Puzzle Quest",
-		},
-		{
-			gameId: "116",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "117",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "118",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "119",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "120",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-	];
 
 	const totalPages = Math.ceil(allGames.length / gamesPerPage);
 	const indexOfLastGame = currentPage * gamesPerPage;
@@ -435,65 +341,36 @@ function TopChartsView({
 	return (
 		<>
 			<div className="top-charts-game-card-gallery">
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={1}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={2}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={3}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={4}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={5}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={6}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
+				{topChartsGames.map((game, index) => (
+					<TopChartsGameCard
+						key={game.id}
+						image={
+							game.media.filter((m: GameMedia) => m.type === MediaType.Icon)[0]
+								?.uri || StardewValleyLogo
+						}
+						title={game.name}
+						genres={
+							game.labels
+								?.filter((label: Label) => label.type === LabelType.Genre)
+								?.map((label: Label) => label.name) || []
+						}
+						rating={Number(
+							Number(
+								allRatings.find((rating) => rating.gameId === game.id)
+									?.averageEnjoyabilityRating || 0,
+							).toFixed(1),
+						)}
+						rank={index + 1}
+						tags={
+							game.labels
+								?.filter(
+									(label: Label) => label.type === LabelType.Accessibility,
+								)
+								?.map((label: Label) => label.name) || []
+						}
+						gameId={game.id.toString()}
+					/>
+				))}
 			</div>
 
 			<div className="games-bar">
@@ -501,22 +378,25 @@ function TopChartsView({
 					<h2 className="games-title">ALL GAMES</h2>
 				</div>
 			</div>
-			<FiltersBar
-				selectedGenre={selectedGenre}
-				setSelectedGenre={setSelectedGenre}
-				selectedDisability={selectedDisability}
-				setSelectedDisability={setSelectedDisability}
-			/>
-
 			<div className="game-card-gallery">
 				{currentGames.map((game) => (
 					<GameCard
-						key={game.gameId}
-						image={game.image}
-						title={game.title}
-						genres={game.genres}
-						rating={game.rating}
-						gameId={game.gameId}
+						key={game.id}
+						image={
+							game.media.filter((m: GameMedia) => m.type === MediaType.Icon)[0]
+								?.uri || StardewValleyLogo
+						}
+						title={game.name}
+						genres={game.labels
+							.filter((label: Label) => label.type === LabelType.Genre)
+							.map((label: Label) => label.name)}
+						rating={Number(
+							Number(
+								allRatings.find((rating) => rating.gameId === game.id)
+									?.averageEnjoyabilityRating || 0,
+							).toFixed(1),
+						)}
+						gameId={game.id.toString()}
 					/>
 				))}
 			</div>
@@ -533,10 +413,8 @@ function TopChartsView({
 function CategoriesView({
 	currentPage,
 	setCurrentPage,
-	selectedGenre,
-	setSelectedGenre,
-	selectedDisability,
-	setSelectedDisability,
+	allGames,
+	allRatings,
 }: {
 	currentPage: number;
 	setCurrentPage: (page: number) => void;
@@ -544,152 +422,10 @@ function CategoriesView({
 	setSelectedGenre: (genre: string) => void;
 	selectedDisability: string;
 	setSelectedDisability: (disability: string) => void;
+	allGames: Game[];
+	allRatings: GameAverageRating[];
 }) {
 	const gamesPerPage = 8;
-
-	// Sample game data
-	const allGames = [
-		{
-			gameId: "101",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "102",
-			genres: ["Action", "Adventure"],
-			image: StardewValleyLogo,
-			rating: 4.8,
-			title: "Hollow Knight",
-		},
-		{
-			gameId: "103",
-			genres: ["Platformer", "Indie"],
-			image: StardewValleyLogo,
-			rating: 4.7,
-			title: "Celeste",
-		},
-		{
-			gameId: "104",
-			genres: ["Racing", "Sports"],
-			image: StardewValleyLogo,
-			rating: 4.5,
-			title: "Racing Rivals",
-		},
-		{
-			gameId: "105",
-			genres: ["Puzzle", "Casual"],
-			image: StardewValleyLogo,
-			rating: 4.3,
-			title: "Puzzle Quest",
-		},
-		{
-			gameId: "106",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "107",
-			genres: ["Action", "Adventure"],
-			image: StardewValleyLogo,
-			rating: 4.8,
-			title: "Hollow Knight",
-		},
-		{
-			gameId: "108",
-			genres: ["Platformer", "Indie"],
-			image: StardewValleyLogo,
-			rating: 4.7,
-			title: "Celeste",
-		},
-		{
-			gameId: "109",
-			genres: ["Racing", "Sports"],
-			image: StardewValleyLogo,
-			rating: 4.5,
-			title: "Racing Rivals",
-		},
-		{
-			gameId: "110",
-			genres: ["Puzzle", "Casual"],
-			image: StardewValleyLogo,
-			rating: 4.3,
-			title: "Puzzle Quest",
-		},
-		{
-			gameId: "111",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "112",
-			genres: ["Action", "Adventure"],
-			image: StardewValleyLogo,
-			rating: 4.8,
-			title: "Hollow Knight",
-		},
-		{
-			gameId: "113",
-			genres: ["Platformer", "Indie"],
-			image: StardewValleyLogo,
-			rating: 4.7,
-			title: "Celeste",
-		},
-		{
-			gameId: "114",
-			genres: ["Racing", "Sports"],
-			image: StardewValleyLogo,
-			rating: 4.5,
-			title: "Racing Rivals",
-		},
-		{
-			gameId: "115",
-			genres: ["Puzzle", "Casual"],
-			image: StardewValleyLogo,
-			rating: 4.3,
-			title: "Puzzle Quest",
-		},
-		{
-			gameId: "116",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "117",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "118",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "119",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "120",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-	];
 
 	const totalPages = Math.ceil(allGames.length / gamesPerPage);
 	const indexOfLastGame = currentPage * gamesPerPage;
@@ -698,22 +434,58 @@ function CategoriesView({
 	return (
 		<>
 			<div className="category-gallery">
-				<CategoriesCard image={ActionIcon} category="ACTION" />
+				<CategoriesCard
+					image={ActionIcon}
+					category="ACTION"
+					link="/search?query=&filters=Action&sort="
+				/>
 
-				<CategoriesCard image={RPGIcon} category="RPG" />
+				<CategoriesCard
+					image={RPGIcon}
+					category="RPG"
+					link="/search?query=&filters=RPG&sort="
+				/>
 
-				<CategoriesCard image={PuzzleIcon} category="PUZZLE" />
+				<CategoriesCard
+					image={PuzzleIcon}
+					category="PUZZLE"
+					link="/search?query=&filters=Puzzle&sort="
+				/>
 
-				<CategoriesCard image={RacingIcon} category="RACING" />
+				<CategoriesCard
+					image={RacingIcon}
+					category="RACING"
+					link="/search?query=&filters=Racing&sort="
+				/>
 
-				<CategoriesCard image={SimulationIcon} category="SIMULATION" />
+				<CategoriesCard
+					image={SimulationIcon}
+					category="SIMULATION"
+					link="/search?query=&Simulation&sort="
+				/>
 
-				<CategoriesCard image={StrategyIcon} category="STRATEGY" />
+				<CategoriesCard
+					image={StrategyIcon}
+					category="STRATEGY"
+					link="/search?query=&filters=Strategy&sort="
+				/>
 
-				<CategoriesCard image={BoardIcon} category="BOARD" />
+				<CategoriesCard
+					image={BoardIcon}
+					category="BOARD"
+					link="/search?query=&filters=Board&sort="
+				/>
 
-				<CategoriesCard image={MultiplayerIcon} category="MULTIPLAYER" />
-				<CategoriesCard image={CardsIcon} category="CARDS" />
+				<CategoriesCard
+					image={MultiplayerIcon}
+					category="MULTIPLAYER"
+					link="/search?query=&filters=Multiplayer&sort="
+				/>
+				<CategoriesCard
+					image={CardsIcon}
+					category="CARDS"
+					link="/search?query=&filters=Cards&sort="
+				/>
 			</div>
 
 			<div className="games-bar">
@@ -721,22 +493,25 @@ function CategoriesView({
 					<h2 className="games-title">ALL GAMES</h2>
 				</div>
 			</div>
-			<FiltersBar
-				selectedGenre={selectedGenre}
-				setSelectedGenre={setSelectedGenre}
-				selectedDisability={selectedDisability}
-				setSelectedDisability={setSelectedDisability}
-			/>
-
 			<div className="game-card-gallery">
 				{currentGames.map((game) => (
 					<GameCard
-						key={game.gameId}
-						image={game.image}
-						title={game.title}
-						genres={game.genres}
-						rating={game.rating}
-						gameId={game.gameId}
+						key={game.id}
+						image={
+							game.media.filter((m: GameMedia) => m.type === MediaType.Icon)[0]
+								?.uri || StardewValleyLogo
+						}
+						title={game.name}
+						genres={game.labels
+							.filter((label: Label) => label.type === LabelType.Genre)
+							.map((label: Label) => label.name)}
+						rating={Number(
+							Number(
+								allRatings.find((rating) => rating.gameId === game.id)
+									?.averageEnjoyabilityRating || 0,
+							).toFixed(1),
+						)}
+						gameId={game.id.toString()}
 					/>
 				))}
 			</div>
@@ -753,10 +528,9 @@ function CategoriesView({
 function NewThisWeekView({
 	currentPage,
 	setCurrentPage,
-	selectedGenre,
-	setSelectedGenre,
-	selectedDisability,
-	setSelectedDisability,
+	allGames,
+	topChartsGames,
+	allRatings,
 }: {
 	currentPage: number;
 	setCurrentPage: (page: number) => void;
@@ -764,152 +538,11 @@ function NewThisWeekView({
 	setSelectedGenre: (genre: string) => void;
 	selectedDisability: string;
 	setSelectedDisability: (disability: string) => void;
+	allGames: Game[];
+	topChartsGames: Game[];
+	allRatings: GameAverageRating[];
 }) {
 	const gamesPerPage = 8;
-
-	// Sample game data
-	const allGames = [
-		{
-			gameId: "101",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "102",
-			genres: ["Action", "Adventure"],
-			image: StardewValleyLogo,
-			rating: 4.8,
-			title: "Hollow Knight",
-		},
-		{
-			gameId: "103",
-			genres: ["Platformer", "Indie"],
-			image: StardewValleyLogo,
-			rating: 4.7,
-			title: "Celeste",
-		},
-		{
-			gameId: "104",
-			genres: ["Racing", "Sports"],
-			image: StardewValleyLogo,
-			rating: 4.5,
-			title: "Racing Rivals",
-		},
-		{
-			gameId: "105",
-			genres: ["Puzzle", "Casual"],
-			image: StardewValleyLogo,
-			rating: 4.3,
-			title: "Puzzle Quest",
-		},
-		{
-			gameId: "106",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "107",
-			genres: ["Action", "Adventure"],
-			image: StardewValleyLogo,
-			rating: 4.8,
-			title: "Hollow Knight",
-		},
-		{
-			gameId: "108",
-			genres: ["Platformer", "Indie"],
-			image: StardewValleyLogo,
-			rating: 4.7,
-			title: "Celeste",
-		},
-		{
-			gameId: "109",
-			genres: ["Racing", "Sports"],
-			image: StardewValleyLogo,
-			rating: 4.5,
-			title: "Racing Rivals",
-		},
-		{
-			gameId: "110",
-			genres: ["Puzzle", "Casual"],
-			image: StardewValleyLogo,
-			rating: 4.3,
-			title: "Puzzle Quest",
-		},
-		{
-			gameId: "111",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "112",
-			genres: ["Action", "Adventure"],
-			image: StardewValleyLogo,
-			rating: 4.8,
-			title: "Hollow Knight",
-		},
-		{
-			gameId: "113",
-			genres: ["Platformer", "Indie"],
-			image: StardewValleyLogo,
-			rating: 4.7,
-			title: "Celeste",
-		},
-		{
-			gameId: "114",
-			genres: ["Racing", "Sports"],
-			image: StardewValleyLogo,
-			rating: 4.5,
-			title: "Racing Rivals",
-		},
-		{
-			gameId: "115",
-			genres: ["Puzzle", "Casual"],
-			image: StardewValleyLogo,
-			rating: 4.3,
-			title: "Puzzle Quest",
-		},
-		{
-			gameId: "116",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "117",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "118",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "119",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-		{
-			gameId: "120",
-			genres: ["Simulation", "RPG"],
-			image: StardewValleyLogo,
-			rating: 5,
-			title: "Stardew Valley",
-		},
-	];
 
 	const totalPages = Math.ceil(allGames.length / gamesPerPage);
 	const indexOfLastGame = currentPage * gamesPerPage;
@@ -917,84 +550,58 @@ function NewThisWeekView({
 	const currentGames = allGames.slice(indexOfFirstGame, indexOfLastGame);
 	return (
 		<>
-			<FiltersBar
-				selectedGenre={selectedGenre}
-				setSelectedGenre={setSelectedGenre}
-				selectedDisability={selectedDisability}
-				setSelectedDisability={setSelectedDisability}
-			/>
-
 			<div className="top-charts-game-card-gallery">
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={1}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={2}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={3}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={4}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={5}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
-
-				<TopChartsGameCard
-					image={StardewValleyLogo}
-					title="Stardew Vally"
-					genres={["Action", "RPG"]}
-					rating={4.8}
-					rank={6}
-					tags={["Epilepsy"]}
-					gameId="204"
-				/>
+				{topChartsGames.map((game, index) => (
+					<TopChartsGameCard
+						key={game.id}
+						image={
+							game.media.filter((m: GameMedia) => m.type === MediaType.Icon)[0]
+								?.uri || StardewValleyLogo
+						}
+						title={game.name}
+						genres={
+							game.labels
+								?.filter((label: Label) => label.type === LabelType.Genre)
+								?.map((label: Label) => label.name) || []
+						}
+						rating={Number(
+							Number(
+								allRatings.find((rating) => rating.gameId === game.id)
+									?.averageEnjoyabilityRating || 0,
+							).toFixed(1),
+						)}
+						rank={index + 1}
+						tags={
+							game.labels
+								?.filter(
+									(label: Label) => label.type === LabelType.Accessibility,
+								)
+								?.map((label: Label) => label.name) || []
+						}
+						gameId={game.id.toString()}
+					/>
+				))}
 			</div>
 
 			<div className="game-card-gallery">
 				{currentGames.map((game) => (
 					<GameCard
-						key={game.gameId}
-						image={game.image}
-						title={game.title}
-						genres={game.genres}
-						rating={game.rating}
-						gameId={game.gameId}
+						key={game.id}
+						image={
+							game.media.filter((m: GameMedia) => m.type === MediaType.Icon)[0]
+								?.uri || StardewValleyLogo
+						}
+						title={game.name}
+						genres={game.labels
+							.filter((label: Label) => label.type === LabelType.Genre)
+							.map((label: Label) => label.name)}
+						rating={Number(
+							Number(
+								allRatings.find((rating) => rating.gameId === game.id)
+									?.averageEnjoyabilityRating || 0,
+							).toFixed(1),
+						)}
+						gameId={game.id.toString()}
 					/>
 				))}
 			</div>

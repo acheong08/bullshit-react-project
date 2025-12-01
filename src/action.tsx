@@ -1,6 +1,7 @@
 "use server";
 
 import bcrypt from "bcrypt";
+import { QueryFailedError } from "typeorm";
 import type { Game } from "$entity/Games";
 import { Report, ReportStatus } from "$entity/Report";
 import { Review } from "$entity/Review";
@@ -154,11 +155,25 @@ export async function createReview(
 
 		await review.save();
 
+		try {
+			await AppDataSource.query(
+				"REFRESH MATERIALIZED VIEW game_average_rating",
+			);
+		} catch (e) {
+			if (e instanceof QueryFailedError) {
+				console.log(
+					"Only errors in tests because of SQLite not having materialized views",
+				);
+			} else {
+				throw e;
+			}
+		}
+
 		return {
 			reviewId: review.id,
 			success: true,
 		};
-	} catch (_) {
+	} catch {
 		return {
 			error: "An error occurred while creating the review. Please try again.",
 			success: false,
