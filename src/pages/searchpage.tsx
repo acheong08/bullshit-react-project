@@ -1,7 +1,6 @@
 import GameCard from "$components/gameCards/game-card";
 import { SearchBar } from "$components/searchbar";
-import { LabelType, MediaType } from "$entity/Games";
-import { Review } from "$entity/Review";
+import { GameAverageRating, LabelType, MediaType } from "$entity/Games";
 import { searchGames } from "$lib/db";
 
 const StardewValleyLogo = "/images/Stardew_Valley_image.png";
@@ -40,7 +39,7 @@ export async function SearchPage({
 					</div>
 					<div className="flex">
 						<h1 className="query-header center">
-							Search results for '{query}'
+							{query.trim() !== "" ? `Search results for '${query}'` : ""}
 						</h1>
 					</div>
 
@@ -49,16 +48,10 @@ export async function SearchPage({
 							const previewImage = game.media.find(
 								(media) => media.type === MediaType.Icon,
 							);
-							const ratings = await Review.find({
-								where: { game: { id: game.id } },
+							const rating = await GameAverageRating.findOne({
+								where: { gameId: game.id },
 							});
-							const averageRating =
-								ratings.length > 0
-									? ratings.reduce(
-											(sum, review) => sum + review.enjoyabilityRating,
-											0,
-										) / ratings.length
-									: 0;
+							const averageRating = rating?.averageEnjoyabilityRating || 0;
 
 							return (
 								<GameCard
@@ -67,9 +60,8 @@ export async function SearchPage({
 									title={game.name}
 									genres={game.labels
 										.filter((label) => label.type === LabelType.Genre)
-										.slice(0, 3)
 										.map((label) => label.name.toString())}
-									rating={averageRating}
+									rating={Number(Number(averageRating || 0).toFixed(1))}
 									gameId={game.id.toString()}
 								/>
 							);

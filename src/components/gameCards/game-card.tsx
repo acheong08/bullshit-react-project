@@ -12,6 +12,7 @@ export type GameCardProps = {
 };
 
 export default function GameCard(props: GameCardProps) {
+	const genres = props.genres.slice(0, 3);
 	return (
 		<a href={`/game/${props.gameId}`} className="game-card">
 			<img src={props.image} alt={props.title} className="game-card-image" />
@@ -19,7 +20,7 @@ export default function GameCard(props: GameCardProps) {
 			<h3>{props.title}</h3>
 
 			<p className="game-card-genres">
-				{props.genres.map((genre) => (
+				{genres.map((genre) => (
 					<span key={genre} className="genre-item">
 						{genre}
 					</span>

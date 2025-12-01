@@ -51,12 +51,6 @@ a {
 	max-width: 100%;
 }
 
-.game-card-genres {
-	margin: 2px 0;
-	color: var(--text);
-	font-size: 0.9rem;
-}
-
 .game-card-rating {
 	display: inline-flex;
 	align-items: center;
@@ -81,11 +75,12 @@ html[data-theme="dark"] .star-icon,
 .game-card-genres {
 	display: flex;
 	justify-content: center;
-	align-items: center;
 	gap: 0;
 	font-size: 1rem;
 	color: var(--text);
 	font-weight: 500;
+	white-space: nowrap;
+	overflow: auto;
 }
 
 .genre-item {
@@ -279,6 +274,8 @@ html[data-theme="dark"] .star-icon,
 	margin: 0;
 	line-height: 1.2;
 	padding-bottom: 8px;
+	overflow: auto;
+	white-space: nowrap;
 }
 
 .top-charts-genre-item {
@@ -304,7 +301,7 @@ html[data-theme="dark"] .star-icon,
 	gap: 8px;
 	flex-wrap: nowrap;
 	max-width: 100%;
-	overflow: hidden;
+	overflow: auto;
 }
 
 .top-charts-card-tag {

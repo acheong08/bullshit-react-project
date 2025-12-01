@@ -3,11 +3,12 @@ import "$styles/game-card.css";
 export type CategoryCardProps = {
 	image: string;
 	category: string;
+	link: string;
 };
 
 export default function CategoryCard(props: CategoryCardProps) {
 	return (
-		<a href={"/categories"} className="category-card">
+		<a href={props.link} className="category-card">
 			{/* Masked gradient image */}
 			<div
 				className="category-card-image masked-icon"
