@@ -5,9 +5,7 @@ import type { ReactFormState } from "react-dom/client";
 import { renderToReadableStream } from "react-dom/server.edge";
 import { injectRSCPayload } from "rsc-html-stream/server";
 import type { RscPayload } from "./entry.rsc";
-import { initialize } from "./init";
-
-await initialize();
+import "./init";
 
 export async function renderHTML(
 	rscStream: ReadableStream<Uint8Array>,
