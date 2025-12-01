@@ -1,24 +1,11 @@
 "use server";
 
 import bcrypt from "bcrypt";
-import { instanceToPlain } from "class-transformer";
-import { QueryFailedError } from "typeorm";
 import type { Game } from "$entity/Games";
-import { Report, ReportStatus } from "$entity/Report";
 import { Review } from "$entity/Review";
 import { User } from "$entity/User";
-import {
-	addGameToWishlist,
-	deleteGame,
-	getWishlistByUserId,
-	getWishlistGameIds,
-	isGameInWishlist,
-	removeGameFromWishlist,
-	updateGame,
-	updateReportStatus,
-} from "$lib/db";
 import { getCurrentUser } from "$utils/auth";
-import { generateAccessToken } from "$utils/jwt";
+import { generateAccessToken, verifyAccessToken } from "$utils/jwt";
 import { validatePassword, verifyPassword } from "$utils/password";
 import { getRequest } from "$utils/request-context";
 import { AppDataSource } from "./data-source";
@@ -26,6 +13,28 @@ import { AppDataSource } from "./data-source";
 export interface LoginResult {
 	success: boolean;
 	token?: string;
+	error?: string;
+}
+
+export interface Settings {
+	captions: boolean;
+	captionStyle: string;
+	audioDescriptions: boolean;
+	soundFeedback: boolean;
+
+	voiceControls: boolean;
+	keyboardNavigation: boolean;
+	buttonSize: string;
+	gestureSensitivity: string;
+	scrollSpeed: string;
+}
+
+export interface UserData {
+	success: boolean;
+	username?: string;
+	profileImage?: string;
+	accessibilitySettings?: Settings;
+	imageType?: string;
 	error?: string;
 }
 
@@ -58,6 +67,11 @@ export async function loginUser(
 	password: string,
 ): Promise<LoginResult> {
 	try {
+		// Initialize database connection if not already initialized
+		if (!AppDataSource.isInitialized) {
+			await AppDataSource.initialize();
+		}
+
 		// Find user by username
 		const user = await User.findOne({
 			where: { username },
@@ -104,6 +118,11 @@ export async function createReview(
 	input: CreateReviewInput,
 ): Promise<CreateReviewResult> {
 	try {
+		// Initialize database connection if not already initialized
+		if (!AppDataSource.isInitialized) {
+			await AppDataSource.initialize();
+		}
+
 		// Get request from AsyncLocalStorage context
 		const request = getRequest();
 
@@ -155,25 +174,11 @@ export async function createReview(
 
 		await review.save();
 
-		try {
-			await AppDataSource.query(
-				"REFRESH MATERIALIZED VIEW game_average_rating",
-			);
-		} catch (e) {
-			if (e instanceof QueryFailedError) {
-				console.log(
-					"Only errors in tests because of SQLite not having materialized views",
-				);
-			} else {
-				throw e;
-			}
-		}
-
 		return {
 			reviewId: review.id,
 			success: true,
 		};
-	} catch {
+	} catch (_) {
 		return {
 			error: "An error occurred while creating the review. Please try again.",
 			success: false,
@@ -190,6 +195,11 @@ export async function deleteReview(
 	reviewId: number,
 ): Promise<DeleteReviewResult> {
 	try {
+		// Initialize database connection if not already initialized
+		if (!AppDataSource.isInitialized) {
+			await AppDataSource.initialize();
+		}
+
 		// Get request from AsyncLocalStorage context
 		const request = getRequest();
 
@@ -250,6 +260,11 @@ export async function registerUser(
 	email: string,
 ): Promise<LoginResult> {
 	try {
+		// Initialize database connection
+		if (!AppDataSource.isInitialized) {
+			await AppDataSource.initialize();
+		}
+
 		// Hash the password
 		const salt = await bcrypt.genSalt(10);
 		const hashedPassword = await bcrypt.hash(password, salt);
@@ -314,293 +329,180 @@ export async function registerUser(
 	}
 }
 
-// admin section - adding contents of my action.ts file to current one on main
-
 /**
- * Server action to update a game's details
- * @param gameId - The ID of the game to update
- * @param data - Object containing name, description, and imageUri
- * @returns Object with success boolean
+ * Updates a username
+ * @param token - Token of user being updated
+ * @param newUsername - Updated username
  */
-export async function updateGameAction(
-	gameId: number,
-	data: { name: string; description: string; imageUri: string },
-) {
-	try {
-		const success = await updateGame(gameId, data);
-		return { success };
-	} catch (error) {
-		console.error("Error updating game:", error);
-		return { success: false };
-	}
-}
-
-/**
- * Server action to update a report's status
- * @param reportId - The ID of the report to update
- * @param status - The new status (pending, reviewed, or deleted)
- * @returns Object with success boolean
- */
-export async function updateReportStatusAction(
-	reportId: number,
-	status: ReportStatus,
-) {
-	try {
-		const success = await updateReportStatus(reportId, status);
-		return { success };
-	} catch (error) {
-		console.error("Error updating report status:", error);
-		return { success: false };
-	}
-}
-
-/**
- * Server action to delete a game
- * @param gameId - The ID of the game to delete
- * @returns Object with success boolean
- */
-export async function deleteGameAction(gameId: number) {
-	try {
-		const success = await deleteGame(gameId);
-		return { success };
-	} catch (_) {
-		return { success: false };
-	}
-}
-
-/**
- * Server action to create a new game report
- * @param gameId - The ID of the game being reported
- * @param reportReason - Why the game is being reported
- */
-export async function createGameReport(gameId: number, reportReason: string) {
+export async function updateUser(
+	token: string,
+	newUsername: string,
+): Promise<LoginResult> {
 	try {
 		if (!AppDataSource.isInitialized) {
 			await AppDataSource.initialize();
 		}
 
-		// Validate inputs
-		if (!reportReason.trim()) {
-			return { error: "Report reason is required", success: false };
+		const payload = verifyAccessToken(token);
+		if (!payload || !payload.userId) {
+			return { error: "Invalid authentication token.", success: false };
 		}
 
-		// Create the report
-		const report = new Report();
-		report.game = { id: gameId } as Game;
-		report.reportReason = reportReason.trim();
-		report.status = ReportStatus.Pending;
+		const user = await User.findOne({
+			where: { id: payload.userId },
+		});
 
-		await report.save();
+		if (!user) {
+			return { error: "User not found.", success: false };
+		}
+
+		user.username = newUsername;
+		await user.save();
+
+		const newToken = generateAccessToken(user.id, user.username);
+		return { success: true, token: newToken };
+	} catch (err) {
+		console.error("Update user error:", err);
+		return {
+			error: "An unexpected error occurred while updating username.",
+			success: false,
+		};
+	}
+}
+
+/**
+ * Gets user data
+ * @param token - Token of user whose data is being fetched
+ */
+export async function getUserData(token: string): Promise<UserData> {
+	try {
+		if (!AppDataSource.isInitialized) {
+			await AppDataSource.initialize();
+		}
+
+		const payload = verifyAccessToken(token);
+		if (!payload || !payload.userId) {
+			return { error: "Invalid authentication token.", success: false };
+		}
+
+		const user = await User.findOne({
+			where: { id: payload.userId },
+		});
+
+		if (!user) {
+			return { error: "User not found.", success: false };
+		}
+
+		// Convert to base64 if image exists
+		let profileImage: string | undefined;
+		if (user.profileImage && user.imageType) {
+			profileImage = `data:${user.imageType};base64,${user.profileImage.toString("base64")}`;
+		}
+
+		return {
+			accessibilitySettings: user.accessibilitySettings as Settings | undefined,
+			imageType: user.imageType || undefined,
+			profileImage,
+			success: true,
+			username: user.username,
+		};
+	} catch (err) {
+		console.error("Get user data error:", err);
+		return {
+			error: "An unexpected error occurred while fetching user data.",
+			success: false,
+		};
+	}
+}
+
+/**
+ * Updates user profile image
+ * @param token - Token of user whose info is being updated
+ * @param imageBase64 - Base64 String of image being uploaded
+ * @param imageType - Type of image being uploaded
+ */
+export async function updateProfileImage(
+	token: string,
+	imageBase64: string,
+	imageType: string,
+): Promise<LoginResult> {
+	try {
+		if (!AppDataSource.isInitialized) {
+			await AppDataSource.initialize();
+		}
+
+		const payload = verifyAccessToken(token);
+		if (!payload || !payload.userId) {
+			return { error: "Invalid authentication token.", success: false };
+		}
+
+		const user = await User.findOne({
+			where: { id: payload.userId },
+		});
+
+		if (!user) {
+			return { error: "User not found.", success: false };
+		}
+
+		// Convert base64 to buffer
+		const base64Data = imageBase64.replace(/^data:image\/\w+;base64,/, "");
+		const imageBuffer = Buffer.from(base64Data, "base64");
+
+		// Validate file size (e.g., 5MB limit) (again variable)
+		const maxSize = 5 * 1024 * 1024;
+		if (imageBuffer.length > maxSize) {
+			return { error: "Image size must be less than 5MB.", success: false };
+		}
+
+		user.profileImage = imageBuffer;
+		user.imageType = imageType;
+		await user.save();
 
 		return { success: true };
-	} catch (error) {
-		console.error("Error creating report:", error);
-		return { error: "Failed to create report", success: false };
+	} catch (err) {
+		console.error("Update profile image error:", err);
+		return {
+			error: "An unexpected error occurred while updating profile image.",
+			success: false,
+		};
 	}
 }
 
-// Wishlist Server Actions
-// All actions extract user from cookies server-side to prevent OWASP vulnerabilities
-
-export interface WishlistResult {
-	success: boolean;
-	error?: string;
-}
-
-export interface WishlistGamesResult {
-	success: boolean;
-	games?: Game[];
-	error?: string;
-}
-
-export interface WishlistGameIdsResult {
-	success: boolean;
-	gameIds?: number[];
-	error?: string;
-}
-
-export interface WishlistCheckResult {
-	success: boolean;
-	isInWishlist?: boolean;
-	error?: string;
-}
-
 /**
- * Add a game to the current user's wishlist
+ *  Apply new accessibility settings to user account
+ *  @param token - Token of user being edited
+ *  @param settings - Settings being added to an account
  */
-export async function addToWishlistAction(
-	gameId: number,
-): Promise<WishlistResult> {
+export async function updateAccessibilitySettings(
+	token: string,
+	settings: Settings,
+): Promise<LoginResult> {
 	try {
-		const request = getRequest();
-
-		const currentUser = getCurrentUser(request);
-
-		if (!currentUser) {
-			return {
-				error: "You must be logged in to add games to your wishlist",
-				success: false,
-			};
+		if (!AppDataSource.isInitialized) {
+			await AppDataSource.initialize();
 		}
 
-		// Validate gameId
-		if (!gameId || gameId <= 0) {
-			return {
-				error: "Invalid game ID",
-				success: false,
-			};
+		// Validate token
+		const payload = verifyAccessToken(token);
+		if (!payload || !payload.userId) {
+			return { error: "Invalid authentication token.", success: false };
 		}
 
-		const added = await addGameToWishlist(currentUser.userId, gameId);
-
-		if (!added) {
-			return {
-				error: "Failed to add game to wishlist",
-				success: false,
-			};
+		// Fetch user
+		const user = await User.findOne({ where: { id: payload.userId } });
+		if (!user) {
+			return { error: "User not found.", success: false };
 		}
+
+		// Save settings
+		user.accessibilitySettings = settings;
+		await user.save();
 
 		return { success: true };
-	} catch (_) {
+	} catch (err) {
+		console.error("Update settings error:", err);
 		return {
-			error: "An error occurred while adding to wishlist. Please try again.",
-			success: false,
-		};
-	}
-}
-
-/**
- * Remove a game from the current user's wishlist
- */
-export async function removeFromWishlistAction(
-	gameId: number,
-): Promise<WishlistResult> {
-	try {
-		const request = getRequest();
-
-		const currentUser = getCurrentUser(request);
-
-		if (!currentUser) {
-			return {
-				error: "You must be logged in to remove games from your wishlist",
-				success: false,
-			};
-		}
-
-		// Validate gameId
-		if (!gameId || gameId <= 0) {
-			return {
-				error: "Invalid game ID",
-				success: false,
-			};
-		}
-
-		const removed = await removeGameFromWishlist(currentUser.userId, gameId);
-
-		if (!removed) {
-			return {
-				error: "Failed to remove game from wishlist",
-				success: false,
-			};
-		}
-
-		return { success: true };
-	} catch (_) {
-		return {
-			error:
-				"An error occurred while removing from wishlist. Please try again.",
-			success: false,
-		};
-	}
-}
-
-/**
- * Get all games in the current user's wishlist
- */
-export async function getWishlistAction(): Promise<WishlistGamesResult> {
-	try {
-		const request = getRequest();
-
-		const currentUser = getCurrentUser(request);
-
-		if (!currentUser) {
-			return {
-				error: "You must be logged in to view your wishlist",
-				success: false,
-			};
-		}
-
-		const games = await getWishlistByUserId(currentUser.userId);
-
-		// Serialize TypeORM entities to plain objects for client components
-		return { games: instanceToPlain(games) as Game[], success: true };
-	} catch (_) {
-		return {
-			error: "An error occurred while fetching wishlist. Please try again.",
-			success: false,
-		};
-	}
-}
-
-/**
- * Get all game IDs in the current user's wishlist
- */
-export async function getWishlistGameIdsAction(): Promise<WishlistGameIdsResult> {
-	try {
-		const request = getRequest();
-
-		const currentUser = getCurrentUser(request);
-
-		if (!currentUser) {
-			return {
-				error: "You must be logged in to view your wishlist",
-				success: false,
-			};
-		}
-
-		const gameIds = await getWishlistGameIds(currentUser.userId);
-
-		return { gameIds, success: true };
-	} catch (_) {
-		return {
-			error: "An error occurred while fetching wishlist. Please try again.",
-			success: false,
-		};
-	}
-}
-
-/**
- * Check if a game is in the current user's wishlist
- */
-export async function checkWishlistAction(
-	gameId: number,
-): Promise<WishlistCheckResult> {
-	try {
-		const request = getRequest();
-
-		const currentUser = getCurrentUser(request);
-
-		if (!currentUser) {
-			return {
-				error: "You must be logged in to check wishlist status",
-				success: false,
-			};
-		}
-
-		// Validate gameId
-		if (!gameId || gameId <= 0) {
-			return {
-				error: "Invalid game ID",
-				success: false,
-			};
-		}
-
-		const isInWishlist = await isGameInWishlist(currentUser.userId, gameId);
-
-		return { isInWishlist, success: true };
-	} catch (_) {
-		return {
-			error: "An error occurred while checking wishlist. Please try again.",
+			error: "Unexpected error occurred while saving settings.",
 			success: false,
 		};
 	}
