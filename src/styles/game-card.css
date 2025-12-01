@@ -165,7 +165,7 @@ html[data-theme="dark"] .star-icon {
 	border-radius: 12px;
 	height: 100px;
 	width: 400px;
-	background-color: var(--background);
+	background-color: var(--white-black);
 	box-shadow: 0 2px 18px 10px var(--shadow);
 	cursor: pointer;
 	overflow: hidden;
@@ -685,7 +685,7 @@ html[data-theme="dark"] .star-icon {
 .spotlight-game-card {
 	width: min(1310px, 90vw);
 	height: auto;
-	background: var(--background);
+	background: var(--white-black);
 	border-radius: 16px;
 	padding: 30px;
 	margin-top: 10px;
@@ -870,7 +870,7 @@ html[data-theme="dark"] .star-icon {
 .popular-game-card {
 	width: 720px;
 	height: 75px;
-	background: var(--background);
+	background: var(--white-black);
 	border-radius: 16px;
 	padding: 10px;
 	display: flex;
@@ -1000,7 +1000,7 @@ html[data-theme="dark"] .star-icon {
 .category-card {
 	width: 340px;
 	height: 75px;
-	background: var(--background);
+	background: var(--white-black);
 	padding: 10px;
 	display: flex;
 	align-items: center;
