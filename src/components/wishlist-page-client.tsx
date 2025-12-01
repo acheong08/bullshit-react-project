@@ -1,7 +1,8 @@
 import { instanceToPlain } from "class-transformer";
 import WishListGameCard from "$components/gameCards/wish-list-game-card";
 import type { Game } from "$entity/Games";
-import { LabelType, MediaType } from "$entity/Games";
+import { GameAverageRating, LabelType, MediaType } from "$entity/Games";
+import { Review } from "$entity/Review";
 import { getWishlistByUserId } from "$lib/db";
 import { getCurrentUser } from "$utils/auth";
 import { getRequest } from "$utils/request-context";
@@ -21,7 +22,7 @@ export async function WishListPageClient() {
 
 	return (
 		<>
-			{games.map((game) => {
+			{games.map(async (game) => {
 				// Get icon image, falling back to preview image, excluding videos
 				const iconMedia = game.media?.find((m) => m.type === MediaType.Icon);
 				const previewMedia = game.media?.find(
@@ -35,8 +36,11 @@ export async function WishListPageClient() {
 						key={game.id}
 						image={gameImage}
 						title={game.name}
-						rating={4.5}
-						reviews="11.7K"
+						rating={
+							(await GameAverageRating.findOne({ where: { gameId: game.id } }))
+								?.averageAccessibilityRating || 0
+						}
+						reviews={(await Review.count({ where: { game: game } })).toString()}
 						tags={
 							game.labels
 								?.filter((l) => l.type === LabelType.Accessibility)

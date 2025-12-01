@@ -55,7 +55,7 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 				<div className="wish-list-downloads-age">
 					<div className="wish-list-rating-reviews">
 						<p className="wish-list-card-rating">
-							{props.rating}{" "}
+							{props.rating.toFixed(1)}{" "}
 							<img src={StarIcon} alt="Star" className="wish-list-star-icon" />
 						</p>
 						<p className="wish-list-Number-Of-Reviews">
