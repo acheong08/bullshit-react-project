@@ -65,11 +65,6 @@ export function HomePage({
 	const [selectedGenre, setSelectedGenre] = useState<string>("all");
 	const [selectedDisability, setSelectedDisability] = useState<string>("all");
 
-	console.log("Spotlight Game:", spotlightGame);
-	console.log("Popular Games:", popularGames);
-	console.log("Current Games:", currentGames);
-	console.log("Top Charts Games:", topChartsGames);
-
 	const spotlightTitle = spotlightGame ? spotlightGame.name : "Samurai Saga";
 	const spotlightGenres = spotlightGame
 		? spotlightGame.labels

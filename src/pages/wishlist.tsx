@@ -1,14 +1,7 @@
 import "$styles/wishlist.css";
-import WishListPageClient from "$components/wishlist-page-client";
-import { isUserLoggedIn } from "$utils/auth";
+import { WishListPageClient } from "$components/wishlist-page-client";
 
-interface WishlistPageProps {
-	request: Request;
-}
-
-export function WishListPage({ request }: WishlistPageProps) {
-	const loggedIn = isUserLoggedIn(request);
-
+export function WishListPage() {
 	return (
 		<div id="root">
 			<main>
@@ -20,7 +13,7 @@ export function WishListPage({ request }: WishlistPageProps) {
 				</div>
 
 				<div className="wish-list-game-card-gallery">
-					<WishListPageClient isLoggedIn={loggedIn} />
+					<WishListPageClient />
 				</div>
 			</main>
 		</div>
