@@ -8,10 +8,13 @@ export type CategoryCardProps = {
 
 export default function CategoryCard(props: CategoryCardProps) {
 	return (
-		<a href={props.link} className="category-card"
-			aria-label={`Category card: ${props.category}`}>
+		<a
+			href={props.link}
+			className="category-card"
+			aria-label={`${props.category} category, links to ${props.category} games search page`}
+		>
 			{/* Masked gradient image */}
-			
+
 			<div
 				className="category-card-image masked-icon"
 				style={

@@ -36,12 +36,14 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 	}
 
 	return (
-		<div className="wish-list-card">
+		<section
+			className="wish-list-card"
+			aria-label={`${props.title} game card. Image: ${props.title} icon. Title: ${props.title}. Rating: ${props.rating} stars. ${props.reviews} Reviews. Downloads: 1 million. Age Rating: ${props.ageRating}. Game Tags: ${props.tags.join(", ")}`}
+		>
 			<a href={`/game/${props.gameId}`}>
 				<img
 					src={props.image}
 					alt={props.title}
-					aria-hidden="true"
 					className="wish-list-card-image"
 				/>
 			</a>
@@ -57,7 +59,7 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 				<div className="wish-list-downloads-age">
 					<div className="wish-list-rating-reviews">
 						<p className="wish-list-card-rating">
-							{props.rating.toFixed(1)}{" "}
+							{props.rating}{" "}
 							<img src={StarIcon} alt="Star" className="wish-list-star-icon" />
 						</p>
 						<p className="wish-list-Number-Of-Reviews">
@@ -79,9 +81,13 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 
 				<div className="wish-list-tags-container">
 					{props.tags.map((tag) => (
-						<span key={tag} className="wish-list-card-tag">
+						<section
+							key={tag}
+							className="wish-list-card-tag"
+							aria-label={`${tag} game tag`}
+						>
 							{tag}
-						</span>
+						</section>
 					))}
 				</div>
 				<button
@@ -89,14 +95,11 @@ export default function WishListGameCard(props: WishListGameCardProps) {
 					className="remove-button"
 					onClick={handleRemove}
 					disabled={isRemoving}
+					aria-label={`Remove ${props.title} from wishlist`}
 				>
 					{isRemoving ? "Removing..." : "Remove"}
 				</button>
 			</div>
-
-			<button type="button" className="remove-button">
-				Remove
-			</button>
-		</div>
+		</section>
 	);
 }
