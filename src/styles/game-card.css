@@ -400,9 +400,9 @@ html[data-theme="dark"] .star-icon {
 	align-items: flex-start;
 	gap: 12px;
 	padding: 12px;
-	border: 1px solid var(--grey-border);
+	border: #000000;;
 	border-radius: 12px;
-	background-color: var(--background);
+	background-color: var(--white-black);
 	box-shadow: 0 2px 8px 4px var(--shadow);
 	transition:
 		transform 0.2s ease,
