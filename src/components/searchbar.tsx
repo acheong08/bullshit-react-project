@@ -25,6 +25,7 @@ interface SortDropdownProps {
 interface SearchBarProps {
 	sortOptions: string[];
 	filterOptions: Map<string, string[]>;
+	defaultQuery: string | null;
 }
 
 function sortDropdown(
@@ -113,11 +114,13 @@ function dropdownFilterSelector(
 function selectedFiltersDisplay({ selectedFilters }: FilterSummaryProps) {
 	return (
 		<div className="filters-display">
-			{Array.from(selectedFilters).map((filter) => (
-				<p key={filter} className="filter-label">
-					{filter}
-				</p>
-			))}
+			{Array.from(selectedFilters)
+				.filter((filter) => filter.trim() !== "")
+				.map((filter) => (
+					<p key={filter} className="filter-label" data-testid={`${filter}1`}>
+						{filter}
+					</p>
+				))}
 		</div>
 	);
 }
@@ -126,6 +129,7 @@ function searchFilterComponent(
 	{ selectedOption }: SortDropdownProps,
 	{ selectedFilters, setSelectedFilters }: FilterSummaryProps,
 	filterOptions: Map<string, string[]>,
+	defaultQuery: string | null = null,
 ) {
 	const [filterOpen, setFilterOpen] = useState(false);
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -151,6 +155,7 @@ function searchFilterComponent(
 						type="text"
 						name="search"
 						placeholder="Search..."
+						defaultValue={defaultQuery ?? ""}
 					/>
 					<button className="search-component-button" type="submit">
 						Search
@@ -181,6 +186,7 @@ export function SearchBar({ sortOptions, filterOptions }: SearchBarProps) {
 	const [selectedFilters, setSelectedFilters] = useState<Set<string>>(
 		new Set(),
 	);
+	const [queryParam, setQueryParam] = useState<string | null>(null);
 
 	const sortZeroRef = useRef(sortOptions[0]);
 
@@ -190,9 +196,11 @@ export function SearchBar({ sortOptions, filterOptions }: SearchBarProps) {
 		const initialSort = searchParams.get("sort") || sortZeroRef.current;
 		const filterParams = searchParams.get("filters")?.split(",") || [];
 		//TODO: have query also populate search bar input field (defaultValue)
+		const queryParam = searchParams.get("query");
 
 		setSelectedSort(initialSort);
 		setSelectedFilters(new Set(filterParams));
+		setQueryParam(queryParam);
 	}, []);
 
 	return (
@@ -202,6 +210,7 @@ export function SearchBar({ sortOptions, filterOptions }: SearchBarProps) {
 					{ selectedOption: selectedSort, setSelectedOption: setSelectedSort },
 					{ selectedFilters, setSelectedFilters },
 					filterOptions,
+					queryParam,
 				)}
 				{sortDropdown(
 					{

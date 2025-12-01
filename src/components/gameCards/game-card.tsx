@@ -17,6 +17,7 @@ export default function GameCard(props: GameCardProps) {
 	// Build the full accessible label
 	const ariaLabel = `to game page. Game card: image:${props.title} icon, Title: ${props.title}. Genres: ${genreText}. Rating: ${props.rating} stars. `;
 
+	const genres = props.genres.slice(0, 3);
 	return (
 		<a
 			href={`/game/${props.gameId}`}
@@ -36,7 +37,7 @@ export default function GameCard(props: GameCardProps) {
 
 			{/* Hide genre list from screen readers too */}
 			<p className="game-card-genres" aria-hidden="true">
-				{props.genres.map((genre) => (
+				{genres.map((genre) => (
 					<span key={genre} className="genre-item">
 						{genre}
 					</span>

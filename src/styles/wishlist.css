@@ -1,0 +1,60 @@
+main {
+	width: 100%;
+	max-width: 1400px;
+	padding: 0;
+}
+
+.wishlist-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	color: var(--primary-blue);
+}
+
+.wishlist-row {
+	display: flex;
+	width: 100%;
+	max-width: 1400px;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.wishlist-dictate-btn {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	background: var(--primary-blue);
+	color: var(--contrast-text);
+	padding: 12px 18px;
+	border-radius: 20px;
+	border: none;
+	cursor: pointer;
+	font-size: 1.5rem;
+}
+
+.wishlist-dictate-btn .icon {
+	width: 20px;
+	height: 20px;
+}
+
+html[data-theme="light"] .wishlist-dictate-btn .icon {
+	filter: invert(1) brightness(1.2);
+	/* This inverts the colors for dark mode */
+}
+
+.back-button {
+	font-size: 1.5rem;
+	width: 2.3rem;
+	border: 0.2rem var(--black-white) solid;
+	border-radius: 2rem;
+	margin-right: 1rem;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+}
+
+.back-button-container {
+	display: flex;
+	align-items: center;
+	margin: 2rem 0;
+	font-weight: 600;
+}

@@ -17,6 +17,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
+      "$actions": [
+        "src/action.tsx"
+      ],
       "$assets/*": [
         "src/assets/*"
       ],

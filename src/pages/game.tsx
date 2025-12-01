@@ -1,8 +1,10 @@
 import { instanceToPlain } from "class-transformer";
+import { BookmarkButton } from "$components/bookmark-button";
 import { MediaCarousel } from "$components/media-carousel";
+import { ReportButton } from "$components/report-button";
 import { ReviewsSection } from "$components/reviews-section";
 import type { Game, GameMedia } from "$entity/Games";
-import { LabelType } from "$entity/Games";
+import { GameAverageRating, LabelType } from "$entity/Games";
 import { getGameById, getReviewsByGameId } from "$lib/db";
 import { getCurrentUser, isUserLoggedIn } from "$utils/auth";
 
@@ -48,6 +50,11 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 	const currentUser = getCurrentUser(request);
 	const currentUsername = currentUser?.username;
 
+	const rating = await GameAverageRating.findOne({
+		where: { gameId: game.id },
+	});
+	const averageRating = rating?.averageEnjoyabilityRating || 0;
+
 	// Organize labels by type
 
 	const accessibilityLabels =
@@ -57,7 +64,7 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 	const heroImage =
 		game.media && game.media.length > 0
 			? game.media[0].uri
-			: "/placeholder-hero.jpg"; // Fallback if no media
+			: "/placeholder-hero.jpg";
 
 	return (
 		<div id="root">
@@ -72,15 +79,14 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 					<div className="hero-content-wrapper">
 						<div className="hero-details">
 							<h1 className="game-title">{game.name}</h1>
+							<ReportButton gameId={gameIdNumber} gameName={game.name} />
 							<div className="hero-stats">
 								<div className="stat-group">
-									<img
-										src={heroImage} // Using game image as icon placeholder
-										alt="Icon"
-										className="game-icon-small"
-									/>
+									<img src={heroImage} alt="Icon" className="game-icon-small" />
 									<div className="stat-text">
-										<span className="rating-score">4.5 ★</span>
+										<span className="rating-score">
+											{Number(averageRating || 0).toFixed(1)} ★
+										</span>
 										<span className="review-count">11.7K reviews</span>
 									</div>
 								</div>
@@ -100,9 +106,7 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 								<button type="button" className="install-btn">
 									Install
 								</button>
-								<button type="button" className="bookmark-btn">
-									Bookmark
-								</button>
+								<BookmarkButton gameId={gameId} isLoggedIn={loggedIn} />
 							</div>
 						</div>
 					</div>

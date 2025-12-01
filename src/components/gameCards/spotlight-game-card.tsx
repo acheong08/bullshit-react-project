@@ -4,7 +4,7 @@ export type SpotlightCardProps = {
 	videoUrl: string;
 	title: string;
 	genres: string[];
-	tag: string;
+	accessibilityTags: string[];
 	imagePreview: string[];
 	gameId: string;
 };
@@ -13,7 +13,8 @@ export default function SpotlightGameCard(props: SpotlightCardProps) {
 	const genreText = props.genres.join(", ");
 	const previewCount = props.imagePreview.length;
 
-	const ariaLabel = `Spotlight game card: ${props.title}. Genres: ${genreText}. Tag: ${props.tag}. Contains video and ${previewCount} image preview${previewCount !== 1 ? "s" : ""}. Links to game page.`;
+	const ariaLabel = `Spotlight game card: ${props.title}. Genres: ${genreText}. Tag: ${props.accessibilityTags}. Contains video and ${previewCount} image preview${previewCount !== 1 ? "s" : ""}. Links to game page.`;
+	const accessibilityTags = props.accessibilityTags.slice(0, 2);
 
 	return (
 		<a
@@ -47,7 +48,13 @@ export default function SpotlightGameCard(props: SpotlightCardProps) {
 								</span>
 							))}
 						</p>
-						<p className="spotlight-tag">{props.tag}</p>
+						<p className="spotlight-game-card-genres">
+							{accessibilityTags.map((tag) => (
+								<span key={tag} className="spotlight-tag-item">
+									{tag}
+								</span>
+							))}
+						</p>
 					</div>
 				</div>
 

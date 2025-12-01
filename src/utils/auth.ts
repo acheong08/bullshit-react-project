@@ -45,15 +45,17 @@ export function isUserLoggedIn(request: Request): boolean {
 	return getAuthToken(request) !== null;
 }
 
+export interface User {
+	userId: number;
+	username: string;
+}
+
 /**
  * Gets the current authenticated user's information from JWT
  * @param request - The incoming HTTP request
  * @returns User information from token or null if not authenticated
  */
-export function getCurrentUser(request: Request): {
-	userId: number;
-	username: string;
-} | null {
+export function getCurrentUser(request: Request): User | null {
 	const token = getAuthToken(request);
 
 	if (!token) {
