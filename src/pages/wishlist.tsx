@@ -6,11 +6,7 @@ export function WishListPage() {
 		<div id="root">
 			<main>
 				<div className="back-button-container">
-					<a
-						href="/"
-						className="clear-a-stylings back-button"
-						aria-label="Back to home page button"
-					>
+					<a href="/" className="clear-a-stylings back-button" aria-label="Back to home page button">
 						↩
 					</a>
 					<p>Back to home page</p>
