@@ -39,7 +39,7 @@ export function ProfilePage() {
 	});
 	const [newUsername, setNewUsername] = useState("");
 	const [oldUsername, setOldUsername] = useState("");
-	const [profileImage, setProfileImage] = useState<string>("");
+	const [profileImage, setProfileImage] = useState<string>("/images/example-images/example-profile-icon.png");
 	const [newImageFile, setNewImageFile] = useState<File | null>(null);
 	const [imagePreview, setImagePreview] = useState<string>("");
 
@@ -207,7 +207,7 @@ export function ProfilePage() {
 
 	return (
 		<div id="root">
-			<main>
+			<main className="profile-wrap">
 				{/* Header */}
 				<section className="profile-ctrl">
 					<a className="home-link" href="/">
@@ -258,25 +258,6 @@ export function ProfilePage() {
 								/>
 							</button>
 						</h1>
-						<h2 className="profile-detail">Profile created DATE</h2>
-					</div>
-				</section>
-
-				{/* Tags */}
-				<section className="profile-tags">
-					<h2 className="page-subheader">Profile Tags</h2>
-					<div className="tag-gallery">
-						<div className="tag-card">
-							<p>Blindness</p>
-						</div>
-						<button className="secondary-btn" type="button">
-							<img
-								src="/public/images/icons/add-button.png"
-								alt="Plus icon"
-								className="add"
-							/>
-							<p>Add new tag</p>
-						</button>
 					</div>
 				</section>
 

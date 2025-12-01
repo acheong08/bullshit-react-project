@@ -588,6 +588,11 @@ label {
 	color: var(--text);
 }
 
+.profile-wrap{
+	margin-left: 25vw;
+	max-width: 55vw;
+}
+
 /* Profile header */
 
 .profile-ctrl,
