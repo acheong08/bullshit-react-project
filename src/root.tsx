@@ -112,7 +112,7 @@ async function App(props: {
 		return <AdminReportsPage />;
 	}
 	if (pathname === "/wishlist") {
-		return <WishListPage request={props.request} />;
+		return <WishListPage />;
 	}
 	if (pathname.startsWith("/game/")) {
 		const gameId = pathname.split("/")[2];
