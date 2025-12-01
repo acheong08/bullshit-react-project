@@ -190,7 +190,11 @@ export function ReviewsSection({
 						</div>
 					)}
 
-					{submitError && <div className="error-message">{submitError}</div>}
+					{submitError && (
+						<div className="error-message" role="alert" aria-live="assertive">
+							{submitError}
+						</div>
+					)}
 
 					<div className="rating-inputs">
 						<div className="rating-input-group">
@@ -250,7 +254,11 @@ export function ReviewsSection({
 
 			<div className="reviews-list">
 				{reviews.map((review) => (
-					<div key={review.id} className="review-card">
+					<section
+						key={review.id}
+						className="review-card"
+						aria-label={`Review by ${review.user.username} on ${formatDate(review.createdAt)}. Comment: ${review.comment}. Accessibility rating: ${review.accessibilityRating} out of 5. Gameplay rating: ${review.enjoyabilityRating} out of 5.`}
+					>
 						<img
 							src="/images/example-images/example-profile-icon.png"
 							alt={review.user.username}
@@ -317,7 +325,7 @@ export function ReviewsSection({
 								</div>
 							</div>
 						</div>
-					</div>
+					</section>
 				))}
 			</div>
 

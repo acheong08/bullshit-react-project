@@ -114,14 +114,17 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 
 				<div className="game-content-container">
 					{/* Media Section */}
-					<div className="media-section">
+					<section
+						className="media-section"
+						aria-label={`${game.name} carousel of images`}
+					>
 						{game.media && game.media.length > 0 && (
 							<MediaCarousel
 								media={instanceToPlain(game.media) as GameMedia[]}
 								gameName={game.name}
 							/>
 						)}
-					</div>
+					</section>
 
 					{/* About Section */}
 					<div className="about-section">
