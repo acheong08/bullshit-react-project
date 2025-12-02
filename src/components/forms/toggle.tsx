@@ -15,6 +15,9 @@ export function Toggle({ label, isChecked, onChange, id }: OptionToggleProps) {
 				checked={isChecked}
 				onChange={onChange}
 				className="toggle-checkbox"
+				aria-label={`${label}, ${isChecked ? "currently enabled" : "currently disabled"}`}
+				aria-required="true"
+				aria-live="polite"
 			/>
 			<label htmlFor={id} className="toggle-label">
 				{label}

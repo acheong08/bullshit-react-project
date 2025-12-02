@@ -33,7 +33,6 @@ function sortDropdown(
 	sortOptions: string[],
 ) {
 	const [open, setOpen] = useState(false);
-	//NOTE: in future these will be pulled from the database
 	return (
 		<div className="">
 			<button
@@ -41,11 +40,13 @@ function sortDropdown(
 				className="search-component-button sort-by-label"
 				type="button"
 				onClick={() => setOpen(!open)}
+				aria-expanded={open}
+				aria-label={`Sort by ${selectedOption}, ${open ? "dropdown open" : "dropdown closed"}`}
 			>
 				Sort By: {selectedOption}
 			</button>
 			{open && (
-				<ul className="sort-dropdown-container">
+				<ul className="sort-dropdown-container" aria-label="Sort options">
 					{sortOptions.map((option: string) => (
 						<li key={option} className="center">
 							<button
@@ -53,7 +54,10 @@ function sortDropdown(
 								className="filter-button"
 								onClick={() => {
 									setSelectedOption(option);
+									setOpen(false);
 								}}
+								aria-label={`Sort by ${option}`}
+								aria-current={option === selectedOption ? "true" : undefined}
 							>
 								{option}
 							</button>
@@ -73,7 +77,10 @@ function dropdownFilterSelector(
 	return (
 		<div>
 			{filterOpen && (
-				<div className="filters-dropdown-container">
+				<section
+					className="filters-dropdown-container"
+					aria-label="Filter options"
+				>
 					{Array.from(filters.entries()).map(
 						([category, options]: [string, string[]]) => (
 							<ul className="category-header center" key={category}>
@@ -97,6 +104,8 @@ function dropdownFilterSelector(
 													return newSet;
 												});
 											}}
+											aria-label={`${option}, ${selectedFilters.has(option) ? "selected" : "not selected"}`}
+											aria-pressed={selectedFilters.has(option)}
 										>
 											{option}
 										</button>
@@ -105,7 +114,7 @@ function dropdownFilterSelector(
 							</ul>
 						),
 					)}
-				</div>
+				</section>
 			)}
 		</div>
 	);
@@ -166,6 +175,8 @@ function searchFilterComponent(
 						className="search-component-button"
 						type="button"
 						onClick={() => setFilterOpen(!filterOpen)}
+						aria-expanded={filterOpen}
+						aria-label={`Filters, ${filterOpen ? "dropdown open" : "dropdown closed"}`}
 					>
 						Filter:
 					</button>
