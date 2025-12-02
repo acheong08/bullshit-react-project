@@ -1,79 +1,97 @@
 # Contributing
 
-This is a Vite + React Server Components project following the usual standards.
+This is a Vite + React Server Components project following the usual standards. See [Tech Stack](TechStack.md)
 
 ```
 root@localhost> tree src
 src
-├── action.tsx              // Server actions
+├── action.tsx // Server actions
 ├── assets
-│   ├── games.jsonl         // Game data
-│   └── react.svg
-├── client.tsx              // Client-side entry
-├── components              // Reusable components
-│   ├── gameCards           // Game card variants
-│   │   ├── category-card.tsx
-│   │   ├── game-card.tsx
-│   │   ├── popular-game-card.tsx
-│   │   ├── spotlight-game-card.tsx
-│   │   ├── top-charts-game-card.tsx
-│   │   └── wish-list-game-card.tsx
-│   ├── filtersbar.tsx
-│   ├── media-carousel.tsx
-│   ├── navbar.tsx
-│   ├── pagination.tsx
-│   ├── reviews-section.tsx
-│   ├── searchbar.tsx
-│   ├── voice-command-provider.tsx
-│   └── voice-navigation-commands.tsx
-├── data-source.ts          // TypeORM data source configuration
-├── entity                  // Database entities
-│   ├── Games.ts
-│   ├── Review.ts
-│   └── User.ts
-├── framework               // Server side entrypoint
-│   ├── entry.browser.tsx
-│   ├── entry.rsc.tsx
-│   ├── entry.ssr.tsx
-│   └── init.ts
+│   ├── games.jsonl //Game data
+│   └── react.svg
+├── client.tsx // Client-side entry
+├── components // Reusable components
+│   ├── bookmark-button.tsx
+│   ├── forms
+│   │   ├── dropdown.tsx
+│   │   └── toggle.tsx
+│   ├── gameCards // Game card variants
+│   │   ├── category-card.tsx
+│   │   ├── game-card.tsx
+│   │   ├── popular-game-card.tsx
+│   │   ├── spotlight-game-card.tsx
+│   │   ├── top-charts-game-card.tsx
+│   │   └── wish-list-game-card.tsx
+│   ├── media-carousel.tsx
+│   ├── navbar.tsx
+│   ├── pagination.tsx
+│   ├── report-button.tsx
+│   ├── report-modal.tsx
+│   ├── reviews-section.tsx
+│   ├── searchbar.tsx
+│   ├── voice-command-provider.tsx
+│   ├── voice-navigation-commands.tsx
+│   └── wishlist-page-client.tsx
+├── data-source.ts // TypeORM data source configuration
+├── entity // Database entities
+│   ├── Games.ts
+│   ├── Report.ts
+│   ├── Review.ts
+│   ├── User.ts
+│   └── Wishlist.ts
+├── framework // Server side entrypoint
+│   ├── entry.browser.tsx
+│   ├── entry.rsc.tsx
+│   ├── entry.ssr.tsx
+│   └── init.ts
 ├── lib
-│   └── db.ts               // Database wrapper
-├── pages                   // Full page components
-│   ├── game.tsx
-│   ├── home.tsx
-│   ├── login.tsx
-│   ├── not-found.tsx
-│   ├── profile.tsx
-│   └── searchpage.tsx
-├── root.tsx                // React entrypoint and routing
-├── styles                  // CSS stylesheets
-│   ├── game-card.css
-│   ├── home.css
-│   ├── index.css
-│   └── variables.css
-├── tests                   // Test files
-│   ├── components
-│   │   └── component.test.tsx
-│   ├── lib
-│   │   ├── action.test.ts
-│   │   ├── auth.test.ts
-│   │   ├── db.test.ts
-│   │   ├── jwt.test.ts
-│   │   └── password.test.ts
-│   ├── happydom.ts
-│   ├── matchers.d.ts
-│   └── testing-library.ts
-└── utils
-    ├── voice               // Voice command system
-    │   ├── commands.test.ts
-    │   └── commands.ts
+│   └── db.ts // Database wrapper
+├── pages // Full page components
+│   ├── admin // Admin pages
+│   │   ├── reports-client.tsx
+│   │   └── reports.tsx
+│   ├── adminDashboard.tsx
+│   ├── game.tsx
+│   ├── home.tsx
+│   ├── login.tsx
+│   ├── not-found.tsx
+│   ├── profile.tsx
+│   ├── register.tsx
+│   ├── searchpage.tsx
+│   └── wishlist.tsx
+├── root.tsx // React entrypoint and routing
+├── styles // CSS stylesheets
+│   ├── game-card.css
+│   ├── home.css
+│   ├── index.css
+│   ├── variables.css
+│   └── wishlist.css
+├── tests // Test files
+│   ├── components
+│   │   └── component.test.tsx
+│   ├── happydom.ts
+│   ├── lib
+│   │   ├── action.test.ts
+│   │   ├── auth.test.ts
+│   │   ├── db.test.ts
+│   │   ├── jwt.test.ts
+│   │   └── password.test.ts
+│   ├── matchers.d.ts
+│   └── testing-library.ts
+└── utils // Utility functions
     ├── auth.ts
     ├── cookies.ts
     ├── jwt.ts
     ├── password.ts
     ├── request-context.ts
     ├── seed.ts
-    └── theme.ts
+    ├── theme.ts
+    ├── voice // Voice command system
+    │   ├── commands.test.ts
+    │   └── commands.ts
+    ├── wishlist-server.ts
+    └── wishlist.ts
+
 ```
 
 ## Client and Server interaction in React
@@ -82,7 +100,7 @@ In React, there are 3 types of code:
 
 - SSR (Server Side Rendering): This refers to React Server Components which are generates on the server before being sent down as static HTML. By default, all components are server side rendered.
 - Client side rendering: This refers to components which are hydrated by JavaScript running in the browser as seen in traditional React. This should generally be used for components that use slow loading data such that we have a fast initial loading speed. To make a component client side rendered, tag the file with `"use client"`.
-- Server actions: These are functions tagged with `"use server"`. These functions should only be called by client side components. Behind the scenes, React auto magically generated API endpoints to react the server for this data.
+- Server actions: These are functions tagged with `"use server"`. These functions should only be called by client side components. Behind the scenes, React automatically generates API endpoints to react the server for this data.
 
 ## On security
 
@@ -187,6 +205,6 @@ if (vcManager.isSupported()) {
 }
 ```
 
-## Docker/podman
+## Docker/Podman
 
-By default, `podman compose up` uses any existing cached image. If you've made changes since the last build, you can run `podman compose build` to ensure the image is up to date. Ensure you run the commands in this order: `podman compose down` -> `podman volume prune` (to delete the database) -> `podman compose build` -> `podman compose up`. 
+By default, `podman compose up` uses any existing cached image. If you've made changes since the last build, you can run `podman compose build` to ensure the image is up to date. For a complete refresh/rerun, ensure you run these commands: `podman compose down` -> `podman volume prune` (to delete the database) -> `podman compose build` -> `podman compose up`.
