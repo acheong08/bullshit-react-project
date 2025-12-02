@@ -3,5 +3,7 @@
 - **Builder**: Cargo/NPM/UV
 - **Testing**: Jest
 - **Deployment**: Terraform
+- **ORM**: Prisma, Drizzle ORM
+- **Testing DOM**: JSDom
 
 See [Our Chosen Tech Stack](wiki/TechStack.md)
