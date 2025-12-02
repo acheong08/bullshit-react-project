@@ -1,6 +1,5 @@
 import "$styles/game-card.css";
 
-// these are props for poplur games on the home page recommend section
 export type PopularGameCardProps = {
 	image: string;
 	title: string;
@@ -9,18 +8,27 @@ export type PopularGameCardProps = {
 };
 
 export default function PopularGameCard(props: PopularGameCardProps) {
+	const genreText = props.genres.join(", ");
+
+	const ariaLabel = `Popular game card: image: ${props.title} icon, Title: ${props.title}. Genres: ${genreText}. Links to game page.`;
+
 	return (
-		<a href={`/game/${props.gameId}`} className="popular-game-card">
+		<a
+			href={`/game/${props.gameId}`}
+			className="popular-game-card"
+			aria-label={ariaLabel}
+		>
 			<img
 				src={props.image}
-				alt={props.title}
+				alt=""
+				aria-hidden="true"
 				className="popular-game-card-image"
 			/>
 
 			<div className="popular-game-card-content">
-				<h3>{props.title}</h3>
+				<h3 className="popular-game-card-title">{props.title}</h3>
 
-				<p className="popular-game-card-genres">
+				<p className="popular-game-card-genres" aria-hidden="true">
 					{props.genres.map((genre) => (
 						<span key={genre} className="genre-item">
 							{genre}

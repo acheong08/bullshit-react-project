@@ -1,11 +1,16 @@
 import { seedAdminUser, seedGames, seedReports } from "$utils/seed";
 import { AppDataSource } from "../data-source";
 
+let isInitialized = false;
+
 /**
  * Initialize database and run seeding operations
  * This is called at module-level in entry.rsc.tsx (runs once at server startup)
  */
 export async function initialize(): Promise<void> {
+	if (isInitialized) {
+		return;
+	}
 	if (!AppDataSource.isInitialized) {
 		try {
 			console.log("[Init] Initializing database connection...");
@@ -27,6 +32,7 @@ export async function initialize(): Promise<void> {
 		console.error("[Init] Seed operations failed:", error);
 		// Don't throw - we don't want to crash the server if seeding fails
 	}
+	isInitialized = true;
 }
 
 await initialize();

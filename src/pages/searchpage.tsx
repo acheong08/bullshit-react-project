@@ -32,7 +32,11 @@ export async function SearchPage({
 			<div className="overall-container center">
 				<div className="alignment-container">
 					<div className="flex back-button-container">
-						<a href="/" className="clear-a-stylings back-button">
+						<a
+							href="/"
+							className="clear-a-stylings back-button"
+							aria-label="Back to home page button"
+						>
 							↩
 						</a>
 						<p>Back to home page</p>

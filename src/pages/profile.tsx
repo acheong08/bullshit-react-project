@@ -90,7 +90,7 @@ export function ProfilePage() {
 	function closeModal(modal: string) {
 		const element = document.querySelector<HTMLElement>(`#${modal}`);
 		if (element) {
-			element.classList.add("active");
+			element.classList.remove("active");
 		}
 
 		// Reset image preview when closing

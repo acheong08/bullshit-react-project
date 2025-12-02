@@ -45,7 +45,11 @@ export function RegisterPage() {
 				{/* User credentials form*/}
 				<form onSubmit={handleSubmit} className="auth-form">
 					<h1 className="form-header">Register</h1>
-					{error && <div className="error-banner">{error}</div>}
+					{error && (
+						<div className="error-banner" role="alert" aria-live="assertive">
+							{error}
+						</div>
+					)}
 					<div className="input-container">
 						<label htmlFor="email">Email Address</label>
 						<input

@@ -103,7 +103,7 @@ export function Navbar({ user }: NavbarProps) {
 	return (
 		<nav className="navbar">
 			<div className="navbar-section flex">
-				<a href="/">
+				<a href="/" aria-label="TO home page, logo">
 					<img
 						className="navbar-logo"
 						src="/images/logo.png"
@@ -121,12 +121,16 @@ export function Navbar({ user }: NavbarProps) {
 									user.profileImage ||
 									"/images/example-images/example-profile-icon.png"
 								}
-								alt="Profile Icon"
+								alt="Profile Icon links to home page"
 							/>
 						</a>
 
 						{/* Username */}
-						<a href={"/profile"} className="navbar-username">
+						<a
+							href={"/profile"}
+							className="navbar-username"
+							aria-label={`Your Username: ${user.username}`}
+						>
 							{user.username}
 						</a>
 					</>
@@ -151,7 +155,7 @@ export function Navbar({ user }: NavbarProps) {
 					}}
 				/>
 
-				<a href="/wishlist">
+				<a href="/wishlist" aria-label={"to your wishlist"}>
 					<img
 						className="navbar-image"
 						src="/images/wishlist-icon.png"

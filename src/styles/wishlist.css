@@ -56,5 +56,6 @@ html[data-theme="light"] .wishlist-dictate-btn .icon {
 	display: flex;
 	align-items: center;
 	margin: 2rem 0;
+	margin-left: 1.5rem;
 	font-weight: 600;
 }

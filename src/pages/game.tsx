@@ -114,14 +114,17 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 
 				<div className="game-content-container">
 					{/* Media Section */}
-					<div className="media-section">
+					<section
+						className="media-section"
+						aria-label={`${game.name} carousel of images`}
+					>
 						{game.media && game.media.length > 0 && (
 							<MediaCarousel
 								media={instanceToPlain(game.media) as GameMedia[]}
 								gameName={game.name}
 							/>
 						)}
-					</div>
+					</section>
 
 					{/* About Section */}
 					<div className="about-section">
@@ -131,13 +134,13 @@ export async function GamePage({ gameId, request }: GamePageProps) {
 								"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sagittis vestibulum justo, eu commodo sapien finibus at. In elementum mattis suscipit. Nullam nec suscipit ligula."}
 						</p>
 
-						<div className="tags-container">
+						<section className="tags-container" aria-label="Game tags">
 							{accessibilityLabels.map((label) => (
 								<span key={label.id} className="game-tag">
 									{label.name}
 								</span>
 							))}
-						</div>
+						</section>
 
 						<div className="meta-info">
 							<div className="meta-item">
