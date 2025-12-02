@@ -20,9 +20,14 @@ html[data-theme="light"] {
 	color-scheme: light;
 }
 
+html[data-theme="system"] {
+	color-scheme: dark light;
+}
+
 body {
 	background-color: var(--background);
 	font-family: system-ui;
+	font-size: 1.25rem;
 	line-height: 1.5;
 	min-height: 100vh;
 }
@@ -45,13 +50,23 @@ main {
 	color: var(--text);
 }
 
+.page-subheader {
+	color: var(--primary-blue);
+	margin: 15px 0 5px 0;
+}
+
+.subsection-header {
+	font-style: italic;
+	color: var(--primary-blue);
+}
+
 /*Buttons*/
 
 .primary-btn {
 	width: 100%;
 	height: 55px;
 	background-color: var(--primary-blue);
-	color: white;
+	color: var(--contrast-text);
 	box-shadow: 0 6px 7px 0 var(--shadow);
 	border: 0;
 	outline: 0;
@@ -63,15 +78,55 @@ main {
 	cursor: pointer;
 }
 
+.secondary-btn {
+	height: 55px;
+	padding: 0 20px;
+	font-size: 15px;
+	border-radius: 10px;
+	background-color: var(--text);
+	color: var(--contrast-text);
+	display: flex;
+	align-items: center;
+	box-shadow: 0 4px 4px var(--shadow);
+	gap: 10px;
+	border: 0;
+	outline: 0;
+}
+
+.secondary-btn img {
+	height: 35%;
+}
+
+.secondary-btn:hover {
+	cursor: pointer;
+}
+
 .navbar-button {
 	background-color: var(--primary-blue);
-	color: white;
+	color: var(--contrast-text);
 	box-shadow: 0 6px 7px 0 var(--shadow);
 	border: 0;
 	outline: 0;
 	border-radius: 10px;
 	font-size: 1rem;
 	padding: 0.75rem 2rem;
+}
+
+.logout-btn {
+	border-radius: 5px;
+	border: 2px solid red;
+	color: var(--text);
+	background: transparent;
+	height: 100%;
+	width: 150px;
+	transition: 0.5s all ease-out;
+	font-size: 15px;
+}
+
+.logout-btn:hover {
+	background-color: red;
+	color: var(--white);
+	cursor: pointer;
 }
 
 /*Navbar*/
@@ -163,13 +218,24 @@ label {
 	background-repeat: no-repeat;
 }
 
+/* Legacy login-banner for backwards compatibility */
+.login-banner {
+	width: 100%;
+	height: 100%;
+	background-image: url("/public/images/banner.png");
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
 /* Responsive to stack on smaller screens */
 @media (max-width: 1100px) {
 	.auth-container {
 		grid-template-columns: 1fr;
 	}
 
-	.auth-banner {
+	.auth-banner,
+	.login-banner {
 		display: none;
 	}
 }
@@ -183,112 +249,7 @@ label {
 	padding: 0.5rem;
 }
 
-/* Navbar */
-.flex {
-	display: flex;
-}
-
-.center {
-	justify-content: center;
-}
-
-.search-component-button {
-	border: 2px solid black;
-	border-radius: 8px;
-	/* background-color: white; */
-	margin: 5px;
-	font-size: 1rem;
-	padding: 0.6rem 1.2rem;
-}
-
-.filter-button {
-	border: 2px solid black;
-	border-radius: 8px;
-	font-size: 1rem;
-	margin: 5px 0;
-	/* width: 12rem; */
-	width: 100%;
-	max-width: calc((100vw - 15rem - 15px) / 3);
-	padding: 0.6rem;
-	display: flex;
-	justify-content: center;
-}
-
-.sort-by-button {
-	border: 2px solid black;
-	margin: 5px;
-	min-width: 12.5rem;
-}
-
-.search-bar-input {
-	margin: 5px;
-	width: 30rem;
-	max-width: calc(100vw - 30rem);
-	border: 2px solid black;
-	/* Below is inherited from the default button styling, to keep visual consistency */
-	padding: 0.6rem 1.2rem;
-	font-size: 1rem;
-	font-weight: 500;
-	font-family: inherit;
-	border-radius: 8px;
-}
-
-.category-header {
-	list-style-type: none;
-	color: white;
-	/* CSS doesnt have text-outline stylings, this is a hacky way to do it anyways */
-	text-shadow:
-		1.5px 1.5px 0px black,
-		-1.5px -1.5px 0px black,
-		1.5px -1.5px 0px black,
-		-1.5px 1.5px 0px black;
-
-	/* Below is inherited from the default button styling, to keep visual consistency */
-	font-size: 1rem;
-	font-weight: 500;
-	font-family: inherit;
-	align-items: center;
-	justify-self: center;
-	margin: 0 5px;
-}
-
-.filters-dropdown-container {
-	background-color: gray;
-	border-radius: 8px;
-	border: 2px solid black;
-	list-style-type: none;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-	/* justify-content: space-around; */
-	width: 45rem;
-	max-width: calc(100vw - 15rem);
-	/* TODO: make this animate nicely */
-	max-height: 25rem;
-	overflow-y: auto;
-}
-
-.sort-dropdown-container {
-	background-color: gray;
-	border-radius: 8px;
-	border: 2px solid black;
-	list-style-type: none;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	align-self: center;
-	justify-self: center;
-	width: 13rem;
-	max-height: 15rem;
-	overflow-y: auto;
-}
-
-.filters-display {
-	display: flex;
-	flex-wrap: wrap;
-	width: 45rem;
-	max-width: calc(100vw - 15rem);
-}
+/* Navbar Components */
 
 .navbar {
 	padding: 1rem;
@@ -317,6 +278,10 @@ label {
 
 .navbar-profile-pic {
 	height: 4rem;
+	width: 4rem;
+	border-radius: 100%;
+	object-fit: cover;
+	object-position: center;
 }
 
 .navbar-username {
@@ -347,7 +312,6 @@ label {
 	padding: 0 4px;
 }
 
-/* The circle that changes position */
 .toggle-thumb {
 	width: 2rem;
 	height: 2rem;
@@ -356,7 +320,6 @@ label {
 	border: 1px solid gray;
 	position: absolute;
 	transition: all 0.3s ease;
-	/* to put the button above whatever its hovering over */
 	z-index: 2;
 	left: 4px;
 }
@@ -374,7 +337,7 @@ label {
 
 .sun-icon {
 	margin-right: auto;
-	color: black;
+	color: var(--black);
 	font-size: 1.5rem;
 }
 
@@ -461,6 +424,18 @@ label {
 	padding: 0.6rem 1.2rem;
 }
 
+.filter-button {
+	border: 2px solid black;
+	border-radius: 8px;
+	font-size: 1rem;
+	margin: 5px 0;
+	width: 100%;
+	max-width: calc((100vw - 15rem - 15px) / 3);
+	padding: 0.6rem;
+	display: flex;
+	justify-content: center;
+}
+
 .sort-by-button {
 	border: 2px solid black;
 	margin: 5px;
@@ -470,9 +445,8 @@ label {
 .search-bar-input {
 	margin: 5px;
 	width: 30rem;
-	max-width: 40vw;
-	border: 2px solid black;
-	/* Below is inherited from the default button styling, to keep visual consistency */
+	max-width: calc(100vw - 30rem);
+	border: 2px solid var(--black);
 	padding: 0.6rem 1.2rem;
 	font-size: 1rem;
 	font-weight: 500;
@@ -482,36 +456,37 @@ label {
 
 .category-header {
 	list-style-type: none;
-	color: white;
-	/* CSS doesnt have text-outline stylings, this is a hacky way to do it anyways */
+	color: var(--white);
 	text-shadow:
-		1.5px 1.5px 0px black,
-		-1.5px -1.5px 0px black,
-		1.5px -1.5px 0px black,
-		-1.5px 1.5px 0px black;
-
-	/* Below is inherited from the default button styling, to keep visual consistency */
+		1.5px 1.5px 0px var(--black),
+		-1.5px -1.5px 0px var(--black),
+		1.5px -1.5px 0px var(--black),
+		-1.5px 1.5px 0px var(--black);
 	font-size: 1rem;
 	font-weight: 500;
 	font-family: inherit;
 	align-items: center;
 	justify-self: center;
+	margin: 0 5px;
 }
 
-.dropdown-container {
+.filters-dropdown-container {
 	background-color: gray;
 	border-radius: 8px;
-	border: 2px solid black;
+	border: 2px solid var(--black);
 	list-style-type: none;
-	display: flex;
-	justify-content: space-around;
-	/* TODO: make this animate nicely */
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+	width: 45rem;
+	max-width: calc(100vw - 15rem);
+	max-height: 25rem;
+	overflow-y: auto;
 }
 
 .sort-dropdown-container {
 	background-color: gray;
 	border-radius: 8px;
-	border: 2px solid black;
+	border: 2px solid var(--black);
 	list-style-type: none;
 	display: flex;
 	flex-direction: column;
@@ -520,6 +495,8 @@ label {
 	align-self: center;
 	justify-self: center;
 	width: 13rem;
+	max-height: 15rem;
+	overflow-y: auto;
 }
 
 .highlight {
@@ -530,13 +507,19 @@ label {
 	font-size: 1rem;
 	font-weight: 500;
 	font-family: inherit;
-	border: 2px solid black;
+	border: 2px solid var(--black);
 	border-radius: 8px;
-	/* background-color: white; */
 	margin: 5px;
 	width: 8rem;
 	display: flex;
 	justify-content: center;
+}
+
+.filters-display {
+	display: flex;
+	flex-wrap: wrap;
+	width: 45rem;
+	max-width: calc(100vw - 15rem);
 }
 
 .test-class {
@@ -591,12 +574,257 @@ label {
 }
 
 .text-outline {
-	/* CSS doesnt have text-outline stylings, this is a hacky way to do it anyways */
 	text-shadow:
 		1.5px 1.5px 0px var(--black-white),
 		-1.5px -1.5px 0px var(--black-white),
 		1.5px -1.5px 0px var(--black-white),
 		-1.5px 1.5px 0px var(--black-white);
+}
+
+/* Profile page */
+
+.profile-ctrl,
+.profile-details {
+	margin-top: 10px;
+	display: flex;
+	color: var(--text);
+}
+
+.profile-wrap {
+	margin-left: 25vw;
+	max-width: 55vw;
+}
+
+/* Profile header */
+
+.profile-ctrl,
+.home-link {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 50px;
+	gap: 10px;
+	color: var(--text);
+}
+
+/* Profile details editing section*/
+
+.profile-details {
+	gap: 30px;
+	margin-top: 40px;
+}
+
+.profile-image-edit {
+	height: 25vh;
+	position: relative;
+}
+
+.profile-edit {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border-radius: 100px;
+	height: 75px;
+	width: 75px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	outline: 0;
+	box-shadow: 0 8px 8px var(--shadow);
+	background-color: #ffffff;
+}
+
+.profile-edit img,
+.icon img {
+	height: 60%;
+}
+
+.edit-icon {
+	height: 2.5rem;
+	width: auto;
+}
+
+.profile-image {
+	height: 25vh;
+	width: 25vh;
+	object-fit: cover;
+	border-radius: 100%;
+}
+
+.profile-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.page-title {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+}
+
+.page-title .profile-edit {
+	position: relative;
+}
+
+/* Profile tags section */
+
+.tag-gallery {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.tag-card {
+	padding: 0 20px;
+	font-size: 15px;
+	border-radius: 10px;
+	background-color: var(--text);
+	color: var(--contrast-text);
+	display: flex;
+	align-items: center;
+	box-shadow: 0 4px 4px var(--shadow);
+}
+
+/* Profile settings */
+
+.option-list {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	color: var(--text);
+	margin: 20px 0 20px 0;
+}
+
+.option-header {
+	font-size: 22px;
+	font-weight: 600;
+}
+
+/* Settings toggle */
+.toggle-container {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+}
+
+.toggle-checkbox {
+	display: none;
+}
+
+.toggle-label {
+	position: relative;
+	display: inline-block;
+	width: 80px;
+	height: 40px;
+	background-color: #8a8a8a;
+	border-radius: 30px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	color: transparent;
+	font-size: 0;
+}
+
+.toggle-label::after {
+	content: "";
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 30px;
+	height: 30px;
+	background-color: white;
+	border-radius: 50%;
+	transition: transform 0.3s ease;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+	background-color: var(--primary-blue);
+}
+
+.toggle-checkbox:checked + .toggle-label::after {
+	transform: translateX(40px);
+}
+
+/* Dropdown toggle */
+
+.dropdown-container {
+	background-color: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border: 0;
+	outline: 0;
+}
+
+.dropdown-select {
+	width: 30%;
+	height: 4vh;
+	font-size: 15px;
+	padding: 5px;
+}
+
+.profile-options .primary-btn {
+	margin-bottom: 10px;
+}
+
+/* Update modal */
+
+.modal-wrap {
+	height: 100vh;
+	width: 100%;
+	backdrop-filter: blur(2px);
+	position: fixed;
+	top: 0;
+	left: 0;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 2;
+	background-color: var(--shadow);
+}
+
+.update-form {
+	width: 25vw;
+	height: fit-content;
+	background-color: var(--contrast-text);
+	padding: 40px 40px;
+	border-radius: 15px;
+	color: var(--text);
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: center;
+	gap: 5px;
+}
+
+.close-btn {
+	width: 50px;
+	height: 50px;
+	margin-bottom: 10px;
+	border-radius: 10px;
+	border: red solid 1px;
+	outline: 0;
+	background-color: transparent;
+	color: var(--text);
+	font-weight: 600;
+	font-size: 20px;
+}
+
+.update-form .input-container {
+	gap: 20px;
+	text-align: center;
+}
+
+.profile-edit:hover,
+.close-btn:hover {
+	cursor: pointer;
+}
+
+.active {
+	display: flex;
 }
 
 /* Game Page Styling */

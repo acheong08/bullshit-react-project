@@ -34,3 +34,5 @@ export async function initialize(): Promise<void> {
 	}
 	isInitialized = true;
 }
+
+await initialize();

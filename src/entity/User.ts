@@ -13,4 +13,10 @@ export class User extends BaseEntity {
 
 	@Column({ length: 128, type: "varchar" })
 	email: string;
+
+	@Column({ nullable: true, type: "text" })
+	profileImage: string | null;
+
+	@Column({ nullable: true, type: "text" })
+	accessibilitySettings: string | null;
 }
