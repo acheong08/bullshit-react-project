@@ -12,7 +12,9 @@ See [Additional Learning Resources](wiki/LearningResources.md)
 
 ## Programming Language: Typescript
 Docs:
+
 Typescript - [https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html](https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html)
+
 Javascript - [https://developer.mozilla.org/en-US/docs/Web/JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 - Typescript is a super-set of Javascript, with enforced typing, this makes it easier to identify bugs due to faulty typing, which is common when writing Javascript.
@@ -34,8 +36,11 @@ Docs: [https://react.dev/reference/rsc/server-components](https://react.dev/refe
 ## Database: PostgreSQL with TypeORM
 
 Docs:
+
 PostgreSQL - [https://www.postgresql.org/docs/](https://www.postgresql.org/docs/)
+
 TypeORM - [https://typeorm.io/docs/getting-started](https://typeorm.io/docs/getting-started)
+
 
 - PostgreSQL is a powerful, open-source relational database with strong community support and a wide range of features. For example: We used a PostgreSQL native feature `Materialized Views` in this project.
 - Team members have prior experience with PostgreSQL.
@@ -50,9 +55,13 @@ Docs: [https://bun.com/docs](https://bun.com/docs)
 
 ## Testing: Bun test with happy-dom and @testing-library
 Docs:
+
 Bun test - [https://bun.com/docs/test](https://bun.com/docs/test)
+
 happy-dom - [https://github.com/capricorn86/happy-dom/wiki/](https://github.com/capricorn86/happy-dom/wiki/)
+
 @testing-library/react - [https://testing-library.com/docs/react-testing-library/intro/](https://testing-library.com/docs/react-testing-library/intro/)
+
 
 - Bun test is a fast and efficient testing framework that integrates well with Bun.
 - happy-dom provides a lightweight DOM implementation for testing React components in a Node.js environment. It is essentially a more modern equivalent of JSDom.
@@ -60,10 +69,15 @@ happy-dom - [https://github.com/capricorn86/happy-dom/wiki/](https://github.com/
 
 ## Deployment: Podman/Docker + Compose
 Docs:
+
 Docker - [https://docs.docker.com/](https://docs.docker.com/)
+
 Docker Compose - [https://docs.docker.com/compose/](https://docs.docker.com/compose/)
+
 Podman - [https://docs.podman.io/en/latest/](https://docs.podman.io/en/latest/)
+
 Podman Compose - [https://docs.podman.io/en/latest/markdown/podman-compose.1.html](https://docs.podman.io/en/latest/markdown/podman-compose.1.html)
+
 
 - Podman and Docker are interoperable, that have almost exactly the same syntax.
 - Podman/Docker allows for containerization of the application, making it easier to deploy and manage dependencies, and also solves the classic "well it works on my machine" problem.
