@@ -111,9 +111,55 @@ bun run test
 - `src/tests/components/` - Component tests using happy-dom (requires `bunfig.component.toml`)
 
 The test suite uses:
+
 - **Bun test** - Native test runner
 - **happy-dom** - DOM implementation for component testing
 - **@testing-library/react** - React component testing utilities
+
+This should also show code coverage. Current stats:
+
+```js
+------------------------------|---------|---------|-------------------
+File                          | % Funcs | % Lines | Uncovered Line #s
+------------------------------|---------|---------|-------------------
+All files                     |   75.37 |   83.68 |
+ src/action.tsx               |   21.05 |   21.36 | 179,201-248,259-324,337-345,356-364,374-378,388-405,439-475,483-520,528-548,556-575,583-612,622-649,670-710,720-759,769-795
+ src/data-source.ts           |  100.00 |  100.00 |
+ src/entity/Games.ts          |   83.33 |   85.33 | 81-91
+ src/entity/Report.ts         |   50.00 |  100.00 |
+ src/entity/Review.ts         |  100.00 |  100.00 |
+ src/entity/User.ts           |  100.00 |  100.00 |
+ src/entity/Wishlist.ts       |    0.00 |  100.00 |
+ src/lib/db.ts                |   50.00 |   31.84 | 15-16,22-30,36-48,54-77,83-93,99,121-122,138-139,160-165,169-170,187-196,206-217,228-251,262-281,292-305
+ src/utils/auth.ts            |  100.00 |  100.00 |
+ src/utils/jwt.ts             |  100.00 |   92.00 | 41-42
+ src/utils/password.ts        |  100.00 |   93.62 | 65,82-83
+ src/utils/request-context.ts |  100.00 |   80.00 | 25-27
+------------------------------|---------|---------|-------------------
+
+ 64 pass
+ 0 fail
+ 144 expect() calls
+Ran 64 tests across 5 files. [1.85s]
+bun test v1.3.2 (b131639c)
+
+src/tests/components/component.test.tsx:
+✓ basic math
+✓ verify search bar component [58.00ms]
+------------------------------|---------|---------|-------------------
+File                          | % Funcs | % Lines | Uncovered Line #s
+------------------------------|---------|---------|-------------------
+All files                     |  100.00 |   99.79 |
+ src/components/searchbar.tsx |  100.00 |   99.38 |
+ src/tests/happydom.ts        |  100.00 |  100.00 |
+ src/tests/testing-library.ts |  100.00 |  100.00 |
+------------------------------|---------|---------|-------------------
+
+ 2 pass
+ 0 fail
+ 30 expect() calls
+Ran 2 tests across 1 file. [335.00ms]
+```
 
 ## Contributing
 
