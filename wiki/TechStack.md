@@ -12,7 +12,9 @@ See [Additional Learning Resources](wiki/LearningResources.md)
 
 ## Programming Language: Typescript
 Docs:
+
 Typescript - [https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html](https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html)
+
 Javascript - [https://developer.mozilla.org/en-US/docs/Web/JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 - Typescript is a super-set of Javascript, with enforced typing, this makes it easier to identify bugs due to faulty typing, which is common when writing Javascript.
@@ -53,6 +55,7 @@ Docs: [https://bun.com/docs](https://bun.com/docs)
 
 ## Testing: Bun test with happy-dom and @testing-library
 Docs:
+
 Bun test - [https://bun.com/docs/test](https://bun.com/docs/test)
 
 happy-dom - [https://github.com/capricorn86/happy-dom/wiki/](https://github.com/capricorn86/happy-dom/wiki/)
