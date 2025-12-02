@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 FROM base AS install
 RUN mkdir -p /temp/deps
 COPY package.json bun.lock /temp/deps/
-RUN cd /temp/deps && bun install
+RUN cd /temp/deps && bun ci
 
 # Build
 FROM base AS build

@@ -2,75 +2,105 @@
 
 ```mermaid
 classDiagram
-    class Users {
-	    +UserID PK
-	    string username
-	    string passwordHash
-	    string email
-        UNIQUE(username)
-        IsEmail(email)
+    class User {
+        +int id PK
+        varchar(32) username
+        varchar(60) passwordHash
+        varchar(128) email
+        text profileImage
+        text accessibilitySettings
     }
 
-    class HoursOnRecord {
-	    +HoursOnRecordID PK
-	    FK User
-	    FK Game
-	    number Hours
+    class Game {
+        +int id PK
+        text name
+        text description
+    }
+
+    class Label {
+        +int id PK
+        smallint type
+        text name
+        text description
+    }
+
+    class LabelType {
+        <<enumeration>>
+        Genre = 1
+        Accessibility = 2
+        Platform = 3
+        IndustryRating = 4
+        Misc = 5
+    }
+
+    class IndustryRating {
+        <<enumeration>>
+        Everyone
+        Teen
+        Mature
+        Adults Only
+    }
+
+    class GameMedia {
+        +int id PK
+        smallint type
+        text uri
+    }
+
+    class MediaType {
+        <<enumeration>>
+        PreviewImg = 1
+        Video = 2
+        Icon = 3
+    }
+
+    class Review {
+        +int id PK
+        smallint accessibilityRating
+        smallint enjoyabilityRating
+        text comment
+        timestamp createdAt
+        timestamp updatedAt
         UNIQUE(user, game)
     }
 
-    class Reviews {
-	    +ReviewID PK
-	    FK User
-	    FK Game
-	    date date
-	    int rating
-	    string reviewText
-        UNIQUE(User, Game, Date, rating, reviewText)
-        Before Insert/Update validateReview() 
-        REFRESH MATERIZED VIEW (Game ratings)
+    class Report {
+        +int id PK
+        text reportReason
+        enum status
+        timestamp reportedAt
     }
 
-    class LabelTypes {
-	    Genre
-	    Accessibility
-	    Miscellaneous
+    class ReportStatus {
+        <<enumeration>>
+        Pending
+        Reviewed
+        Deleted
     }
 
-    class Labels {
-	    +LabelID PK
-	    LabelType type
-	    string name
-        UNIQUE(name)
+    class Wishlist {
+        +int id PK
+        timestamp addedAt
+        UNIQUE(user, game)
     }
 
-    class MediaAssets {
-	    +MediaAsset PK
-	    number assetSize
-	    string url
-        UNIQUE(url)
+    class GameAverageRating {
+        <<materialized view>>
+        int gameId
+        float averageEnjoyabilityRating
+        float averageAccessibilityRating
     }
 
-    class Games {
-	    +GameID PK
-	    Label[] labels
-	    string name
-	    string description
-	    FK MediaAsset trailer
-	    FK MediaAsset mobileIcon
-	    FK MediaAsset desktopIcon
-	    FKs MediaAsset[] additionalCarouselMediaMobile
-	    FKs MediaAsset[] additionalCarouselMediaDesktop
-        UNIQUE(name, labels)
-    }
-
-	<<ENUM>> LabelTypes
-
-    Users "1" --> "many" HoursOnRecord : records
-    Games "1" --> "many" HoursOnRecord : has
-    Users "1" --> "many" Reviews : writes
-    Games "1" --> "many" Reviews : receives
-    Labels "many" --> "many" Games : tags
-    Labels --> LabelTypes : uses
-    Games "1" --> "many" MediaAssets : displays
+    User "1" --> "many" Review : writes
+    Game "1" --> "many" Review : receives
+    User "1" --> "many" Wishlist : has
+    Game "1" --> "many" Wishlist : in
+    Game "1" --> "many" Report : receives
+    Game "many" --> "many" Label : tags
+    Game "many" --> "many" GameMedia : displays
+    Label --> LabelType : uses
+    Label --> IndustryRating : can be
+    GameMedia --> MediaType : uses
+    Report --> ReportStatus : has
+    Game "1" --> "1" GameAverageRating : aggregates
 ```
