@@ -50,7 +50,8 @@ https://www.youtube.com/watch?v=ePAPd9qzGyM - React Server Components Video Cour
 ## Database: PostgreSQL with TypeORM
 
 ### PostgreSQL
-PostgreSQL is an open-source, object-relational database system that extends SQL, adding features that can scale complicated data worklo    
+PostgreSQL is an open-source, object-relational database system that extends SQL, adding features that can scale complicated data workloads
+
 https://www.postgresql.org/about/ - Official Docs    
 https://neon.com/postgresql/tutorial - Basic PostgreSQL tutorial    
 https://www.pgtutorial.com/postgresql-tutorial/postgresql-distinct-on/ - Interactive PostgreSQL tutorial     
