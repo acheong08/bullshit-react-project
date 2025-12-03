@@ -239,7 +239,7 @@ export function ProfilePage() {
 							onClick={() => openModal("imageModal")}
 						>
 							<img
-								src="/public/images/icons/edit-button.png"
+								src="/images/icons/edit-button.png"
 								alt="Edit icon"
 								className="edit-icon"
 							/>
@@ -254,7 +254,7 @@ export function ProfilePage() {
 								onClick={() => openModal("usernameModal")}
 							>
 								<img
-									src="/public/images/icons/edit-button.png"
+									src="/images/icons/edit-button.png"
 									alt="Edit icon"
 									className="edit-icon"
 								/>
