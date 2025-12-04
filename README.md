@@ -1,13 +1,10 @@
-# Debilis
+Some random bullshit coursework.
 
-A web-based discovery platform for accessible mobile games.
+Setting it up is easy:
+- `cp .env.example .env`
+- Edit .env as you please
+- `podman run --name psql -d -p 127.0.0.1:5432:5432 -e "POSTGRES_DB=test" -e "POSTGRES_USER=test" -e "POSTGRES_PASSWORD=test" docker.io/library/postgres:18`
+- `bun run build`
+- `bun run preview`
 
-**Primary features:**
-
-- Search and filter based on available accessibility options
-- User reviews separated out by game quality and accessibility.
-- The web page itself is accessible, allowing for voice commands and complying to WCAG AA.
-
-## Development
-
-See [wiki](wiki/readme.md)
+Uploaded as backup and reference.
